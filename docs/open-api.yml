@@ -1,0 +1,2364 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Education HUB Restful API
+  description: Education HUB Endpoint List
+servers:
+   # Added by API Auto Mocking Plugin
+   - description: SwaggerHub API Auto Mocking
+     url: https://virtserver.swaggerhub.com/EventPlanning/Education_Hub_Restful_API/1.0.0
+   - url: http://34.124.170.4:8000/ 
+     description: testing
+   - url : https://go-event.online/
+     description: production
+components:
+  parameters:
+    limit:
+      name: limit
+      in: query
+      description: limit contents
+      required: true
+      schema:
+        type: integer
+        example: 5
+    offset:
+      name: page
+      in: query
+      description: page
+      required: true
+      schema: 
+        type: integer
+        example: 0
+    name:
+      name: search
+      in: query
+      description: filter by search value
+      schema: 
+        type: string
+        example: linux
+    schoolid:
+      name: schoolid
+      in: path
+      description: schoolid
+      required: true
+      schema: 
+        type: integer
+        example: 1
+    token:
+      name: token
+      in: path
+      description: token obtained from the user email
+      required: true
+      schema:
+       type: string
+       example: qeqweq36232372321ewq32
+
+
+  securitySchemes:
+    bearerAuth:           
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "Token obtained upon successful login"
+  responses:
+    Unauthorized:
+      description: Access token is missing or mismatched role
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code :
+                type: integer
+                example: 401
+              message:
+                type: string
+                example: Missing or Malformed JWT
+    BadRequest:
+      description: Missing Csrf Token or Invalid Request Body or data not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 400
+              message:
+                type: string
+                example: Bad Request
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 500
+              message:
+                type: string
+                example: Internal Server Error
+    StatusOK:
+      description: Success operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Success operation
+    StatusCreated:
+      description: StatusCreated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 201
+              message:
+                type: string
+                example: Status Created
+    StatusOKLogin:
+      description: Success operation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Success operation
+              data:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIzI1NiIsInR5cCI6IkpXVCJ9 
+    StatusOkUserProfile:
+      description: Successful retrieval of user profile data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Success Operation
+              code:
+                type: integer
+                example: 200
+              data:
+                $ref: "#/components/schemas/UsersSchemaProfile"
+    StatusOkSchools:
+      description: fetch all schools data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Success Operation
+              code:
+                type: integer
+                example: 200
+              data:
+                $ref: "#/components/schemas/SchoolsSchemaAll"
+    StatusOkSchoolsDetail:
+      description: Fetch detail school data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Success Operation
+              code:
+                type: integer
+                example: 200
+              data:
+                $ref: "#/components/schemas/SchoolsSchemaDetail"
+    StatusCreatedRegister:
+      description: Successfully registered for school
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Status Created
+              code:
+                type: integer
+                example: 200
+              data:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+    StatusOkProgress:
+      description: list progress
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Success Operation
+              code:
+                type: integer
+                example: 200
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    s_name:
+                      type: string
+                    p_id :
+                      type: integer
+                example:
+                  - s_name: SMA 1 Suroboyo
+                    p_id: 1
+                  - s_name: SMA 2 Kebumen
+                    p_id : 2
+    StatusOkProgressDetail:
+      description: detail progress
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              message: 
+                type: string
+                example: Success Operation
+              data:
+                type: object
+                properties:
+                  progress:
+                    type: string
+                    example: file approved
+
+            
+    StatusOkGetCaptcha:
+      description: get captcha
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Success Operation
+              code:
+                type: integer
+                example: 200
+              data:
+                type: object
+                properties:
+                  captchaid:
+                    type: string
+                    example: K4yVyz8xAN1s9ABZfGoq
+                  img:
+                    type: string
+                    format: base64
+                    example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAAA8CAYAAADha"
+    StatusOkVerifyCaptcha:
+      description: get captcha
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Successfully verified captcha
+              code:
+                type: integer
+                example: 200
+    StatusOkCart:
+      description: If the student has not yet paid the form fee, the from fee will be displayed, but if they have already paid, the fee for further registration will be displayed.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Success Operation
+              code:
+                type: integer
+                example: 200
+              data:
+                $ref: '#/components/schemas/TransactionsSchemaCart'
+        
+    StatusOkCheckout:
+      description: get payment information
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+               type: integer
+               example: 201
+              message:
+                type:  string
+                example: StatusCreated
+              data:              
+                $ref: '#/components/schemas/TransactionsSchemaCheckoutResponse'
+    StatusOkAdminSchool:
+      description: retrieve the school data associated with their ID
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Success operation
+              data: 
+                $ref : '#/components/schemas/AdminSchemaGetSchool'                  
+    StatusCreatedAddSchool:
+      description: success response add a new school
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 201
+              message: 
+                type: string
+                example: StatusCreated
+              data:
+               type: object
+               properties:
+                 id:
+                  type: integer
+                  example: 1 
+    StatusOkUodateSchool:
+      description: reponses update school
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code: 
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Success Opreation
+              data: 
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 1
+    StatusCreatedAddExtrac:
+      description: reponses add a new extracurricular
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code: 
+                type: integer
+                example: 201
+              message:
+                type: string
+                example: StatusCreated
+              data: 
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 1
+    StatusOkUpdateExtrac:
+      description: reponses updated extrac
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code: 
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Success Operation
+              data: 
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 1
+    StatusCreatedAddAchiev:
+      description: reponses add a new Achievement
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code: 
+                type: integer
+                example: 201
+              message:
+                type: string
+                example: StatusCreated
+              data: 
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 1
+    StatusOkUpdateAchiev:
+      description: reponses updated Achievement
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code: 
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Success Operation
+              data: 
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 1
+    StatusOkGetAchiev:
+      description: fetch all achievments data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Success Operation
+              data:
+                $ref: '#/components/schemas/AdminSchemaGetAchiev'
+    StatusOkGetExtrac:
+      description: fetch all extracurricular data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Success Operation
+              data:
+                $ref: '#/components/schemas/AdminSchemaGetExtrac'
+    StatusCreatedFaq:
+      description: response add a new faq
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example:  201
+              message:
+                type: integer
+                example: StatusCreated
+              data:
+                type: object 
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+    StatusOkUpdateFaq:
+      description: response update faq
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                example:  200
+              message:
+                type: integer
+                example: Success Operation
+              data:
+                type: object 
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+    StatusOkFaq:
+      description: fetch all faqs data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              message: 
+                type: string
+                example: Success Operation
+              data:
+                $ref: '#/components/schemas/AdminSchemaGetFaq'
+    StatusOkAdmission:
+      description: Fetch all admission data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Success Operation
+              data:
+                $ref: '#/components/schemas/AdminSchemaGetAdmission'
+    StatusOkAdmissionDetail:
+      description: Fetch detailed admission information
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+              message:
+                type: string
+              data:
+                $ref: '#/components/schemas/AdminSchemaGetDetailAdmission'
+    StatusOkGetTestResult:
+      description: Retrieve all test results data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              message:
+                type:  string
+                example: Success Operation
+              data:
+                $ref: '#/components/schemas/AdminSchemaGetAllTestResults'
+    StatusCreatedQuiz:
+      description: responses create a new quiz
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 201
+              messsage:
+                type: string
+              data: 
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 1 
+    StatusOkGetDetailProgressAdmin:
+      description: Get detailed progress data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Success operation
+              data: 
+                type: object
+                properties:
+                  progress_id:
+                    type: integer
+                    example: 1
+                  progress:
+                    type: string
+                    example: send test link
+    StatusOkUpdateProgress:
+      description: responses update progress
+      content:
+        application/json:
+         schema: 
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: SuccessOperation
+            data:
+              type: object
+              properties:
+                progres_id: 
+                  type: integer
+                  example: 1
+  requestBodies:
+    ReqUserLogin:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersSchemaLogin'
+    ReqVerifyCaptcha:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              captcha_id:
+                type: string
+                example: "ei32732832q"
+              value:
+                type: string
+                example: "inijakarta"
+    ReqUserRegister:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsersSchemaRegis'
+    ReqForgotPass:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  example: yusuf@gmail.com
+    ReqResetPass:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password: 
+                  type: string
+                  example: yusuf321
+    ReqUpdateUser:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/UsersSchemaUpdate'
+    ReqRegisterSchool:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/SchoolSchemaRegister'
+    ReqCheckoutInitRegis:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TransactionsSchemaCheckout'
+    ReqAddShool:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/AdminSchemaAddSchool'
+    ReqAddExtracurricular:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/AdminSchemaAddExtrac'
+    ReqUpdateExtracurricular:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/AdminSchemaUpdateExtrac'
+    ReqAddAchievement:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/AdminSchemaAddAchievement'
+    ReqUpdateAchievement:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/AdminSchemaUpdateAchievement'
+    ReqAddFaq:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AdminSchemaAddFaq'
+    ReqUpdateFaq:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AdminSchemaUpdateFaq'
+    ReqCreateTest:
+      required: true
+      content:
+        application/json:
+          schema:
+           $ref: '#/components/schemas/AdminSchemaCreateTest'
+    ReqUpdateProgress:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              progress_id:
+                type: integer
+                example: 1
+              progress_status:
+                type: string
+                example: finish
+  schemas:
+    AdminSchemaCreateTest:
+      type: array
+      items:
+        type: object
+        properties:
+          school_id:
+            type: integer
+          question:
+            type: string
+          option1:
+            type: string
+          option2:
+            type: string
+          option3:
+            type: string
+          option4:
+            type: string
+          answer:
+            type: integer
+      example:
+        - school_id: 1
+          question: question1
+          option1: option1
+          option2: option2
+          option3: option3
+          option4: option4
+          answer: 4
+        - school_id: 1
+          question: question2
+          option1: option1
+          option2: option2 
+          option3: option3
+          option4: option4
+          answer: 4
+          
+    AdminSchemaGetAllTestResults:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          email:
+            type: string
+          result:
+            type: string
+      example:
+        - name: yusuf 
+          email: yusuf@gmail.com
+          result: pass
+        - name: younglex
+          email: youg@gmail.com
+          result: fail
+        
+    AdminSchemaGetDetailAdmission:
+      type: object
+      properties:
+        student_data:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Younglex
+            p_date:
+              type: string
+              example: Jakarta, 29 februari 2004
+            gender:
+              type: string
+              example: Laki-laki
+            religion:
+              type: string
+              example: Islam
+            graduation_from:
+              type: string
+              example: SMPN 3 Jakarta
+            nisn:
+              type: integer
+              example: 231231310313131
+            address:
+              type: object
+              properties:
+                province:
+                  type: string
+                  example: Jakarta
+                city:
+                  type: string
+                  example: cibubur
+                district:
+                  type: string
+                  example: cibubur
+                village:
+                  type: string
+                  example: cibubur
+                detail:
+                  type: string
+                  example: cibubur
+                zip_code:
+                  type:  string
+                  example: 16223
+        parent_data:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Asep
+            job:
+              type: string
+              example: TNI
+            religion:
+              type: string
+              example: Islam
+            address:
+              type: object
+              properties:
+                province:
+                  type: string
+                  example: Jakarta  
+                city:
+                  type: string
+                  example: cibubur
+                district: 
+                  type: string
+                  example: cibubur
+                village:
+                  type: string
+                  example: cibubur reg
+                zip_code:
+                  type: integer
+                  example: 168211
+                detail:
+                  type: string
+                  example: Blok L88
+            phone:
+              type: string
+              example: 0812331313332
+        city:
+          type: string
+          example: Jakarta
+        date:
+          type: string
+          example: 2202-05-01
+        student_signature:
+          type: string
+          example: youglex.jpg
+        parents_signature:
+          type: string
+          example: asep.jpg
+            
+    AdminSchemaGetAdmission:
+      type: array
+      items:
+        type: object
+        properties:
+          adm_id:
+            type: integer
+          prog_id:
+            type: integer
+          usr_img:
+            type: string
+          usr_id:
+            type: integer
+          usr_name:
+            type: string
+      example:
+        - adm_id: 1
+          prog_id: 1
+          usr_img: irwan.jpg
+          usr_id: 1
+          usr_name: irwan
+        - adm_id: 2
+          prog_id: 2
+          usr_img: yusuf.jpg
+          usr_id: 2
+          usr_name: yusuf 
+    AdminSchemaGetFaq:
+      type: array
+      items: 
+        type: object
+        properties:
+          q:
+            type: string
+          a:
+            type: string
+      example:
+        -  q: question 1
+           a: answer 1
+        -  q: question 2
+           a: answer 2
+    AdminSchemaAddFaq:
+      type: object
+      properties:
+        question:
+          type: string
+          example: question 1
+        answer:
+          type: string
+          example: answer 1
+        school_id:
+          type: integer
+          example: 1
+    AdminSchemaUpdateFaq:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        question:
+          type: string
+          example: question 1
+        answer:
+          type: string
+          example: answer 1
+        
+    AdminSchemaGetAchiev:
+      type: array
+      items: 
+        type: object
+        properties:
+          id:
+            type: integer
+          title:
+            type: string
+          image:
+            type: string
+          description:
+            type: string
+      example:
+        - id: 1
+          title: 1'st Math olympiade
+          image: throphy.jpg
+          description: 1'st Math olympiade
+        - id: 2 
+          title: 1'st Math olympiade
+          description: 1'st Math olympiade
+          image: throphy.jpg       
+    AdminSchemaGetExtrac:
+      type: array
+      items: 
+        type: object
+        properties:
+          id:
+            type: integer
+          title:
+            type: string
+          image:
+            type: string
+          description:
+            type: string
+      example:
+        - id: 1
+          title: scout
+          image: scout.jpg
+          description: scout
+        - id: 2 
+          title: football
+          description: football
+          image: football.jpg
+       
+    AdminSchemaUpdateExtrac:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        image:
+          type: string
+          example: scout.jpg
+        title:
+          type: string
+          example: scout
+        description:
+          type: string
+          example: scouttt
+    AdminSchemaAddExtrac:
+      type: object
+      properties:
+        school_id:
+          type: integer
+          example: 1
+        image:
+          type: string
+          example: scout.jpg
+        title:
+          type: string
+          example: scout
+        description:
+          type: string
+          example: scouttt
+    AdminSchemaUpdateAchievement:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        image:
+          type: string
+          example: trophy.jpg
+        title:
+          type: string
+          example: 1'st Math olympiade
+        description:
+          type: string
+          example: 1'st Math olympiade
+    AdminSchemaAddAchievement:
+      type: object
+      properties:
+        school_id:
+          type: integer
+          example: 1
+        image:
+          type: string
+          example: trophy.jpg
+        title:
+          type: string
+          example: 1'st Math olympiade
+        description:
+          type: string
+          example: 1'st Math olympiade
+
+    UsersSchemaLogin:
+        type: object
+        properties:
+          username:
+            type: string    
+          password:
+            type: string
+        example :
+          username : yusuf
+          password : yusuf123
+      
+    UsersSchemaRegis:
+        type: object
+        properties:
+          email:
+           type: "string"
+           description: "Alamat email user"
+           example: yusuf@gmail.com
+          firstname:
+           type: "string"
+           description: "first name"
+           example: yusuf
+          lastname:
+           type: "string"
+           description: "surename"
+           example: yusuf
+          username:
+           type: "string"
+           description: "uname"
+           example: yusuf
+          password:
+            type: "string"
+            description: "u pass"
+            example: yusuf123
+          address:
+            type: "string"
+            description: "User address"
+            example: gresik
+          role:
+            type: "string"
+            description: role user
+            example: "student"
+    UsersSchemaProfile:
+        type: object
+        properties:
+          username:
+            type: string
+            example: satrio w
+          fname:
+            type: string
+            example: yusuf
+          sname:
+            type: string
+            example: maulana
+          email:
+            type: string
+            example: yusuf@gmail.com 
+          password:
+            type: string
+            example: yusuf123
+          address:
+            type: string
+            example: gresik
+          image:
+            type: string
+            example: default.jpg    
+    UsersSchemaUpdate:
+        type: object
+        properties:
+         username:
+          type: string
+          example: yusufm
+         fname:
+          type: string
+          example: yusuf
+         sname:
+          type: string
+          example: maulana
+         email:
+          type: string
+          example: yusuf@gmail.com 
+         password:
+          type: string
+          example: yusuf123
+         address:
+          type: string
+          example: gresik
+         image:
+          type: string
+          format: binary
+          example: yusuf.jpg    
+    SchoolsSchemaAll:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+               
+              n_adm:
+                type: string
+
+              image:
+                type: string
+    
+              accreditation:
+                type: string
+    
+              location:
+                type: string    
+      example:
+        total_page: 3
+        limit: 10
+        page: 1
+        total_data: 30
+        data:
+          - id: 1
+            name: "smp 1 gresik"
+            n_adm: Irwan
+            image: smpn1.jpg
+            accreditation: A
+            location: gresik
+          - id: 2
+            name: "smp 2 gresik"
+            n_adm: Irwan2
+            image: smpn2.jpg
+            accreditation: B
+            location: gresik
+    SchoolsSchemaDetail:
+      type: object
+      properties:
+        id:
+         type: integer
+         example: 1
+        pdf:
+         type: string
+         example: brochure.pdf
+        video:
+          type: string
+          example: introduction.mp4
+        website:
+          type: string
+          example: www.sma1bogor.sch.id
+        name:
+         type: string
+         example: smpn 1 gresik
+        description:
+         type: string
+         example: Smpn 1 gresik berada di gresik
+        image:
+         type: string
+         example: smpn1.jpg
+        address:
+         type: string
+         example: jl.gresik
+        students:
+         type: integer
+         example: 112
+        event:
+         type:  object
+         properties:
+            date:
+             type: string
+             example: 2022-05-30 24:00:00
+            gmeet:
+              type: string
+              example: https://meet.google.com/
+        faq:
+         type: object
+         properties:
+          qa:
+           type: array
+           items:
+            type: object
+            properties:
+              q:
+                type: string
+              a:
+                type: string
+           example:
+            - q: question1
+              a: answer1
+            - q: question2
+              a: answer1
+          wa:
+           type: string
+           example: "wa.me/6281293283823/?text=Saya ingin bertanya"
+        teachers:
+         type: integer
+         example: 70
+        staff:
+         type: integer
+         example: 21
+        accreditation:
+         type: string
+         example: A
+        reviews:
+         type: array
+         items:
+           type: object
+           properties:
+            img:
+              type: string
+            review:
+              type: string
+         example:
+           - img: irwan.jpg
+             review: mantap nih sekolah
+           - img: yusuf
+             review: mantaps nih sekolah
+        extracurriculars:
+          type: array
+          items:
+            type: object
+            properties:
+              name: 
+                type: string
+              img:
+                type: string
+              description:
+                type: string
+          example:
+            - name: pramuka
+              img: prmk.jpg
+              description: pramuka is extracurricular for young
+            - name: football
+              img: foot.jpg
+              description: football is extracurricular for young
+        prestations:
+          type: array
+          items:
+           type: object
+           properties:
+            name: 
+             type: string
+            img:
+             type: string
+            description:
+             type: string
+          example:
+           - name: 1'st place national matematic olympiade 2023
+             img: prs1.jpg
+             description: this olympiade has announce from goverment indonesia in ministri of education
+        school_fees:
+          type: object
+          properties:
+            onetime:
+              type: array
+              items:
+                type: object
+                properties:
+                  name: 
+                    type: string
+                  price:
+                    type: integer
+              example:
+                - name: Her Registration
+                  price: 1000000 
+                - name: Building
+                  price: 1000000
+                - name: Books
+                  price: 1000000
+            annual:
+              type: array
+              items:
+                type: object
+                properties:        
+                  name:
+                    type: string 
+                  price:
+                    type: integer
+                  interval:
+                    type: string
+              example:
+                - name: SPP
+                  interval: 3 Month
+                  price: 500000
+                - name: Cleaning 
+                  interval: 3 month
+                  price: 50000
+
+    SchoolSchemaRegister:
+      type: object
+      properties:
+        school_id: 
+          type: integer
+          example: 1
+        student_photo:
+          type: string
+          format: binary
+          example: yusuf4x6.jpg
+        student_name:
+          type: string
+          example: yusuf maulana
+        pdate:
+          type: string
+          example: Jakarta,21 juni 2001
+        gender:
+          type: string
+          example: laki-laki
+        religion:
+          type: string
+          example: islam
+        graduation_from:
+          type: string
+          example: Sdn 1 gresik
+        nisn:
+          type: string
+          example: 232121333232
+        address:
+          type: string
+          example: jl gresik blok p19 no.04
+        parent_name:
+          type: string
+          example: Rudi
+        parent_job:
+          type: string
+          example: PNS
+        parent_religion:
+          type: string
+          example: islam
+        parent_address:
+          type:  string
+          example: jl gresik blok p19 no.04 
+        parent_phone:
+          type: string
+          example: 081232393232
+        parent_signature:
+          type: string
+          format: binary
+        student_signature:
+          type: string
+          format: binary
+        city:
+          type: string
+          example: Gresik
+        date:
+          type:  string
+          example: 2022-05-06T05:00:12              
+    TransactionsSchemaCart:
+      type: object
+      properties:
+        type:
+          type: string
+          example: form | initregis
+        schoolid:
+          type: integer
+          example: 1
+        form_fee:
+          type: integer
+          example: 200000
+        regis_fee: 
+          type: integer
+          example: 1000000
+        building_fee:
+          type: integer
+          example: 1000000
+        books_fee : 
+          type:  integer
+          example: 1000000
+        m_fee :
+          type: integer
+          example: 500000     
+    TransactionsSchemaCheckout:
+      type: object
+      description: If the payment is for form, please fill in the form fee field only. If not, please fill in the other fields without filling in the form fee field
+      properties:
+        schoolid:
+          type: integer
+          example: 1
+        form_fee :
+          type: integer
+          example: 200000
+        initregis_fee:
+          type: integer
+          example: 1000000
+        building_fee:
+          type: integer
+          example: 1000000
+        books_fee:
+          type: integer
+          example: 1000000
+        m_fee:
+          type: integer
+          example: 500000
+        payment_method:
+          type: string
+          example: bca | mandiri | indomaret| bni
+    TransactionsSchemaCheckoutResponse:
+      type: object
+      properties:
+        invoice:
+          type: string
+          example: INV-019233232
+        expire_time:
+          type: string
+          example: 2022-05-25 14:00:00
+        payment_code:
+          type: string
+          example: 2710288329232
+        payment_method:
+          type: string
+          example: bca
+    AdminSchemaGetSchool:
+      type: object
+      properties:
+        school_name:
+          type: string
+          example: SMA 3 Gresik
+        school_id:
+          type: string
+          example: 1
+        description:
+          type: string
+          example: SMA 3 Gresik, better known to many  as Padmanaba or SMA 3 B, is one of the oldest senior high school.
+        students:
+          type: integer
+          example: 112
+        teachers:
+          type: integer
+          example: 77
+        staff: 
+          type: integer
+          example: 20
+        accreditation:
+          type: string
+          example: A
+        website:
+          type: string
+          example: https://sma3gresik.sch.id/
+        location:
+          type:  string
+          example: Gresik, Jawa Timur
+        image:
+          type:  string
+          example: sma3gresik.jpg
+        video:
+          type: string
+          example: introduction.mp4
+        reviews: 
+          type: array
+          items:
+            type: object
+            properties:
+              img:
+                type: string
+              review:
+                type: string
+          example:
+            - img: student1.jpg
+              review: sekolah bagus yah, adminya ramah
+            - img: student2.jpg
+              review: Halaman bagus dan bersih
+        extracurriculars:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              img:
+                type: string
+              name:
+                type: string
+              description:
+                type:  string
+          example: 
+            - id: 1
+              img: football.jpg 
+              name: football 
+              description: footballl
+            - id: 2
+              img: scout.jpg
+              name: scout
+              description: scoutttt
+        payments:
+          type: object
+          properties:
+            onetime:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  img:
+                    type: string
+                  description:
+                    type: string
+                  price:
+                    type: integer
+              example:
+                - id: 1
+                  img: build.jpg
+                  description: Building
+                  price: 2000000
+                - id: 2
+                  img: form.jpg
+                  description: Her Registration
+                  price: 1000000
+                - id: 3
+                  img: book.jpg
+                  price: 200000
+                  description: Books
+            annual:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  img:
+                    type: string
+                  description:
+                    type: string
+                  price:
+                    type: integer
+              example:
+                - id: 4
+                  img: m.jpg
+                  description: Spp/ 1 Month
+                  price: 500000
+                - id: 5
+                  img: clean.jpg
+                  description: Cleaning / 3 Month
+                  price: 1000000
+        faq:
+          type: array
+          items:
+            type: object
+            properties:
+              id: 
+                type: integer
+              q:
+                type: string
+              a:
+                type: string
+          example:
+            - id: 1
+              q: question 1
+              a: answer 1
+            - id: 2
+              q: question 2
+              a: answer 2 
+    AdminSchemaAddSchool:
+      description: add a new school
+      type: object
+      properties:
+        npsn:
+          type:  string
+          example: 23213123213
+        school_name:
+          type: string
+          example: SMA 1 Gresik 
+        description:
+          type: string
+          example: SMA 1 gresik 
+        location:
+          type: object
+          properties:
+            province:
+              type: string
+              example: Jawa Timur
+            city:
+              type: string
+              example: gresik
+            district: 
+              type: string
+              example: gresik
+            village:
+              type: string
+              example: kmp.gresik
+            detail: 
+              type: string
+              example: blok l19
+            zip_code:
+              type: string
+              example: 55232
+        students:
+          type: integer
+          example: 100
+        teachers:
+          type: integer
+          example: 30
+        staff: 
+          type: integer
+          example: 10
+        accreditation:  
+          type: string
+          example: A
+        school_web:
+          type:  string
+          example: www.sma1gresik.sch.id
+        image:
+          type: string
+          format: binary
+        video: 
+          type: string
+          format: binary
+        pdf:
+          type: string
+          format: binary
+       
+paths:
+  /getcaptcha:
+    get:
+      tags:
+        - Auth
+      responses:
+        '200': 
+          $ref: '#/components/responses/StatusOkGetCaptcha'
+        '500':
+          $ref: "#/components/responses/InternalServerError"        
+  /verifycaptcha:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        $ref: '#/components/requestBodies/ReqVerifyCaptcha'
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkVerifyCaptcha'
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /register:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        $ref: '#/components/requestBodies/ReqUserRegister'
+      responses:
+        '201':
+          $ref: "#/components/responses/StatusCreated"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /login:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        $ref: '#/components/requestBodies/ReqUserLogin'
+      responses:
+        '200':
+          $ref: "#/components/responses/StatusOKLogin"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+
+  /forgot:
+    post:
+      description: forgot password
+      tags:
+        - Auth
+      requestBody:
+       $ref: '#/components/requestBodies/ReqForgotPass'
+      responses:
+        '200':
+          $ref: "#/components/responses/StatusOK"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /reset/{token}:
+    post:
+      tags:
+        - Auth
+      parameters:
+        - $ref: '#/components/parameters/token'
+      requestBody:
+        $ref: '#/components/requestBodies/ReqResetPass'
+      responses:
+        '200':
+          $ref: "#/components/responses/StatusOK"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get detail user profile
+
+      security:
+        - bearerAuth: []
+      responses:
+         '200':
+          $ref: "#/components/responses/StatusOkUserProfile"
+         '401':
+          $ref: "#/components/responses/Unauthorized"
+         '400':
+          $ref: "#/components/responses/BadRequest"
+         '500':
+          $ref: "#/components/responses/InternalServerError"
+    delete:
+      tags:
+        - Users
+      summary: delete user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref: "#/components/responses/StatusOK"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    put:
+      tags:
+        - Users
+      summary: update user
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ReqUpdateUser'
+      responses:
+        '200':
+          description: User information updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersSchemaUpdate'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /users/progress:
+    get:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkProgress'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /users/progress/{progid}:
+    get:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: progid
+          schema: 
+            type: string
+          in: path
+          description: progress id
+          required: true
+      responses:
+        '200':
+          $ref: "#/components/responses/StatusOkProgressDetail" 
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /schools:
+    post:
+      tags:
+        - schools
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ReqRegisterSchool'
+        
+      responses:
+        '201':
+          $ref: "#/components/responses/StatusCreatedRegister"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    get:
+      tags:
+        - schools
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/name'
+
+      responses:
+        '200':
+          $ref : "#/components/responses/StatusOkSchools"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /schools/{schoolid}:
+    get:
+      tags:
+        - schools
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/schoolid'
+      responses:
+        '200':
+          $ref : "#/components/responses/StatusOkSchoolsDetail"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  
+  /transactions/cart/{schoolid}:
+    get:
+      tags:
+        - transactions
+      parameters:
+        - $ref: '#/components/parameters/schoolid'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref : "#/components/responses/StatusOkCart"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /transactions/checkout:
+    post:
+      tags:
+        - transactions
+      security:
+        - bearerAuth: []
+      requestBody:
+       $ref: '#/components/requestBodies/ReqCheckoutInitRegis'
+      responses:
+        '201':
+          $ref: '#/components/responses/StatusOkCheckout'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /admin/school:
+    get:
+      tags:
+        - admin
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkAdminSchool'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      tags:
+        - admin
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ReqAddShool'
+
+      responses:
+        '201':
+          $ref: '#/components/responses/StatusCreatedAddSchool'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    put:
+      tags:
+        - admin
+      security:
+        - bearerAuth: []
+      requestBody:
+       $ref: '#/components/requestBodies/ReqAddShool'
+      responses:
+        '200':
+          $ref: '#/components/requestBodies/ReqAddShool'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError" 
+  /admin/school/{id}:   
+    delete:
+      tags:
+       - admin 
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          $ref : "#/components/responses/StatusOK"
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /admin/school/extracurriculars:
+    post:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ReqAddExtracurricular'
+      responses:
+        '201':
+          $ref: '#/components/responses/StatusCreatedAddExtrac'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    put:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ReqUpdateExtracurricular'
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkUpdateExtrac'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    get:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      responses:
+        '200': 
+          $ref: '#/components/responses/StatusOkGetExtrac'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /admin/school/extracurriculars/{id}:
+    delete:
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+            
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkUpdateExtrac'   
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /admin/school/achievements:
+    post:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ReqAddAchievement'
+      responses:
+        '201':
+          $ref: '#/components/responses/StatusCreatedAddAchiev'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    put:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ReqUpdateAchievement'
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkUpdateAchiev'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    get:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      responses:
+        '200': 
+          $ref: '#/components/responses/StatusOkGetAchiev'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /admin/school/achievements/{id}:
+    delete:
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+            example: 1
+          required: true
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkUpdateAchiev'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /admin/school/faqs:
+    post:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ReqAddFaq'
+      responses:
+        '201':
+          $ref: '#/components/responses/StatusCreatedFaq'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    put:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ReqUpdateFaq'
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkUpdateFaq'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+    get:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      responses:
+        '200': 
+          $ref: '#/components/responses/StatusOkFaq'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /admin/school/faqs/{id}:
+    delete:
+      tags:
+        - admin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkUpdateFaq'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /admin/school/gmeet:
+    post:
+      tags:
+        - admin
+      security:
+        - bearerAuth: []
+      description: Create a new gmeet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_time:
+                  type: string
+                  example: 2023-05-19T19:00:00
+                end_time:
+                  type:  string
+                  example: 2023-05-19T20:00:00
+                school_id:
+                  type: integer
+                  example: 1
+      responses:
+        '201':
+          $ref: '#/components/responses/StatusCreated'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError"
+  /admin/school/admission:
+    get:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkAdmission'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError" 
+  /admin/school/admission/{admid}:
+    get:
+      parameters:
+        - name: admid
+          required: true
+          schema:
+            type: integer
+          in: path
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkAdmissionDetail'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError" 
+  /admin/school/progress/{progid}:
+    get:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      parameters:
+        - name: progid
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          $ref: '#/components/responses/StatusOkGetDetailProgressAdmin'
+        '401':
+          $ref: "#/components/responses/Unauthorized"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+        '500':
+          $ref: "#/components/responses/InternalServerError" 
+    put:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      requestBody:
+       $ref: '#/components/requestBodies/ReqUpdateProgress'
+      responses:
+       '200':
+        $ref: '#/components/responses/StatusOkUpdateProgress'
+       '401':
+         $ref: "#/components/responses/Unauthorized"
+       '400':
+         $ref: "#/components/responses/BadRequest"
+       '500':
+         $ref: "#/components/responses/InternalServerError" 
+      
+  /admin/school/test:
+    get:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      responses:
+       '200':
+         $ref: '#/components/responses/StatusOkGetTestResult'
+       '401':
+         $ref: "#/components/responses/Unauthorized"
+       '400':
+         $ref: "#/components/responses/BadRequest"
+       '500':
+         $ref: "#/components/responses/InternalServerError" 
+    post:
+      tags:
+        - admin
+      security:
+       - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/ReqCreateTest'
+      responses:
+        '201':
+         $ref: '#/components/responses/StatusCreatedQuiz' 
+        '401':
+         $ref: "#/components/responses/Unauthorized"
+        '400':
+         $ref: "#/components/responses/BadRequest"
+        '500':
+         $ref: "#/components/responses/InternalServerError" 
