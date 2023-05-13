@@ -1,0 +1,54 @@
+{
+    "SERVER" : {
+    "PORT" : "8000"
+    },
+    "DATABASE":{
+        "HOST": "localhost",
+        "PORT": "3306",
+        "USERNAME": "root",
+        "PASSWORD": "",
+        "NAME": ""
+    },
+    "REDIS" : {
+        "HOST": "localhost",
+        "PORT": "6379",
+        "PASSWORD": "test",
+        "DB": "1"
+    },
+    "NSQ": {
+        "HOST": "localhost",
+        "PORT": "4150",
+        "TOPIC": "PENDING",
+        "TOPIC2": "SUCCESS",
+        "TOPIC3": "CANCEL",
+        "TOPIC4": "REFUND",
+        "TOPIC5": "VERIFY-EMAIL",
+        "TOPIC6": "RESET-PASSWORD"
+    },
+    "PUSHER": {
+        "APPID": "1586003",
+        "KEY": "198b35e916a3f0811a9c",
+        "SECRET": "13fa3da050d2a10fcc5c",
+        "CLUSTER": "ap1",
+        "SECURE": false,
+        "CHANNEL": "my-channel",
+        "EVENT": "my-event"
+      },
+    "MIDTRANS": {
+        "SERVERKEY": "SB-Mid-server-SncqFmlAhQ312312312",
+        "CLIENTKEY": "SB-Mid-client-ZjOMzX23213213ewqewqexmY",
+        "ENV": 1,
+        "URL":"go-event.online/notif",
+        "EXP":5,
+        "UNIT":"minute"
+    },
+    "CSRFLENGTH": 20,
+    "CSRFMODE": "2",
+    "GCP": {
+        "CREDEN": "./Auth.json",
+        "PROJECTID": "projec321312316",
+        "BUCKETNAME" : "prj32131321",
+        "PATH": ""
+    },
+    "JWTSECRET": "#$@321dsdwe@_=--++"
+}
