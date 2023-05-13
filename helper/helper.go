@@ -19,6 +19,14 @@ func GetUid(token *jwt.Token) int {
 
 	return id
 }
+func GetRole(token *jwt.Token) string {
+	parse := token.Claims.(jwt.MapClaims)
+	return parse["role"].(string)
+}
+func GetStatus(token *jwt.Token) string {
+	parse := token.Claims.(jwt.MapClaims)
+	return parse["verified"].(string)
+}
 
 func HashPassword(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -32,10 +40,11 @@ func VerifyPassword(passhash string, password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(passhash), []byte(password))
 }
 
-func GenerateJWT(id int, role string, dp depedency.Depend) string {
+func GenerateJWT(id int, role string, is_verified string, dp depedency.Depend) string {
 	var informasi = jwt.MapClaims{}
 	informasi["id"] = id
 	informasi["role"] = role
+	informasi["verified"] = is_verified
 	rawToken := jwt.NewWithClaims(jwt.SigningMethodHS256, informasi)
 	resultToken, err := rawToken.SignedString([]byte(dp.Config.JwtSecret))
 	if err != nil {

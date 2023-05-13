@@ -7,6 +7,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+const (
+	URLFRONTEND       = "http://localhost:8000?status=success"
+	URLFRONTENDUPDATE = "http://localhost:8000?status=success"
+)
+
 type (
 	WebResponse struct {
 		Code    int    `json:"code"`

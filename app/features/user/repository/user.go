@@ -21,6 +21,9 @@ type (
 		InsertForgotPassToken(db *gorm.DB, req entity.ForgotPass) error
 		ResetPass(db *gorm.DB, newpass string, token string) error
 		FindByUsername(db *gorm.DB, username string) (*entity.User, error)
+		GetById(db *gorm.DB, id int) (*entity.User, error)
+		Update(db *gorm.DB, user entity.User) (*entity.User, error)
+		Delete(db *gorm.DB, user entity.User) error
 	}
 )
 
@@ -91,6 +94,9 @@ func (u *user) Update(db *gorm.DB, user entity.User) (*entity.User, error) {
 				n.Field(i).SetString(val)
 			}
 		}
+	}
+	if user.IsVerified {
+		newdata.IsVerified = false
 	}
 	if err := db.Save(&newdata).Error; err != nil {
 		u.log.Errorf("error Db : %v", err)

@@ -28,6 +28,20 @@ func (_m *UserRepo) Create(db *gorm.DB, _a1 user.User) error {
 	return r0
 }
 
+// Delete provides a mock function with given fields: db, _a1
+func (_m *UserRepo) Delete(db *gorm.DB, _a1 user.User) error {
+	ret := _m.Called(db, _a1)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, user.User) error); ok {
+		r0 = rf(db, _a1)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // FindByEmail provides a mock function with given fields: db, email
 func (_m *UserRepo) FindByEmail(db *gorm.DB, email string) (*user.User, error) {
 	ret := _m.Called(db, email)
@@ -80,6 +94,32 @@ func (_m *UserRepo) FindByUsername(db *gorm.DB, username string) (*user.User, er
 	return r0, r1
 }
 
+// GetById provides a mock function with given fields: db, id
+func (_m *UserRepo) GetById(db *gorm.DB, id int) (*user.User, error) {
+	ret := _m.Called(db, id)
+
+	var r0 *user.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) (*user.User, error)); ok {
+		return rf(db, id)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) *user.User); ok {
+		r0 = rf(db, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.User)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, int) error); ok {
+		r1 = rf(db, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // InsertForgotPassToken provides a mock function with given fields: db, req
 func (_m *UserRepo) InsertForgotPassToken(db *gorm.DB, req user.ForgotPass) error {
 	ret := _m.Called(db, req)
@@ -106,6 +146,32 @@ func (_m *UserRepo) ResetPass(db *gorm.DB, newpass string, token string) error {
 	}
 
 	return r0
+}
+
+// Update provides a mock function with given fields: db, _a1
+func (_m *UserRepo) Update(db *gorm.DB, _a1 user.User) (*user.User, error) {
+	ret := _m.Called(db, _a1)
+
+	var r0 *user.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, user.User) (*user.User, error)); ok {
+		return rf(db, _a1)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, user.User) *user.User); ok {
+		r0 = rf(db, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*user.User)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, user.User) error); ok {
+		r1 = rf(db, _a1)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // VerifyEmail provides a mock function with given fields: db, verificationcode
