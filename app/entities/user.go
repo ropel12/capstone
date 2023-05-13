@@ -1,6 +1,8 @@
-package user
+package entities
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type (
 	User struct {
@@ -15,6 +17,7 @@ type (
 		Role             string `gorm:"not null" json:"-"`
 		IsVerified       bool   `gorm:"not null" json:"-"`
 		VerificationCode string `gorm:"not null" json:"-"`
+		School           School
 	}
 
 	ForgotPass struct {

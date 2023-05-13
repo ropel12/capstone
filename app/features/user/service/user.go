@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"mime/multipart"
 
-	entity "github.com/education-hub/BE/app/entities/user"
+	entity "github.com/education-hub/BE/app/entities"
 	"github.com/education-hub/BE/app/features/user/repository"
 	dependcy "github.com/education-hub/BE/config/dependency"
 	"github.com/education-hub/BE/errorr"

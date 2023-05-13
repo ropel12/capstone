@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -10,6 +9,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
+	"github.com/education-hub/BE/errorr"
 )
 
 type StorageGCP struct {
@@ -20,9 +20,9 @@ type StorageGCP struct {
 }
 
 func (s *StorageGCP) UploadFile(file multipart.File, fileName string) error {
-	if !strings.Contains(strings.ToLower(fileName), ".jpg") && !strings.Contains(strings.ToLower(fileName), ".png") && !strings.Contains(strings.ToLower(fileName), ".jpeg") {
+	if !strings.Contains(strings.ToLower(fileName), ".jpg") && !strings.Contains(strings.ToLower(fileName), ".png") && !strings.Contains(strings.ToLower(fileName), ".jpeg") && !strings.Contains(strings.ToLower(fileName), ".pdf") {
 		fmt.Println(strings.Contains(strings.ToLower(fileName), ".jpg"))
-		return errors.New("File type not allowed")
+		return errorr.NewBad("File type not allowed")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()

@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	entity "github.com/education-hub/BE/app/entities/user"
+	entity "github.com/education-hub/BE/app/entities"
 	mocks "github.com/education-hub/BE/app/features/user/mocks/repository"
 	user "github.com/education-hub/BE/app/features/user/service"
 	"github.com/education-hub/BE/config"

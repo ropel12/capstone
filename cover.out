@@ -1,4 +1,25 @@
 mode: set
+github.com/education-hub/BE/app/features/school/service/school.go:28.88,30.2 1 1
+github.com/education-hub/BE/app/features/school/service/school.go:32.129,33.48 1 1
+github.com/education-hub/BE/app/features/school/service/school.go:38.2,38.79 1 1
+github.com/education-hub/BE/app/features/school/service/school.go:41.2,41.62 1 1
+github.com/education-hub/BE/app/features/school/service/school.go:44.2,66.12 5 1
+github.com/education-hub/BE/app/features/school/service/school.go:80.2,80.12 1 1
+github.com/education-hub/BE/app/features/school/service/school.go:93.2,95.27 3 1
+github.com/education-hub/BE/app/features/school/service/school.go:100.2,102.17 3 1
+github.com/education-hub/BE/app/features/school/service/school.go:105.2,105.16 1 1
+github.com/education-hub/BE/app/features/school/service/school.go:33.48,36.3 2 1
+github.com/education-hub/BE/app/features/school/service/school.go:38.79,40.3 1 1
+github.com/education-hub/BE/app/features/school/service/school.go:41.62,43.3 1 1
+github.com/education-hub/BE/app/features/school/service/school.go:66.12,68.65 2 1
+github.com/education-hub/BE/app/features/school/service/school.go:74.3,77.12 4 1
+github.com/education-hub/BE/app/features/school/service/school.go:68.65,73.4 4 1
+github.com/education-hub/BE/app/features/school/service/school.go:80.12,82.63 2 1
+github.com/education-hub/BE/app/features/school/service/school.go:88.3,91.12 4 1
+github.com/education-hub/BE/app/features/school/service/school.go:82.63,87.4 4 1
+github.com/education-hub/BE/app/features/school/service/school.go:95.27,96.17 1 1
+github.com/education-hub/BE/app/features/school/service/school.go:96.17,98.4 1 1
+github.com/education-hub/BE/app/features/school/service/school.go:102.17,104.3 1 1
 github.com/education-hub/BE/app/features/user/service/user.go:35.80,37.2 1 1
 github.com/education-hub/BE/app/features/user/service/user.go:39.85,40.48 1 1
 github.com/education-hub/BE/app/features/user/service/user.go:44.2,45.16 2 1

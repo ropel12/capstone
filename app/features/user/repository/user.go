@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	entity "github.com/education-hub/BE/app/entities/user"
+	entity "github.com/education-hub/BE/app/entities"
 	"github.com/education-hub/BE/errorr"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
