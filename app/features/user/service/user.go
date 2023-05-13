@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"encoding/base32"
+	"fmt"
+	"mime/multipart"
 
 	entity "github.com/education-hub/BE/app/entities/user"
 	"github.com/education-hub/BE/app/features/user/repository"
@@ -24,6 +26,9 @@ type (
 		VerifyEmail(ctx context.Context, verificationcode string) error
 		ForgetPass(ctx context.Context, email string) error
 		ResetPass(ctx context.Context, token string, newpass string) error
+		GetProfile(ctx context.Context, id int) (*entity.User, error)
+		Update(ctx context.Context, req entity.UpdateReq, file multipart.File) (*entity.User, error)
+		Delete(ctx context.Context, id int) error
 	}
 )
 
@@ -128,6 +133,81 @@ func (u *user) ForgetPass(ctx context.Context, email string) error {
 func (u *user) ResetPass(ctx context.Context, token string, newpass string) error {
 	if err := u.repo.ResetPass(u.dep.Db.WithContext(ctx), newpass, token); err != nil {
 		return err
+	}
+	return nil
+}
+
+func (u *user) GetProfile(ctx context.Context, id int) (*entity.User, error) {
+	res, err := u.repo.GetById(u.dep.Db.WithContext(ctx), id)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (u *user) Update(ctx context.Context, req entity.UpdateReq, file multipart.File) (*entity.User, error) {
+	data := entity.User{}
+	if req.Password != "" {
+		passhash, err := helper.HashPassword(req.Password)
+		if err != nil {
+			u.dep.Log.Errorf("[ERROR]WHEN HASHING PASSWORDS, Error: %v", err)
+			return nil, errorr.NewBad("Register failed")
+		}
+		req.Password = passhash
+	}
+	if req.Username != "" {
+		_, err := u.repo.FindByUsername(u.dep.Db.WithContext(ctx), req.Username)
+		if err == nil {
+			return nil, errorr.NewBad("Username already registered")
+		}
+	}
+	if req.Email != "" {
+		user, err := u.repo.FindByEmail(u.dep.Db.WithContext(ctx), req.Email)
+		if err == nil {
+			if user.IsVerified == true {
+				return nil, errorr.NewBad("Email already registered")
+			}
+		}
+		hashedEmailString := base32.StdEncoding.EncodeToString([]byte(req.Email))
+		go func() {
+			err := u.dep.Nsq.Publish("7", []byte(hashedEmailString))
+			if err != nil {
+				u.dep.Log.Errorf("[FAILED] to publish to NSQ: %v", err)
+				return
+			}
+		}()
+		data.VerificationCode = hashedEmailString
+		data.IsVerified = true
+	}
+	if file != nil {
+		filename := fmt.Sprintf("%s_%s", "User", req.Image)
+		if err1 := u.dep.Gcp.UploadFile(file, filename); err1 != nil {
+			u.dep.Log.Errorf("Error Service : %v", err1)
+			return nil, errorr.NewBad("Failed to upload image")
+		}
+		req.Image = filename
+		file.Close()
+	}
+	data.Username = req.Username
+	data.Email = req.Email
+	data.Address = req.Address
+	data.Password = req.Password
+	data.Image = req.Image
+	data.FirstName = req.FirstName
+	data.SureName = req.SureName
+	data.ID = uint(req.Id)
+	res, err := u.repo.Update(u.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+func (u *user) Delete(ctx context.Context, id int) error {
+	data := entity.User{}
+	data.ID = uint(id)
+	err := u.repo.Delete(u.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return errorr.NewInternal("Internal Server Error")
 	}
 	return nil
 }

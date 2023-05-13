@@ -23,8 +23,15 @@ func (r *Routes) RegisterRoutes() {
 	ro.POST("/login", r.User.Login)
 	ro.POST("/register", r.User.Register)
 	ro.GET("/verify/:verifcode", r.User.Verify)
+	ro.GET("/updateverif/:verifcode", r.User.UpdateVerif)
 	ro.POST("/forgot", r.User.Forgotpass)
 	ro.POST("/reset/:token", r.User.ResetPass)
 	ro.GET("/getcaptcha", r.User.GetCaptcha)
 	ro.POST("/verifycaptcha", r.User.VerifyCaptcha)
+
+	// AUTH
+	rauth := ro.Group("", middleware.JWT([]byte(r.Depend.Config.JwtSecret)))
+	rauth.PUT("/users", r.User.Update)
+	rauth.DELETE("/users", r.User.Delete)
+	rauth.GET("/users", r.User.GetProfile)
 }
