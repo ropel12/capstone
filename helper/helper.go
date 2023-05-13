@@ -4,12 +4,16 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"net/http"
 	"strings"
 	"time"
 
+	"github.com/PuerkitoBio/goquery"
 	depedency "github.com/education-hub/BE/config/dependency"
+	"github.com/education-hub/BE/errorr"
 	"github.com/golang-jwt/jwt"
 	"github.com/mojocn/base64Captcha"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -99,4 +103,26 @@ func GenerateCaptcha() (string, string, error) {
 func VerifyCaptcha(captcha string, value string) bool {
 	var store = base64Captcha.DefaultMemStore
 	return store.Verify(captcha, value, true)
+}
+
+func CheckNPSN(npsn string, log *logrus.Logger) error {
+	client := http.Client{}
+	link := fmt.Sprintf("https://referensi.data.kemdikbud.go.id/tabs.php?npsn=%s", npsn)
+	req, err := http.NewRequest("GET", link, nil)
+	if err != nil {
+		log.Errorf("[ERROR]WHEN CREATING HTTP REQUEST, Error : %v", err)
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Errorf("[ERROR]WHEN GETTING DATA NPSN, Error : %v", err)
+	}
+	defer resp.Body.Close()
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	if err != nil {
+		log.Errorf("[ERROR]WHEN READING DATA HTML, Error : %v", err)
+	}
+	if !doc.Find("div").HasClass("tabby-content") {
+		return errorr.NewBad("NPSN not registered")
+	}
+	return nil
 }

@@ -1,6 +1,7 @@
 package routes
 
 import (
+	schoolhand "github.com/education-hub/BE/app/features/school/handler"
 	userhand "github.com/education-hub/BE/app/features/user/handler"
 	"github.com/education-hub/BE/config/dependency"
 	"github.com/labstack/echo/v4/middleware"
@@ -11,6 +12,7 @@ type Routes struct {
 	dig.In
 	Depend dependency.Depend
 	User   userhand.User
+	School schoolhand.School
 }
 
 func (r *Routes) RegisterRoutes() {
@@ -34,4 +36,8 @@ func (r *Routes) RegisterRoutes() {
 	rauth.PUT("/users", r.User.Update)
 	rauth.DELETE("/users", r.User.Delete)
 	rauth.GET("/users", r.User.GetProfile)
+	rverif := rauth.Group("", StatusVerifiedMiddleWare)
+	//ADMIN AREA
+	radm := rverif.Group("", AdminMiddleWare)
+	radm.POST("/school", r.School.Create)
 }

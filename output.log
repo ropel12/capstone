@@ -125,3 +125,52 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-13T13:58:09+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T13:58:15+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-13T14:04:02+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T19:18:10+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T19:23:20+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T19:24:45+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE CREATE SCHOOL REQ, Error: Key: 'ReqCreateSchool.Name' Error:Field validation for 'Name' failed on the 'required' tag","time":"2023-05-13T19:29:20+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T19:31:24+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T19:31:33+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T19:35:06+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T19:37:36+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T19:39:20+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T19:44:22+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T19:54:06+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T19:54:16+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T19:55:09+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T19:56:38+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T19:56:51+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T19:57:49+07:00"}
+{"level":"error","msg":"Error Service : context deadline exceeded","time":"2023-05-13T19:58:33+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T19:59:36+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T20:03:10+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T20:04:44+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T20:05:24+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T20:09:14+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T20:11:19+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T20:11:53+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T20:12:17+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T20:12:29+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T20:13:15+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T20:13:35+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T20:14:13+07:00"}
+{"level":"error","msg":"[ERROR]WHEN CREATE USER,Error: Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`captone`.`schools`, CONSTRAINT `fk_users_school` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)) ","time":"2023-05-13T20:14:32+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T20:15:24+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T20:15:32+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T20:48:58+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T20:53:36+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T20:56:17+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T20:56:30+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T20:57:41+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T20:57:49+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T22:04:12+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T22:21:26+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T22:21:40+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T22:21:57+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T22:23:12+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T23:26:57+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T23:30:00+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T23:30:47+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T23:33:47+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T23:33:58+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-13T23:34:40+07:00"}

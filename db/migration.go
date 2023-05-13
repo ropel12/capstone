@@ -1,7 +1,7 @@
 package db
 
 import (
-	user "github.com/education-hub/BE/app/entities/user"
+	entity "github.com/education-hub/BE/app/entities"
 	"github.com/education-hub/BE/config"
 )
 
@@ -10,7 +10,7 @@ func Migrate(c *config.Config) {
 	if err != nil {
 		panic(err)
 	}
-	if err := db.AutoMigrate(user.User{}, user.ForgotPass{}); err != nil {
+	if err := db.AutoMigrate(entity.User{}, entity.ForgotPass{}, entity.School{}); err != nil {
 		panic(err)
 	}
 }

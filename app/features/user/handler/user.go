@@ -4,7 +4,7 @@ import (
 	"mime/multipart"
 	"net/http"
 
-	entity "github.com/education-hub/BE/app/entities/user"
+	entity "github.com/education-hub/BE/app/entities"
 	"github.com/education-hub/BE/app/features/user/service"
 	"github.com/education-hub/BE/config/dependency"
 	"github.com/education-hub/BE/helper"
@@ -68,6 +68,7 @@ func (u *User) UpdateVerif(c echo.Context) error {
 	if err := u.Service.VerifyEmail(c.Request().Context(), verifcode); err != nil {
 		return CreateErrorResponse(err, c)
 	}
+	c.SetCookie(&http.Cookie{Name: "verified", Value: "true"})
 	return c.Redirect(http.StatusFound, URLFRONTENDUPDATE)
 }
 
@@ -159,6 +160,7 @@ func (u *User) Update(c echo.Context) error {
 	}
 	newtoken := ""
 	if req.Email != "" {
+		c.SetCookie(&http.Cookie{Name: "verified", Value: "false"})
 		newtoken = helper.GenerateJWT(int(data.ID), data.Role, "false", u.Dep)
 	}
 	res := map[string]any{
