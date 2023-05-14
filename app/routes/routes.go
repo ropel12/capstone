@@ -33,11 +33,15 @@ func (r *Routes) RegisterRoutes() {
 
 	// AUTH
 	rauth := ro.Group("", middleware.JWT([]byte(r.Depend.Config.JwtSecret)))
+	//user
 	rauth.PUT("/users", r.User.Update)
 	rauth.DELETE("/users", r.User.Delete)
 	rauth.GET("/users", r.User.GetProfile)
+	//school
+	rauth.GET("/school/search", r.School.Search)
 	rverif := rauth.Group("", StatusVerifiedMiddleWare)
 	//ADMIN AREA
 	radm := rverif.Group("", AdminMiddleWare)
 	radm.POST("/school", r.School.Create)
+	radm.PUT("/school", r.School.Update)
 }

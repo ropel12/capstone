@@ -37,6 +37,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
+	github.com/google/uuid v1.1.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.0.5 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -73,6 +74,7 @@ require (
 	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c // indirect
 	google.golang.org/grpc v1.52.0-dev // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
+	googlemaps.github.io/maps v1.4.0 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

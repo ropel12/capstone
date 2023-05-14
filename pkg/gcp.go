@@ -28,11 +28,11 @@ func (s *StorageGCP) UploadFile(file multipart.File, fileName string) error {
 	defer cancel()
 	wc := s.ClG.Bucket(s.BucketName).Object(s.Path + fileName).NewWriter(ctx)
 	if _, err := io.Copy(wc, file); err != nil {
-		return err
+		return errorr.NewInternal(err.Error())
 	}
 
 	if err := wc.Close(); err != nil {
-		return err
+		return errorr.NewInternal(err.Error())
 	}
 	return nil
 }

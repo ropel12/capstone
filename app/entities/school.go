@@ -47,4 +47,47 @@ type (
 		Staff         int    `form:"staff" validate:"required"`
 		Accreditation string `form:"accreditation" validate:"required"`
 	}
+	ReqUpdateSchool struct {
+		Id            int    `form:"id" validate:"required"`
+		Npsn          string `form:"npsn" `
+		Name          string `form:"school_name" `
+		Description   string `form:"description" `
+		Image         string `form:"image" `
+		Video         string `form:"video" `
+		Pdf           string `form:"pdf" `
+		Web           string `form:"school_web" `
+		Province      string `form:"province" `
+		City          string `form:"city" `
+		District      string `form:"district" `
+		Village       string `form:"village" `
+		Detail        string `form:"detail" `
+		ZipCode       string `form:"zipcode" `
+		Students      int    `form:"students" `
+		Teachers      int    `form:"teachers" `
+		Staff         int    `form:"staff" `
+		Accreditation string `form:"accreditation" `
+	}
+	Location struct {
+		Province string `json:"province"`
+		City     string `json:"city"`
+		District string `json:"district"`
+		Village  string `json:"village"`
+		Detail   string `json:"detail"`
+		ZipCode  string `json:"zipcode"`
+	}
+	ResUpdateSchool struct {
+		Id            int      `json:"id"`
+		Npsn          string   `json:"npsn"`
+		Name          string   `json:"school_name"`
+		Description   string   `json:"description"`
+		Image         string   `json:"image"`
+		Video         string   `json:"video"`
+		Pdf           string   `json:"pdf"`
+		Web           string   `json:"school_web"`
+		Students      int      `json:"students"`
+		Teachers      int      `json:"teachers"`
+		Staff         int      `json:"staff"`
+		Accreditation string   `json:"accreditation"`
+		Location      Location `json:"location"`
+	}
 )

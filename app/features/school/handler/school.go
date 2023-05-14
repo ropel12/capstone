@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"mime/multipart"
 	"net/http"
 
 	entity "github.com/education-hub/BE/app/entities"
@@ -21,7 +22,7 @@ type School struct {
 func (u *School) Create(c echo.Context) error {
 	var req entity.ReqCreateSchool
 	if err := c.Bind(&req); err != nil {
-		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REGISTER, ERROR: %v", err)
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQREGISTERSCHOOL, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
 	}
 
@@ -30,7 +31,7 @@ func (u *School) Create(c echo.Context) error {
 	if err2 != nil || err3 != nil {
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Missing Image or PDF", nil))
 	}
-	if pdffile.Size > 2*1024*1024 || imagefile.Size > 2*1024*102 {
+	if pdffile.Size > 2*1024*1024 || imagefile.Size > 2*1024*1024 {
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
 
 	}
@@ -53,4 +54,48 @@ func (u *School) Create(c echo.Context) error {
 		return CreateErrorResponse(err, c)
 	}
 	return c.JSON(http.StatusCreated, CreateWebResponse(http.StatusCreated, "Status Created", map[string]any{"id": id}))
+}
+func (u *School) Update(c echo.Context) error {
+	var req entity.ReqUpdateSchool
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQUPDATESCHOOL, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
+	}
+	var image multipart.File
+	var pdf multipart.File
+	pdffile, err := c.FormFile("pdf")
+	if err == nil {
+		if pdffile.Size > 2*1024*1024 {
+			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
+
+		}
+		fpdf, err := pdffile.Open()
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot Load PDF", nil))
+		}
+		req.Pdf = pdffile.Filename
+		pdf = fpdf
+	}
+	imagefile, err := c.FormFile("image")
+	if err == nil {
+		fimage, err := imagefile.Open()
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot Load Image", nil))
+		}
+		req.Image = imagefile.Filename
+		image = fimage
+	}
+	res, err := u.Service.Update(c.Request().Context(), req, image, pdf)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
+}
+
+func (u *School) Search(c echo.Context) error {
+	searchval := c.QueryParam("school")
+	if searchval == "" {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "School is missing in the query param", nil))
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", u.Service.Search(searchval)))
 }

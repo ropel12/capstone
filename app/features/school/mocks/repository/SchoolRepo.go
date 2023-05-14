@@ -52,6 +52,32 @@ func (_m *SchoolRepo) FindByNPSN(db *gorm.DB, npsn string) error {
 	return r0
 }
 
+// Update provides a mock function with given fields: db, school
+func (_m *SchoolRepo) Update(db *gorm.DB, school entities.School) (*entities.School, error) {
+	ret := _m.Called(db, school)
+
+	var r0 *entities.School
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.School) (*entities.School, error)); ok {
+		return rf(db, school)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.School) *entities.School); ok {
+		r0 = rf(db, school)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.School)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.School) error); ok {
+		r1 = rf(db, school)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 type mockConstructorTestingTNewSchoolRepo interface {
 	mock.TestingT
 	Cleanup(func())
