@@ -11,6 +11,7 @@ import (
 	"github.com/education-hub/BE/config/dependency"
 	"github.com/education-hub/BE/errorr"
 	"github.com/education-hub/BE/helper"
+	"github.com/education-hub/BE/pkg"
 	"github.com/go-playground/validator"
 )
 
@@ -22,6 +23,8 @@ type (
 	}
 	SchoolService interface {
 		Create(ctx context.Context, req entity.ReqCreateSchool, image multipart.File, pdf multipart.File) (int, error)
+		Update(ctx context.Context, req entity.ReqUpdateSchool, image multipart.File, pdf multipart.File) (*entity.ResUpdateSchool, error)
+		Search(searchval string) any
 	}
 )
 
@@ -83,10 +86,9 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 		if err1 := s.dep.Gcp.UploadFile(pdf, filename); err1 != nil {
 			s.dep.Log.Errorf("Error Service : %v", err1)
 			errchan <- err1
-
 			return
 		}
-		data.Image = filename
+		data.Pdf = filename
 		image.Close()
 		errchan <- nil
 		return
@@ -104,4 +106,86 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 		return 0, err2
 	}
 	return id, nil
+}
+func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image multipart.File, pdf multipart.File) (*entity.ResUpdateSchool, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE REQUPDATE")
+		return nil, errorr.NewBad("Missing Or Invalid Request Body")
+	}
+	if req.Npsn != "" {
+		if err := s.repo.FindByNPSN(s.dep.Db.WithContext(ctx), req.Npsn); err == nil {
+			return nil, errorr.NewBad("School Already Registered")
+		}
+		if err := helper.CheckNPSN(req.Npsn, s.dep.Log); err != nil {
+			return nil, err
+		}
+	}
+	data := entity.School{
+		Npsn:          req.Npsn,
+		Name:          req.Name,
+		Description:   req.Description,
+		Image:         req.Image,
+		Video:         req.Video,
+		Pdf:           req.Pdf,
+		Web:           req.Web,
+		Province:      req.Province,
+		City:          req.City,
+		District:      req.District,
+		Village:       req.Village,
+		Detail:        req.Detail,
+		ZipCode:       req.ZipCode,
+		Students:      req.Students,
+		Teachers:      req.Teachers,
+		Staff:         req.Staff,
+		Accreditation: req.Accreditation,
+	}
+	data.ID = uint(req.Id)
+	if image != nil {
+		filename := fmt.Sprintf("%s_%s_%s", "School_", req.Npsn, req.Image)
+		if err := s.dep.Gcp.UploadFile(image, filename); err != nil {
+			s.dep.Log.Errorf("Error Service : %v", err)
+			return nil, err
+		}
+		data.Image = filename
+		image.Close()
+	}
+	if pdf != nil {
+		filename := fmt.Sprintf("%s_%s_%s", "School_", req.Npsn, req.Pdf)
+		if err := s.dep.Gcp.UploadFile(pdf, filename); err != nil {
+			s.dep.Log.Errorf("Error Service : %v", err)
+			return nil, err
+		}
+		data.Pdf = filename
+		pdf.Close()
+	}
+	resdata, err := s.repo.Update(s.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return nil, err
+	}
+	res := entity.ResUpdateSchool{
+		Id:            int(resdata.ID),
+		Npsn:          resdata.Npsn,
+		Name:          resdata.Name,
+		Description:   resdata.Description,
+		Image:         resdata.Image,
+		Video:         resdata.Video,
+		Pdf:           resdata.Pdf,
+		Web:           resdata.Web,
+		Students:      resdata.Students,
+		Teachers:      resdata.Teachers,
+		Staff:         resdata.Staff,
+		Accreditation: resdata.Accreditation,
+		Location: entity.Location{
+			Province: resdata.Province,
+			City:     resdata.City,
+			District: resdata.District,
+			Village:  resdata.Village,
+			Detail:   resdata.Detail,
+			ZipCode:  resdata.ZipCode,
+		},
+	}
+	return &res, nil
+}
+func (s *school) Search(searchval string) any {
+	return pkg.NewClientGmaps(s.dep.Config.GmapsKey, s.dep.Log).Search(searchval)
 }

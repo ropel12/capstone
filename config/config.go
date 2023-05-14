@@ -59,6 +59,7 @@ type Config struct {
 	Database   DatabaseConfig `mapstructure:"DATABASE"`
 	Midtrans   MidtransConfig `mapstructure:"MIDTRANS"`
 	JwtSecret  string         `mapstructure:"JWTSECRET"`
+	GmapsKey   string         `mapstructure:"GMAPS"`
 	Redis      RedisConfig    `mapstructure:"REDIS"`
 	CSRFLength int            `mapstructure:"CSRFLENGTH"`
 	CSRFMode   string         `mapstructure:"CSRFMODE"`

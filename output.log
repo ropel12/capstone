@@ -174,3 +174,24 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-13T23:33:47+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-13T23:33:58+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-13T23:34:40+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T07:50:11+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE REQUPDATE","time":"2023-05-14T07:53:29+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T07:55:59+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T07:57:09+07:00"}
+{"level":"error","msg":"ERROR]WHEN UPDATE School,Error: record not found ","time":"2023-05-14T07:57:33+07:00"}
+{"level":"error","msg":"ERROR]WHEN UPDATE School,Error: record not found ","time":"2023-05-14T07:57:45+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T07:57:58+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T07:58:51+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T08:01:31+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T08:01:35+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T08:01:59+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T08:02:42+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T08:03:54+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T08:04:08+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T08:07:53+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T11:03:03+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T11:04:24+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T11:06:34+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T11:07:47+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T11:08:27+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T11:11:16+07:00"}

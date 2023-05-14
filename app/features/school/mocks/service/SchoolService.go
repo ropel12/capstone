@@ -40,6 +40,32 @@ func (_m *SchoolService) Create(ctx context.Context, req entities.ReqCreateSchoo
 	return r0, r1
 }
 
+// Update provides a mock function with given fields: ctx, req, image, pdf
+func (_m *SchoolService) Update(ctx context.Context, req entities.ReqUpdateSchool, image multipart.File, pdf multipart.File) (*entities.ResUpdateSchool, error) {
+	ret := _m.Called(ctx, req, image, pdf)
+
+	var r0 *entities.ResUpdateSchool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqUpdateSchool, multipart.File, multipart.File) (*entities.ResUpdateSchool, error)); ok {
+		return rf(ctx, req, image, pdf)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqUpdateSchool, multipart.File, multipart.File) *entities.ResUpdateSchool); ok {
+		r0 = rf(ctx, req, image, pdf)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.ResUpdateSchool)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqUpdateSchool, multipart.File, multipart.File) error); ok {
+		r1 = rf(ctx, req, image, pdf)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 type mockConstructorTestingTNewSchoolService interface {
 	mock.TestingT
 	Cleanup(func())

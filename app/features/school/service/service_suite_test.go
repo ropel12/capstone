@@ -35,6 +35,7 @@ var _ = Describe("school", func() {
 		ctx = context.Background()
 		Mock = mocks.NewSchoolRepo(GinkgoT())
 		SchoolService = school.NewSchoolService(Mock, Depend)
+		Depend.Config = &config.Config{GmapsKey: os.Getenv("GMAPS")}
 	})
 
 	Context("Menambah Sekolah Baru", func() {
@@ -209,6 +210,170 @@ var _ = Describe("school", func() {
 				id, err := SchoolService.Create(ctx, req, image, pdf)
 				Expect(err).Should(BeNil())
 				Expect(id).To(Equal(1))
+			})
+		})
+	})
+
+	Context("Memperbaharui Data Sekolah", func() {
+		When("Request Body kosong", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				var pdf multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				pdf = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.Update(ctx, entity.ReqUpdateSchool{}, image, pdf)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Missing Or Invalid Request Body"))
+			})
+		})
+
+		When("Npsn sudah terdaftar pada database", func() {
+			BeforeEach(func() {
+				Mock.On("FindByNPSN", mock.Anything, mock.Anything).Return(nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				var pdf multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				pdf = os.NewFile(uintptr(2), "2")
+				req := entity.ReqUpdateSchool{
+					Id:            1,
+					Npsn:          "20100251",
+					Description:   "321321",
+					Image:         "animal3.jpg",
+					Pdf:           "motivasion letter.pdf",
+					Accreditation: "A"}
+				_, err := SchoolService.Update(ctx, req, image, pdf)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("School Already Registered"))
+			})
+		})
+		When("Npsn tidak terdaftar pada data kementrian pendidikan", func() {
+			BeforeEach(func() {
+				Mock.On("FindByNPSN", mock.Anything, mock.Anything).Return(errors.New("error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				var pdf multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				pdf = os.NewFile(uintptr(2), "2")
+				req := entity.ReqUpdateSchool{
+					Id:            1,
+					Npsn:          "2010025112",
+					Description:   "321321",
+					Image:         "animal3.jpg",
+					Pdf:           "motivasion letter.pdf",
+					Accreditation: "A"}
+				_, err := SchoolService.Update(ctx, req, image, pdf)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("NPSN not registered"))
+			})
+		})
+		When("Format gambar tidak sesuai", func() {
+			BeforeEach(func() {
+				Mock.On("FindByNPSN", mock.Anything, mock.Anything).Return(errors.New("error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				var pdf multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				pdf = os.NewFile(uintptr(2), "2")
+				req := entity.ReqUpdateSchool{
+					Id:            1,
+					Npsn:          "20100251",
+					Description:   "321321",
+					Image:         "animal3.php",
+					Pdf:           "motivasion letter.pdf",
+					Accreditation: "A"}
+				_, err := SchoolService.Update(ctx, req, image, pdf)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("File type not allowed"))
+			})
+		})
+		When("Format pdf tidak sesuai", func() {
+			BeforeEach(func() {
+				Mock.On("FindByNPSN", mock.Anything, mock.Anything).Return(errors.New("error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				var pdf multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				pdf = os.NewFile(uintptr(2), "2")
+				req := entity.ReqUpdateSchool{
+					Id:            1,
+					Npsn:          "20100251",
+					Description:   "321321",
+					Image:         "animal3.jpg",
+					Pdf:           "brochure.php",
+					Accreditation: "A"}
+				_, err := SchoolService.Update(ctx, req, image, pdf)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("File type not allowed"))
+			})
+		})
+		When("Terjadi kesalahn qury database", func() {
+			BeforeEach(func() {
+				Mock.On("FindByNPSN", mock.Anything, mock.Anything).Return(errors.New("error")).Once()
+				Mock.On("Update", mock.Anything, mock.Anything).Return(nil, errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				var pdf multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				pdf = os.NewFile(uintptr(2), "2")
+				req := entity.ReqUpdateSchool{
+					Id:            1,
+					Npsn:          "20100251",
+					Description:   "321321",
+					Image:         "animal3.jpg",
+					Pdf:           "brochure.pdf",
+					Accreditation: "A"}
+				_, err := SchoolService.Update(ctx, req, image, pdf)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil memperbaharui data", func() {
+			BeforeEach(func() {
+				res := entity.School{
+					Npsn:          "20100251",
+					Description:   "321321",
+					Image:         "animal3.jpg",
+					Pdf:           "brochure.php",
+					Accreditation: "A"}
+				res.ID = uint(1)
+				Mock.On("FindByNPSN", mock.Anything, mock.Anything).Return(errors.New("error")).Once()
+				Mock.On("Update", mock.Anything, mock.Anything).Return(&res, nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				var pdf multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				pdf = os.NewFile(uintptr(2), "2")
+				req := entity.ReqUpdateSchool{
+					Id:            1,
+					Npsn:          "20100251",
+					Description:   "321321",
+					Image:         "animal3.jpg",
+					Pdf:           "brochure.pdf",
+					Accreditation: "A"}
+				res, err := SchoolService.Update(ctx, req, image, pdf)
+				Expect(err).Should(BeNil())
+				Expect(res.Npsn).To(Equal("20100251"))
+			})
+		})
+	})
+	Context("Mencari Detail Alamat Sekolah", func() {
+		When("Data Sekolah Tidak Ditemukan", func() {
+			It("Akan Mengembalikan nil", func() {
+				res := SchoolService.Search("exsdwqeqewqxqwxwqxqwxqxwwqxwwxwqxqxwqxwqxwqxwqxwwwwwwwwwwwwwwwwwwwwwwwwwwxwxwq")
+				Expect(res).Should(BeEmpty())
+			})
+		})
+		When("Data Sekolah Tidak Ditemukan", func() {
+			It("Akan Mengembalikan nil", func() {
+				res := SchoolService.Search("smpn 6 jakarta")
+				Expect(res).ShouldNot(BeEmpty())
 			})
 		})
 	})
