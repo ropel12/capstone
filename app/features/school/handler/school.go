@@ -93,7 +93,7 @@ func (u *School) Update(c echo.Context) error {
 }
 
 func (u *School) Search(c echo.Context) error {
-	searchval := c.QueryParam("school")
+	searchval := c.QueryParam("q")
 	if searchval == "" {
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "School is missing in the query param", nil))
 	}
