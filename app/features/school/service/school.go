@@ -33,6 +33,9 @@ type (
 		AddExtracurricular(ctx context.Context, req entity.ReqAddExtracurricular, image multipart.File) (int, error)
 		DeleteExtracurricular(ctx context.Context, id int) error
 		UpdateExtracurricular(ctx context.Context, req entity.ReqUpdateExtracurricular, image multipart.File) (int, error)
+		AddFaq(ctx context.Context, req entity.ReqAddFaq) (int, error)
+		DeleteFaq(ctx context.Context, id int) error
+		UpdateFaq(ctx context.Context, req entity.ReqUpdateFaq) (int, error)
 	}
 )
 
@@ -423,4 +426,45 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 	res.Extracurriculars = extracurriculars
 	res.Achievements = achivements
 	return &res, nil
+}
+
+func (s *school) AddFaq(ctx context.Context, req entity.ReqAddFaq) (int, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE Add Faq REQ, Error: %v", err)
+		return 0, errorr.NewBad("Missing or Invalid Request Body")
+	}
+	data := entity.Faq{
+		SchoolID: uint(req.SchoolId),
+		Question: req.Question,
+		Answer:   req.Answer,
+	}
+	res, err := s.repo.AddFaq(s.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return 0, err
+	}
+	return res, err
+}
+
+func (s *school) DeleteFaq(ctx context.Context, id int) error {
+	if err := s.repo.DeleteFaq(s.dep.Db.WithContext(ctx), id); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *school) UpdateFaq(ctx context.Context, req entity.ReqUpdateFaq) (int, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE Add Faq REQ, Error: %v", err)
+		return 0, errorr.NewBad("Missing or Invalid Request Body")
+	}
+	data := entity.Faq{
+		Question: req.Question,
+		Answer:   req.Answer,
+	}
+	data.ID = uint(req.Id)
+	res, err := s.repo.UpdateFaq(s.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return 0, err
+	}
+	return int(res.SchoolID), nil
 }

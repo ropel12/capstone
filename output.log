@@ -310,3 +310,13 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-15T13:04:29+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T13:05:58+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-15T13:06:29+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T17:57:40+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T17:59:32+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T18:00:51+07:00"}
+{"level":"error","msg":"[ERROR]WHEN ADDING Faq, Err: Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`captone`.`faqs`, CONSTRAINT `fk_schools_faqs` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`))","time":"2023-05-15T18:02:08+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Faq REQ, Error: Key: 'ReqAddFaq.Answer' Error:Field validation for 'Answer' failed on the 'required' tag","time":"2023-05-15T18:02:35+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Faq REQ, Error: Key: 'ReqAddFaq.Answer' Error:Field validation for 'Answer' failed on the 'required' tag","time":"2023-05-15T18:02:38+07:00"}
+{"level":"error","msg":"ERROR]WHEN UPDATE Faq,Error: record not found ","time":"2023-05-15T18:03:50+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T18:09:29+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T18:17:38+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T18:23:40+07:00"}

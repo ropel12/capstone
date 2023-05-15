@@ -227,6 +227,46 @@ func (u *School) DeleteExtracurricular(c echo.Context) error {
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
 }
 
+func (u *School) AddFaq(c echo.Context) error {
+	req := entity.ReqAddFaq{}
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQADDFaq, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
+	}
+	id, err := u.Service.AddFaq(c.Request().Context(), req)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"id": id}))
+}
+
+func (u *School) UpdateFaq(c echo.Context) error {
+	req := entity.ReqUpdateFaq{}
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQUPDATEFaq, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
+	}
+	schoolid, err := u.Service.UpdateFaq(c.Request().Context(), req)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"id": schoolid}))
+}
+func (u *School) DeleteFaq(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Faq id is missing", nil))
+	}
+	newid, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Faq Id", nil))
+	}
+	if err := u.Service.DeleteFaq(c.Request().Context(), newid); err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
+}
+
 func (u *School) GenerateUrl(c echo.Context) error {
 	req := entity.ReqCreateGmeet{}
 	if err := c.Bind(&req); err != nil {

@@ -650,5 +650,102 @@ var _ = Describe("school", func() {
 		})
 
 	})
+	Context("Add Faq", func() {
+		When("Request Body kosong", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				_, err := SchoolService.AddFaq(ctx, entity.ReqAddFaq{})
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+
+		When("Terjadi Kesalahan Query Database", func() {
+			BeforeEach(func() {
+				Mock.On("AddFaq", mock.Anything, mock.Anything).Return(0, errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+
+				req := entity.ReqAddFaq{SchoolId: 1, Question: "test", Answer: "tes"}
+				_, err := SchoolService.AddFaq(ctx, req)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil Menambahakan Faq", func() {
+			BeforeEach(func() {
+				Mock.On("AddFaq", mock.Anything, mock.Anything).Return(1, nil).Once()
+			})
+			It("Akan Mengembalikan Id Sekolah", func() {
+				req := entity.ReqAddFaq{SchoolId: 1, Question: "test", Answer: "tes"}
+				res, err := SchoolService.AddFaq(ctx, req)
+				Expect(err).Should(BeNil())
+				Expect(res).To(Equal(1))
+			})
+		})
+
+	})
+
+	Context("Update Faq", func() {
+		When("id tidak ada", func() {
+			It("Akan Mengembalikan Erorr", func() {
+
+				_, err := SchoolService.UpdateFaq(ctx, entity.ReqUpdateFaq{})
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+		When("Terjadi Kesalahn Query Database", func() {
+			BeforeEach(func() {
+				Mock.On("UpdateFaq", mock.Anything, mock.Anything).Return(nil, errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+
+				_, err := SchoolService.UpdateFaq(ctx, entity.ReqUpdateFaq{Id: 1, Question: "tes"})
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil memperbahrui data Faq", func() {
+			BeforeEach(func() {
+				Mock.On("UpdateFaq", mock.Anything, mock.Anything).Return(&entity.Faq{SchoolID: 1}, nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+
+				res, err := SchoolService.UpdateFaq(ctx, entity.ReqUpdateFaq{Id: 1, Question: "tes"})
+				Expect(err).Should(BeNil())
+				Expect(res).To(Equal(1))
+			})
+		})
+	})
+
+	Context("Delete Faq", func() {
+		When("Id tidak ditemukan", func() {
+			BeforeEach(func() {
+				Mock.On("DeleteFaq", mock.Anything, mock.Anything).Return(errors.New("Id not found")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeleteFaq(ctx, 9999)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Id not found"))
+			})
+		})
+		When("Terjadi kesalahan query database", func() {
+			BeforeEach(func() {
+				Mock.On("DeleteFaq", mock.Anything, mock.Anything).Return(errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeleteFaq(ctx, 1)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil Menghapus data Faq", func() {
+			BeforeEach(func() {
+				Mock.On("DeleteFaq", mock.Anything, mock.Anything).Return(nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeleteFaq(ctx, 1)
+				Expect(err).Should(BeNil())
+			})
+		})
+	})
 
 })

@@ -25,6 +25,9 @@ type (
 		UpdateExtracurricular(db *gorm.DB, achv entity.Extracurricular) (*entity.Extracurricular, error)
 		GetByUid(db *gorm.DB, uid int) (*entity.School, error)
 		GetById(db *gorm.DB, id int) (*entity.School, error)
+		AddFaq(db *gorm.DB, faq entity.Faq) (int, error)
+		DeleteFaq(db *gorm.DB, id int) error
+		UpdateFaq(db *gorm.DB, extrac entity.Faq) (*entity.Faq, error)
 	}
 )
 
@@ -200,6 +203,52 @@ func (s *school) UpdateExtracurricular(db *gorm.DB, extrac entity.Extracurricula
 	}
 	if err := db.Save(&newdata).Error; err != nil {
 		s.log.Errorf("[ERROR]WHEN UPDATING Extracurricular, Err: %v", err)
+		return nil, errorr.NewInternal("Internal server error")
+	}
+	return &newdata, nil
+}
+
+func (u *school) AddFaq(db *gorm.DB, faq entity.Faq) (int, error) {
+	if err := db.Save(&faq).Error; err != nil {
+		u.log.Errorf("[ERROR]WHEN ADDING Faq, Err: %v", err)
+		return 0, errorr.NewInternal("internal Server Error")
+	}
+	return int(faq.SchoolID), nil
+}
+
+func (u *school) DeleteFaq(db *gorm.DB, id int) error {
+
+	if err := db.Where("id=?", id).First(&entity.Faq{}).Error; err != nil {
+		if err != gorm.ErrRecordNotFound {
+			u.log.Errorf("[ERROR]WHEN GETTING The Faq Data, Err: %v", err)
+			return errorr.NewInternal("Internal Server Error")
+		}
+		return errorr.NewBad("Id Not Found")
+	}
+	if err := db.Where("id=?", id).Delete(&entity.Faq{}).Error; err != nil {
+		u.log.Errorf("[ERROR]WHEN DELETING Faq, Err: %v", err)
+		return errorr.NewInternal("Internal Server Error")
+	}
+	return nil
+}
+func (s *school) UpdateFaq(db *gorm.DB, extrac entity.Faq) (*entity.Faq, error) {
+	newdata := entity.Faq{}
+	if err := db.First(&newdata, extrac.ID).Error; err == gorm.ErrRecordNotFound {
+		s.log.Errorf("ERROR]WHEN UPDATE Faq,Error: %v ", err)
+		return nil, errorr.NewBad("Id Not Found")
+	}
+	v := reflect.ValueOf(extrac)
+	n := reflect.ValueOf(&newdata).Elem()
+
+	for i := 0; i < v.NumField(); i++ {
+		if val, ok := v.Field(i).Interface().(string); ok {
+			if val != "" {
+				n.Field(i).SetString(val)
+			}
+		}
+	}
+	if err := db.Save(&newdata).Error; err != nil {
+		s.log.Errorf("[ERROR]WHEN UPDATING Faq, Err: %v", err)
 		return nil, errorr.NewInternal("Internal server error")
 	}
 	return &newdata, nil

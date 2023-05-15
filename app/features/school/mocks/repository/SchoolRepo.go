@@ -62,6 +62,30 @@ func (_m *SchoolRepo) AddExtracurricular(db *gorm.DB, achv entities.Extracurricu
 	return r0, r1
 }
 
+// AddFaq provides a mock function with given fields: db, faq
+func (_m *SchoolRepo) AddFaq(db *gorm.DB, faq entities.Faq) (int, error) {
+	ret := _m.Called(db, faq)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Faq) (int, error)); ok {
+		return rf(db, faq)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Faq) int); ok {
+		r0 = rf(db, faq)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Faq) error); ok {
+		r1 = rf(db, faq)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: db, school
 func (_m *SchoolRepo) Create(db *gorm.DB, school entities.School) (int, error) {
 	ret := _m.Called(db, school)
@@ -102,6 +126,20 @@ func (_m *SchoolRepo) DeleteAchievement(db *gorm.DB, id int) error {
 
 // DeleteExtracurricular provides a mock function with given fields: db, id
 func (_m *SchoolRepo) DeleteExtracurricular(db *gorm.DB, id int) error {
+	ret := _m.Called(db, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) error); ok {
+		r0 = rf(db, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// DeleteFaq provides a mock function with given fields: db, id
+func (_m *SchoolRepo) DeleteFaq(db *gorm.DB, id int) error {
 	ret := _m.Called(db, id)
 
 	var r0 error
@@ -251,6 +289,32 @@ func (_m *SchoolRepo) UpdateExtracurricular(db *gorm.DB, achv entities.Extracurr
 
 	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Extracurricular) error); ok {
 		r1 = rf(db, achv)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateFaq provides a mock function with given fields: db, extrac
+func (_m *SchoolRepo) UpdateFaq(db *gorm.DB, extrac entities.Faq) (*entities.Faq, error) {
+	ret := _m.Called(db, extrac)
+
+	var r0 *entities.Faq
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Faq) (*entities.Faq, error)); ok {
+		return rf(db, extrac)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Faq) *entities.Faq); ok {
+		r0 = rf(db, extrac)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.Faq)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Faq) error); ok {
+		r1 = rf(db, extrac)
 	} else {
 		r1 = ret.Error(1)
 	}

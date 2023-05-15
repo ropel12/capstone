@@ -64,6 +64,30 @@ func (_m *SchoolService) AddExtracurricular(ctx context.Context, req entities.Re
 	return r0, r1
 }
 
+// AddFaq provides a mock function with given fields: ctx, req
+func (_m *SchoolService) AddFaq(ctx context.Context, req entities.ReqAddFaq) (int, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqAddFaq) (int, error)); ok {
+		return rf(ctx, req)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqAddFaq) int); ok {
+		r0 = rf(ctx, req)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqAddFaq) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: ctx, req, image, pdf
 func (_m *SchoolService) Create(ctx context.Context, req entities.ReqCreateSchool, image multipart.File, pdf multipart.File) (int, error) {
 	ret := _m.Called(ctx, req, image, pdf)
@@ -104,6 +128,20 @@ func (_m *SchoolService) DeleteAchievement(ctx context.Context, id int) error {
 
 // DeleteExtracurricular provides a mock function with given fields: ctx, id
 func (_m *SchoolService) DeleteExtracurricular(ctx context.Context, id int) error {
+	ret := _m.Called(ctx, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// DeleteFaq provides a mock function with given fields: ctx, id
+func (_m *SchoolService) DeleteFaq(ctx context.Context, id int) error {
 	ret := _m.Called(ctx, id)
 
 	var r0 error
@@ -251,6 +289,30 @@ func (_m *SchoolService) UpdateExtracurricular(ctx context.Context, req entities
 
 	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqUpdateExtracurricular, multipart.File) error); ok {
 		r1 = rf(ctx, req, image)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateFaq provides a mock function with given fields: ctx, req
+func (_m *SchoolService) UpdateFaq(ctx context.Context, req entities.ReqUpdateFaq) (int, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqUpdateFaq) (int, error)); ok {
+		return rf(ctx, req)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqUpdateFaq) int); ok {
+		r0 = rf(ctx, req)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqUpdateFaq) error); ok {
+		r1 = rf(ctx, req)
 	} else {
 		r1 = ret.Error(1)
 	}
