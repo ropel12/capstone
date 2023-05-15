@@ -95,7 +95,7 @@ func GenerateCaptcha() (string, string, error) {
 	}
 	var driver base64Captcha.Driver
 	driver = DriverString.ConvertFonts()
-	c := base64Captcha.NewCaptcha(driver, base64Captcha.DefaultMemStore)
+	c := base64Captcha.NewCaptcha(driver, store)
 	id, b64s, err := c.Generate()
 	return id, b64s, err
 }
