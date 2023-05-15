@@ -82,7 +82,7 @@ func GenerateInvoice(eventid int, userid int) string {
 	return fmt.Sprintf("INV-%d%d%d", userid, eventid, randomNum)
 
 }
-
+var store = base64Captcha.DefaultMemStore
 func GenerateCaptcha() (string, string, error) {
 	DriverString := &base64Captcha.DriverString{
 		Height:          60,
@@ -101,7 +101,6 @@ func GenerateCaptcha() (string, string, error) {
 }
 
 func VerifyCaptcha(captcha string, value string) bool {
-	var store = base64Captcha.DefaultMemStore
 	return store.Verify(captcha, value, true)
 }
 
