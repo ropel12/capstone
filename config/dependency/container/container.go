@@ -12,8 +12,11 @@ import (
 	"github.com/education-hub/BE/pkg"
 	"github.com/labstack/echo/v4"
 	"github.com/nsqio/go-nsq"
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 	"go.uber.org/dig"
+	"golang.org/x/oauth2/google"
+	"google.golang.org/api/calendar/v3"
 )
 
 var (
@@ -40,12 +43,18 @@ func RunAll() {
 	if err := Container.Provide(NewStorage); err != nil {
 		panic(err)
 	}
+	if err := Container.Provide(NewCalendar); err != nil {
+		panic(err)
+	}
 	if err := Container.Provide(NewNSQ); err != nil {
 		panic(err)
 	}
 	if err := Container.Provide(NewValidation); err != nil {
 		panic(err)
 	}
+	Container.Provide(func() map[int]bool {
+		return make(map[int]bool)
+	})
 	if err := feat.RegisterRepo(Container); err != nil {
 		panic(err)
 	}
@@ -67,6 +76,21 @@ func NewStorage(cfg *config.Config) (*pkg.StorageGCP, error) {
 		BucketName: cfg.GCP.BCKNM,
 		Path:       cfg.GCP.Path,
 	}, nil
+}
+func NewCalendar(log *logrus.Logger) (*pkg.Calendar, error) {
+	b, err := os.ReadFile("./AuthCal.json")
+	if err != nil {
+		return nil, err
+	}
+	config, err := google.ConfigFromJSON(b, calendar.CalendarScope)
+	if err != nil {
+		return nil, err
+	}
+	calendar := &pkg.Calendar{
+		Config: config,
+		Log:    log,
+	}
+	return calendar, nil
 }
 
 func NewLog() (*log.Logger, error) {

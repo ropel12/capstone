@@ -14,6 +14,30 @@ type SchoolRepo struct {
 	mock.Mock
 }
 
+// AddAchievement provides a mock function with given fields: db, achv
+func (_m *SchoolRepo) AddAchievement(db *gorm.DB, achv entities.Achievement) (int, error) {
+	ret := _m.Called(db, achv)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Achievement) (int, error)); ok {
+		return rf(db, achv)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Achievement) int); ok {
+		r0 = rf(db, achv)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Achievement) error); ok {
+		r1 = rf(db, achv)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: db, school
 func (_m *SchoolRepo) Create(db *gorm.DB, school entities.School) (int, error) {
 	ret := _m.Called(db, school)
@@ -38,6 +62,20 @@ func (_m *SchoolRepo) Create(db *gorm.DB, school entities.School) (int, error) {
 	return r0, r1
 }
 
+// DeleteAchievement provides a mock function with given fields: db, id
+func (_m *SchoolRepo) DeleteAchievement(db *gorm.DB, id int) error {
+	ret := _m.Called(db, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) error); ok {
+		r0 = rf(db, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // FindByNPSN provides a mock function with given fields: db, npsn
 func (_m *SchoolRepo) FindByNPSN(db *gorm.DB, npsn string) error {
 	ret := _m.Called(db, npsn)
@@ -50,6 +88,58 @@ func (_m *SchoolRepo) FindByNPSN(db *gorm.DB, npsn string) error {
 	}
 
 	return r0
+}
+
+// GetById provides a mock function with given fields: db, id
+func (_m *SchoolRepo) GetById(db *gorm.DB, id int) (*entities.School, error) {
+	ret := _m.Called(db, id)
+
+	var r0 *entities.School
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) (*entities.School, error)); ok {
+		return rf(db, id)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) *entities.School); ok {
+		r0 = rf(db, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.School)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, int) error); ok {
+		r1 = rf(db, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetByUid provides a mock function with given fields: db, uid
+func (_m *SchoolRepo) GetByUid(db *gorm.DB, uid int) (*entities.School, error) {
+	ret := _m.Called(db, uid)
+
+	var r0 *entities.School
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) (*entities.School, error)); ok {
+		return rf(db, uid)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) *entities.School); ok {
+		r0 = rf(db, uid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.School)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, int) error); ok {
+		r1 = rf(db, uid)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // Update provides a mock function with given fields: db, school
@@ -71,6 +161,32 @@ func (_m *SchoolRepo) Update(db *gorm.DB, school entities.School) (*entities.Sch
 
 	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.School) error); ok {
 		r1 = rf(db, school)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateAchievement provides a mock function with given fields: db, achv
+func (_m *SchoolRepo) UpdateAchievement(db *gorm.DB, achv entities.Achievement) (*entities.Achievement, error) {
+	ret := _m.Called(db, achv)
+
+	var r0 *entities.Achievement
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Achievement) (*entities.Achievement, error)); ok {
+		return rf(db, achv)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Achievement) *entities.Achievement); ok {
+		r0 = rf(db, achv)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.Achievement)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Achievement) error); ok {
+		r1 = rf(db, achv)
 	} else {
 		r1 = ret.Error(1)
 	}

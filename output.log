@@ -195,3 +195,108 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-14T11:07:47+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T11:08:27+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-14T11:11:16+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:28:11+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:28:22+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:29:07+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:31:48+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:31:57+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Achievement REQ, Error: Key: 'ReqAddAchievemnt.SchoolID' Error:Field validation for 'SchoolID' failed on the 'required' tag\nKey: 'ReqAddAchievemnt.Image' Error:Field validation for 'Image' failed on the 'required' tag","time":"2023-05-14T15:35:02+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Achievement REQ, Error: Key: 'ReqAddAchievemnt.Image' Error:Field validation for 'Image' failed on the 'required' tag","time":"2023-05-14T15:35:39+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:36:35+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:37:50+07:00"}
+{"level":"error","msg":"[ERROR]WHEN DELETING Achievement, Err: \u0026{0xc0000bc870 \u003cnil\u003e 1 0xc00040a380 0}","time":"2023-05-14T15:40:20+07:00"}
+{"level":"error","msg":"[ERROR]WHEN DELETING Achievement, Err: \u0026{0xc0002e4240 \u003cnil\u003e 1 0xc00033a540 0}","time":"2023-05-14T15:41:22+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:41:57+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:42:10+07:00"}
+{"level":"error","msg":"[ERROR]WHEN DELETING Achievement, Err: \u0026{0xc00008b290 \u003cnil\u003e 1 0xc0000be000 0}","time":"2023-05-14T15:43:10+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:43:43+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:43:50+07:00"}
+{"level":"error","msg":"[ERROR]WHEN DELETING Achievement, Err: \u0026{0xc000bda240 \u003cnil\u003e 1 0xc0002b61c0 0}","time":"2023-05-14T15:44:06+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:45:02+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:45:08+07:00"}
+{"level":"error","msg":"[ERROR]WHEN DELETING Achievement, Err: \u0026{0xc000008e10 \u003cnil\u003e 1 0xc00000e700 0}","time":"2023-05-14T15:45:49+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:46:09+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:46:17+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Achievement REQ, Error: Key: 'ReqUpdateAchievemnt.Id' Error:Field validation for 'Id' failed on the 'required' tag","time":"2023-05-14T15:48:58+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:49:30+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:49:39+07:00"}
+{"level":"error","msg":"ERROR]WHEN UPDATE ACHIEVEMENT,Error: record not found ","time":"2023-05-14T15:49:58+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:51:37+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:51:47+07:00"}
+{"level":"error","msg":"ERROR]WHEN UPDATE ACHIEVEMENT,Error: record not found ","time":"2023-05-14T15:52:02+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:52:53+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:53:16+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:55:46+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:55:52+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:56:24+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:56:49+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:57:28+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T15:57:49+07:00"}
+{"level":"error","msg":"ERROR]WHEN UPDATE ACHIEVEMENT,Error: record not found ","time":"2023-05-14T15:58:09+07:00"}
+{"level":"error","msg":"ERROR]WHEN UPDATE ACHIEVEMENT,Error: record not found ","time":"2023-05-14T15:58:11+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T15:58:14+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T16:00:51+07:00"}
+{"level":"error","msg":"ERROR]WHEN UPDATE ACHIEVEMENT,Error: record not found ","time":"2023-05-14T16:01:28+07:00"}
+{"level":"error","msg":"ERROR]WHEN UPDATE ACHIEVEMENT,Error: record not found ","time":"2023-05-14T16:01:30+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T16:03:09+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T16:04:24+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Achievement REQ, Error: Key: 'ReqUpdateAchievemnt.Id' Error:Field validation for 'Id' failed on the 'required' tag","time":"2023-05-14T16:04:40+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T16:04:45+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T21:18:38+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Achievement REQ, Error: Key: 'ReqUpdateAchievemnt.Id' Error:Field validation for 'Id' failed on the 'required' tag","time":"2023-05-14T21:18:54+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T21:19:58+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T23:47:44+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T23:47:59+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T23:52:29+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-14T23:59:34+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-14T23:59:42+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:04:12+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:05:20+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:06:54+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:08:10+07:00"}
+{"level":"error","msg":"[ERROR]WHEN BINDING REQGMEET, Err : code=400, message=json: Unmarshal(non-pointer entities.ReqCreateGmeet), internal=json: Unmarshal(non-pointer entities.ReqCreateGmeet)","time":"2023-05-15T00:08:22+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:08:58+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:09:33+07:00"}
+{"level":"error","msg":"[ERROR]WHEN Validate CREATE GMEET REQ","time":"2023-05-15T00:09:47+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:11:00+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:11:09+07:00"}
+{"level":"error","msg":"[ERROR]WHEN Validate CREATE GMEET REQ, Err: Key: 'ReqCreateGmeet.StartDate' Error:Field validation for 'StartDate' failed on the 'required' tag\nKey: 'ReqCreateGmeet.EndDate' Error:Field validation for 'EndDate' failed on the 'required' tag","time":"2023-05-15T00:11:27+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:12:05+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:13:11+07:00"}
+{"level":"error","msg":"[ERROR]WHEN Validate CREATE GMEET REQ, Err: Key: 'ReqCreateGmeet.StartDate' Error:Field validation for 'StartDate' failed on the 'required' tag\nKey: 'ReqCreateGmeet.EndDate' Error:Field validation for 'EndDate' failed on the 'required' tag","time":"2023-05-15T00:13:39+07:00"}
+{"level":"error","msg":"[ERROR]WHEN Validate CREATE GMEET REQ, Err: Key: 'ReqCreateGmeet.StartDate' Error:Field validation for 'StartDate' failed on the 'required' tag\nKey: 'ReqCreateGmeet.EndDate' Error:Field validation for 'EndDate' failed on the 'required' tag","time":"2023-05-15T00:14:32+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:14:57+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:15:20+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:15:31+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:16:09+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:21:38+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:22:37+07:00"}
+{"level":"error","msg":"[ERROR]WHEN GETTING The School Data BY UID, Err: failed to assign association \u0026entities.Achievement{Model:gorm.Model{ID:0x1, CreatedAt:time.Date(1, time.January, 1, 0, 0, 0, 0, time.UTC), UpdatedAt:time.Date(1, time.January, 1, 0, 0, 0, 0, time.UTC), DeletedAt:gorm.DeletedAt{Time:time.Date(1, time.January, 1, 0, 0, 0, 0, time.UTC), Valid:false}}, SchoolID:0x0, Description:\"tes3\", Image:\"Achv__1_idx-interface.PNG\", Title:\"tes3\"}, make sure foreign fields exists","time":"2023-05-15T00:23:15+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:24:56+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:25:17+07:00"}
+{"level":"fatal","msg":"Unable to create event: googleapi: Error 400: Bad Request, badRequest","time":"2023-05-15T00:25:53+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:26:45+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:28:30+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:28:39+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:28:51+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:29:06+07:00"}
+{"level":"fatal","msg":"Unable to create event: googleapi: Error 400: Bad Request, badRequest","time":"2023-05-15T00:29:49+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:31:13+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:33:34+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:33:45+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:35:40+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:35:46+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:37:04+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:37:13+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:40:29+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:40:36+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:42:18+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:45:18+07:00"}
+{"level":"error","msg":"[ERROR]WHEN UPDATING SCHOOL, Err: Error 1406 (22001): Data too long for column 'gmeet' at row 1","time":"2023-05-15T00:46:30+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:46:46+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:48:01+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:48:11+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:48:20+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:50:03+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:51:26+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T00:53:21+07:00"}

@@ -20,4 +20,5 @@ type Depend struct {
 	Rds        *redis.Client
 	Nsq        *pkg.NSQProducer
 	Validation *pkg.Validation
+	Calendar   *pkg.Calendar
 }

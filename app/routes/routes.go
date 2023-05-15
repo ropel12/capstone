@@ -4,6 +4,7 @@ import (
 	schoolhand "github.com/education-hub/BE/app/features/school/handler"
 	userhand "github.com/education-hub/BE/app/features/user/handler"
 	"github.com/education-hub/BE/config/dependency"
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/dig"
 )
@@ -17,6 +18,7 @@ type Routes struct {
 
 func (r *Routes) RegisterRoutes() {
 	ro := r.Depend.Echo
+	ro.Validator = &CustomValidator{validator: validator.New(), log: r.Depend.Log}
 	ro.Use(middleware.RemoveTrailingSlash())
 	ro.Use(middleware.Logger())
 	ro.Use(middleware.Recover())
@@ -31,6 +33,8 @@ func (r *Routes) RegisterRoutes() {
 	ro.GET("/getcaptcha", r.User.GetCaptcha)
 	ro.POST("/verifycaptcha", r.User.VerifyCaptcha)
 
+	ro.GET("/school/search", r.School.Search)
+	ro.GET("/gmeet", r.School.CreateGmeet)
 	// AUTH
 	rauth := ro.Group("", middleware.JWT([]byte(r.Depend.Config.JwtSecret)))
 	//user
@@ -38,10 +42,13 @@ func (r *Routes) RegisterRoutes() {
 	rauth.DELETE("/users", r.User.Delete)
 	rauth.GET("/users", r.User.GetProfile)
 	//school
-	rauth.GET("/school/search", r.School.Search)
 	rverif := rauth.Group("", StatusVerifiedMiddleWare)
 	//ADMIN AREA
 	radm := rverif.Group("", AdminMiddleWare)
 	radm.POST("/school", r.School.Create)
 	radm.PUT("/school", r.School.Update)
+	radm.POST("/achievements", r.School.AddAchievement)
+	radm.PUT("/achievements", r.School.UpdateAchievement)
+	radm.DELETE("/achievements/:id", r.School.DeleteAchievement)
+	radm.POST("/gmeet", r.School.GenerateUrl)
 }
