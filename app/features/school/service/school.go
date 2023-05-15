@@ -30,6 +30,9 @@ type (
 		UpdateAchievement(ctx context.Context, req entity.ReqUpdateAchievemnt, image multipart.File) (int, error)
 		GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool, error)
 		GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, error)
+		AddExtracurricular(ctx context.Context, req entity.ReqAddExtracurricular, image multipart.File) (int, error)
+		DeleteExtracurricular(ctx context.Context, id int) error
+		UpdateExtracurricular(ctx context.Context, req entity.ReqUpdateExtracurricular, image multipart.File) (int, error)
 	}
 )
 
@@ -259,6 +262,64 @@ func (s *school) UpdateAchievement(ctx context.Context, req entity.ReqUpdateAchi
 	return int(res.SchoolID), nil
 }
 
+func (s *school) AddExtracurricular(ctx context.Context, req entity.ReqAddExtracurricular, image multipart.File) (int, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE Add Extracurricular REQ, Error: %v", err)
+		return 0, errorr.NewBad("Missing or Invalid Request Body")
+	}
+	filename := fmt.Sprintf("%s_%d_%s", "Extra_", req.SchoolID, req.Image)
+	if err := s.dep.Gcp.UploadFile(image, filename); err != nil {
+		s.dep.Log.Errorf("Error Service : %v", err)
+		image.Close()
+		return 0, err
+	}
+	image.Close()
+	data := entity.Extracurricular{
+		SchoolID:    req.SchoolID,
+		Description: req.Description,
+		Image:       filename,
+		Title:       req.Title,
+	}
+	res, err := s.repo.AddExtracurricular(s.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return 0, err
+	}
+	return res, err
+}
+
+func (s *school) DeleteExtracurricular(ctx context.Context, id int) error {
+	if err := s.repo.DeleteExtracurricular(s.dep.Db.WithContext(ctx), id); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *school) UpdateExtracurricular(ctx context.Context, req entity.ReqUpdateExtracurricular, image multipart.File) (int, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE Add Extracurricular REQ, Error: %v", err)
+		return 0, errorr.NewBad("Missing or Invalid Request Body")
+	}
+	filename := fmt.Sprintf("%s_%d_%s", "Extra_", req.Id, req.Image)
+	data := entity.Extracurricular{
+		Description: req.Description,
+		Image:       filename,
+		Title:       req.Title,
+	}
+	data.ID = uint(req.Id)
+	res, err := s.repo.UpdateExtracurricular(s.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return 0, err
+	}
+	if image != nil {
+		if err := s.dep.Gcp.UploadFile(image, filename); err != nil {
+			s.dep.Log.Errorf("Error Service : %v", err)
+			image.Close()
+			return 0, err
+		}
+		image.Close()
+	}
+	return int(res.SchoolID), nil
+}
 func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool, error) {
 	data, err := s.repo.GetByUid(s.dep.Db.WithContext(ctx), uid)
 	if err != nil {
@@ -287,9 +348,9 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		QuizLinkPub:     data.QuizLinkPub,
 		QuizLinkPreview: data.QuizLinkPreview,
 	}
-	achivements := []entity.ResAchievement{}
+	achivements := []entity.ResAddItems{}
 	for _, val := range data.Achievements {
-		achivement := entity.ResAchievement{
+		achivement := entity.ResAddItems{
 			Name:        val.Title,
 			Img:         val.Image,
 			Description: val.Description,
@@ -297,7 +358,18 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		}
 		achivements = append(achivements, achivement)
 	}
+	extracurriculars := []entity.ResAddItems{}
+	for _, val := range data.Extracurriculars {
+		extracurricular := entity.ResAddItems{
+			Name:        val.Title,
+			Img:         val.Image,
+			Description: val.Description,
+			Id:          int(val.ID),
+		}
+		achivements = append(extracurriculars, extracurricular)
+	}
 	res.Achievements = achivements
+	res.Extracurriculars = extracurriculars
 	return &res, nil
 }
 func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, error) {
@@ -329,15 +401,26 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 		QuizLinkPub:     data.QuizLinkPub,
 		QuizLinkPreview: data.QuizLinkPreview,
 	}
-	achivements := []entity.ResAchievement{}
+	achivements := []entity.ResAddItems{}
 	for _, val := range data.Achievements {
-		achivement := entity.ResAchievement{
+		achivement := entity.ResAddItems{
 			Name:        val.Title,
 			Img:         val.Image,
 			Description: val.Description,
 		}
 		achivements = append(achivements, achivement)
 	}
+	extracurriculars := []entity.ResAddItems{}
+	for _, val := range data.Extracurriculars {
+		extracurricular := entity.ResAddItems{
+			Name:        val.Title,
+			Img:         val.Image,
+			Description: val.Description,
+			Id:          int(val.ID),
+		}
+		achivements = append(extracurriculars, extracurricular)
+	}
+	res.Extracurriculars = extracurriculars
 	res.Achievements = achivements
 	return &res, nil
 }

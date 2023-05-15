@@ -87,13 +87,13 @@ func (u *user) Register(ctx context.Context, req entity.RegisterReq) error {
 		IsVerified:       false,
 		VerificationCode: hashedEmailString,
 	}
-	// go func() {
-	// 	err := u.dep.Nsq.Publish("5", []byte(hashedEmailString))
-	// 	if err != nil {
-	// 		u.dep.Log.Errorf("[FAILED] to publish to NSQ: %v", err)
-	// 		return
-	// 	}
-	// }()
+	go func() {
+		err := u.dep.Nsq.Publish("5", []byte(hashedEmailString))
+		if err != nil {
+			u.dep.Log.Errorf("[FAILED] to publish to NSQ: %v", err)
+			return
+		}
+	}()
 	err = u.repo.Create(u.dep.Db.WithContext(ctx), data)
 	if err != nil {
 		return err
@@ -119,13 +119,13 @@ func (u *user) ForgetPass(ctx context.Context, email string) error {
 	if err := u.repo.InsertForgotPassToken(u.dep.Db.WithContext(ctx), entity.ForgotPass{Token: hashedEmailString, Email: user.Email}); err != nil {
 		return err
 	}
-	// go func() {
-	// 	err := u.dep.Nsq.Publish("6", []byte(hashedEmailString))
-	// 	if err != nil {
-	// 		u.dep.Log.Errorf("[FAILED] to publish to NSQ: %v", err)
-	// 		return
-	// 	}
-	// }()
+	go func() {
+		err := u.dep.Nsq.Publish("6", []byte(hashedEmailString))
+		if err != nil {
+			u.dep.Log.Errorf("[FAILED] to publish to NSQ: %v", err)
+			return
+		}
+	}()
 	return nil
 
 }
@@ -169,13 +169,13 @@ func (u *user) Update(ctx context.Context, req entity.UpdateReq, file multipart.
 			}
 		}
 		hashedEmailString := base32.StdEncoding.EncodeToString([]byte(req.Email))
-		// go func() {
-		// 	err := u.dep.Nsq.Publish("7", []byte(hashedEmailString))
-		// 	if err != nil {
-		// 		u.dep.Log.Errorf("[FAILED] to publish to NSQ: %v", err)
-		// 		return
-		// 	}
-		// }()
+		go func() {
+			err := u.dep.Nsq.Publish("7", []byte(hashedEmailString))
+			if err != nil {
+				u.dep.Log.Errorf("[FAILED] to publish to NSQ: %v", err)
+				return
+			}
+		}()
 		data.VerificationCode = hashedEmailString
 		data.IsVerified = true
 	}
