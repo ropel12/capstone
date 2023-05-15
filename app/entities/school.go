@@ -30,6 +30,7 @@ type (
 		QuizLinkPreview  string `gorm:"type:varchar(70);default:"`
 		Achievements     []Achievement
 		Extracurriculars []Extracurricular
+		Faqs             []Faq
 	}
 	Achievement struct {
 		gorm.Model
@@ -44,6 +45,22 @@ type (
 		Description string `gorm:"type:varchar(255);not null"`
 		Image       string `gorm:"type:varchar(50);not null"`
 		Title       string `gorm:"type:varchar(50);not null"`
+	}
+	Faq struct {
+		gorm.Model
+		SchoolID uint
+		Question string `gorm:"type:varchar(255);not null"`
+		Answer   string `gorm:"type:varchar(255);not null"`
+	}
+	ReqAddFaq struct {
+		SchoolId int    `json:"school_id" validate:"required"`
+		Question string `json:"question" validate:"required"`
+		Answer   string `json:"answer" validate:"required"`
+	}
+	ReqUpdateFaq struct {
+		Id       int    `json:"id" validate:"required"`
+		Question string `json:"question"`
+		Answer   string `json:"answer" `
 	}
 	ReqAddExtracurricular struct {
 		SchoolID    uint   `form:"school_id" validate:"required"`
