@@ -7,28 +7,29 @@ import (
 type (
 	School struct {
 		gorm.Model
-		UserID          uint
-		Npsn            string `gorm:"type:varchar(12);not null"`
-		Name            string `gorm:"type:varchar(150);not null"`
-		Description     string `gorm:"type:varchar(255);not null"`
-		Image           string `gorm:"type:varchar(150);not null"`
-		Video           string `gorm:"type:varchar(150);not null"`
-		Pdf             string `gorm:"type:varchar(150);not null"`
-		Web             string `gorm:"type:varchar(150);not null"`
-		Province        string `gorm:"type:varchar(150);not null"`
-		City            string `gorm:"type:varchar(150);not null"`
-		District        string `gorm:"type:varchar(150);not null"`
-		Village         string `gorm:"type:varchar(150);not null"`
-		Detail          string `gorm:"type:varchar(150);not null"`
-		ZipCode         string `gorm:"type:varchar(150);not null"`
-		Students        int    `gorm:"not null"`
-		Teachers        int    `gorm:"not null"`
-		Staff           int    `gorm:"not null"`
-		Accreditation   string `gorm:"type:varchar(3);not null"`
-		Gmeet           string `gorm:"type:varchar(70);default: "`
-		QuizLinkPub     string `gorm:"type:varchar(70);default:"`
-		QuizLinkPreview string `gorm:"type:varchar(70);default:"`
-		Achievements    []Achievement
+		UserID           uint
+		Npsn             string `gorm:"type:varchar(12);not null"`
+		Name             string `gorm:"type:varchar(150);not null"`
+		Description      string `gorm:"type:varchar(255);not null"`
+		Image            string `gorm:"type:varchar(150);not null"`
+		Video            string `gorm:"type:varchar(150);not null"`
+		Pdf              string `gorm:"type:varchar(150);not null"`
+		Web              string `gorm:"type:varchar(150);not null"`
+		Province         string `gorm:"type:varchar(150);not null"`
+		City             string `gorm:"type:varchar(150);not null"`
+		District         string `gorm:"type:varchar(150);not null"`
+		Village          string `gorm:"type:varchar(150);not null"`
+		Detail           string `gorm:"type:varchar(150);not null"`
+		ZipCode          string `gorm:"type:varchar(150);not null"`
+		Students         int    `gorm:"not null"`
+		Teachers         int    `gorm:"not null"`
+		Staff            int    `gorm:"not null"`
+		Accreditation    string `gorm:"type:varchar(3);not null"`
+		Gmeet            string `gorm:"type:varchar(70);default: "`
+		QuizLinkPub      string `gorm:"type:varchar(70);default:"`
+		QuizLinkPreview  string `gorm:"type:varchar(70);default:"`
+		Achievements     []Achievement
+		Extracurriculars []Extracurricular
 	}
 	Achievement struct {
 		gorm.Model
@@ -36,6 +37,25 @@ type (
 		Description string `gorm:"type:varchar(255);not null"`
 		Image       string `gorm:"type:varchar(50);not null"`
 		Title       string `gorm:"type:varchar(50);not null"`
+	}
+	Extracurricular struct {
+		gorm.Model
+		SchoolID    uint
+		Description string `gorm:"type:varchar(255);not null"`
+		Image       string `gorm:"type:varchar(50);not null"`
+		Title       string `gorm:"type:varchar(50);not null"`
+	}
+	ReqAddExtracurricular struct {
+		SchoolID    uint   `form:"school_id" validate:"required"`
+		Description string `form:"description" validate:"required"`
+		Image       string `form:"image" validate:"required"`
+		Title       string `form:"title" validate:"required"`
+	}
+	ReqUpdateExtracurricular struct {
+		Id          int    `form:"id" validate:"required"`
+		Description string `form:"description" `
+		Image       string `form:"image" `
+		Title       string `form:"title" `
 	}
 	ReqAddAchievemnt struct {
 		SchoolID    uint   `form:"school_id" validate:"required"`
@@ -54,35 +74,36 @@ type (
 		EndDate   string `json:"end_time" validate:"required"`
 		SchoolId  int    `json:"school_id" validate:"required"`
 	}
-	ResAchievement struct {
+	ResAddItems struct {
 		Id          int    `json:"id,omitempty"`
 		Name        string `json:"name"`
 		Img         string `json:"img"`
 		Description string `json:"description"`
 	}
 	ResDetailSchool struct {
-		Id              int              `json:"id"`
-		Npsn            string           `json:"npsn"`
-		Name            string           `json:"name"`
-		Description     string           `json:"description"`
-		Image           string           `json:"image"`
-		Video           string           `json:"video"`
-		Pdf             string           `json:"pdf"`
-		Web             string           `json:"web"`
-		Province        string           `json:"province"`
-		City            string           `json:"city"`
-		District        string           `json:"district"`
-		Village         string           `json:"village"`
-		Detail          string           `json:"detail"`
-		ZipCode         string           `json:"zipCode"`
-		Students        int              `json:"students"`
-		Teachers        int              `json:"teachers"`
-		Staff           int              `json:"staff"`
-		Accreditation   string           `json:"accreditation"`
-		Gmeet           string           `json:"gmeet"`
-		QuizLinkPub     string           `json:"quizLinkPub"`
-		QuizLinkPreview string           `json:"quizLinkPreview"`
-		Achievements    []ResAchievement `json:"achievements"`
+		Id               int           `json:"id"`
+		Npsn             string        `json:"npsn"`
+		Name             string        `json:"name"`
+		Description      string        `json:"description"`
+		Image            string        `json:"image"`
+		Video            string        `json:"video"`
+		Pdf              string        `json:"pdf"`
+		Web              string        `json:"web"`
+		Province         string        `json:"province"`
+		City             string        `json:"city"`
+		District         string        `json:"district"`
+		Village          string        `json:"village"`
+		Detail           string        `json:"detail"`
+		ZipCode          string        `json:"zipCode"`
+		Students         int           `json:"students"`
+		Teachers         int           `json:"teachers"`
+		Staff            int           `json:"staff"`
+		Accreditation    string        `json:"accreditation"`
+		Gmeet            string        `json:"gmeet"`
+		QuizLinkPub      string        `json:"quizLinkPub"`
+		QuizLinkPreview  string        `json:"quizLinkPreview"`
+		Achievements     []ResAddItems `json:"achievements"`
+		Extracurriculars []ResAddItems `json:"extracurriculars"`
 	}
 	ReqCreateSchool struct {
 		UserId        int

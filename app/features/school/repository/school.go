@@ -20,6 +20,9 @@ type (
 		AddAchievement(db *gorm.DB, achv entity.Achievement) (int, error)
 		DeleteAchievement(db *gorm.DB, id int) error
 		UpdateAchievement(db *gorm.DB, achv entity.Achievement) (*entity.Achievement, error)
+		AddExtracurricular(db *gorm.DB, achv entity.Extracurricular) (int, error)
+		DeleteExtracurricular(db *gorm.DB, id int) error
+		UpdateExtracurricular(db *gorm.DB, achv entity.Extracurricular) (*entity.Extracurricular, error)
 		GetByUid(db *gorm.DB, uid int) (*entity.School, error)
 		GetById(db *gorm.DB, id int) (*entity.School, error)
 	}
@@ -40,7 +43,9 @@ func (u *school) GetByUid(db *gorm.DB, uid int) (*entity.School, error) {
 	res := entity.School{}
 	if err := db.Preload("Achievements", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,school_id,description,image,title")
-	}).Find(&res).Error; err != nil {
+	}).Preload("Extracurriculars", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,description,image,title")
+	}).Where("user_id=?", uid).Find(&res).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN GETTING The School Data BY UID, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
 	}
@@ -53,7 +58,9 @@ func (u *school) GetById(db *gorm.DB, id int) (*entity.School, error) {
 	res := entity.School{}
 	if err := db.Preload("Achievements", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,description,image,title")
-	}).Find(&res).Error; err != nil {
+	}).Preload("Extracurriculars", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,description,image,title")
+	}).Where("id=?", id).Find(&res).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN GETTING The School Data BY SchoolID, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
 	}
@@ -146,6 +153,53 @@ func (s *school) UpdateAchievement(db *gorm.DB, achv entity.Achievement) (*entit
 	}
 	if err := db.Save(&newdata).Error; err != nil {
 		s.log.Errorf("[ERROR]WHEN UPDATING ACHIEVEMENT, Err: %v", err)
+		return nil, errorr.NewInternal("Internal server error")
+	}
+	return &newdata, nil
+}
+
+func (u *school) AddExtracurricular(db *gorm.DB, extrac entity.Extracurricular) (int, error) {
+	if err := db.Save(&extrac).Error; err != nil {
+		u.log.Errorf("[ERROR]WHEN ADDING Extracurricular, Err: %v", err)
+		return 0, errorr.NewInternal("internal Server Error")
+	}
+	return int(extrac.SchoolID), nil
+}
+
+func (u *school) DeleteExtracurricular(db *gorm.DB, id int) error {
+
+	if err := db.Where("id=?", id).First(&entity.Extracurricular{}).Error; err != nil {
+		if err != gorm.ErrRecordNotFound {
+			u.log.Errorf("[ERROR]WHEN GETTING The Extracurricular Data, Err: %v", err)
+			return errorr.NewInternal("Internal Server Error")
+		}
+		return errorr.NewBad("Id Not Found")
+	}
+	if err := db.Where("id=?", id).Delete(&entity.Extracurricular{}).Error; err != nil {
+		u.log.Errorf("[ERROR]WHEN DELETING Extracurricular, Err: %v", err)
+		return errorr.NewInternal("Internal Server Error")
+	}
+	return nil
+}
+
+func (s *school) UpdateExtracurricular(db *gorm.DB, extrac entity.Extracurricular) (*entity.Extracurricular, error) {
+	newdata := entity.Extracurricular{}
+	if err := db.First(&newdata, extrac.ID).Error; err == gorm.ErrRecordNotFound {
+		s.log.Errorf("ERROR]WHEN UPDATE Extracurricular,Error: %v ", err)
+		return nil, errorr.NewBad("Id Not Found")
+	}
+	v := reflect.ValueOf(extrac)
+	n := reflect.ValueOf(&newdata).Elem()
+
+	for i := 0; i < v.NumField(); i++ {
+		if val, ok := v.Field(i).Interface().(string); ok {
+			if val != "" {
+				n.Field(i).SetString(val)
+			}
+		}
+	}
+	if err := db.Save(&newdata).Error; err != nil {
+		s.log.Errorf("[ERROR]WHEN UPDATING Extracurricular, Err: %v", err)
 		return nil, errorr.NewInternal("Internal server error")
 	}
 	return &newdata, nil

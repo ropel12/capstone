@@ -513,5 +513,142 @@ var _ = Describe("school", func() {
 		})
 
 	})
+	Context("Add Extracurricular", func() {
+		When("Request Body kosong", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.AddExtracurricular(ctx, entity.ReqAddExtracurricular{}, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+		When("Format gambar tidak sesuai", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				req := entity.ReqAddExtracurricular{SchoolID: 1, Description: "test", Image: "gambar.php", Title: "tes"}
+				_, err := SchoolService.AddExtracurricular(ctx, req, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+
+		When("Format gambar tidak sesuai", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				req := entity.ReqAddExtracurricular{SchoolID: 1, Description: "test", Image: "gambar.php", Title: "tes"}
+				_, err := SchoolService.AddExtracurricular(ctx, req, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+
+		When("Terjadi Kesalahan Query Database", func() {
+			BeforeEach(func() {
+				Mock.On("AddExtracurricular", mock.Anything, mock.Anything).Return(0, errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				req := entity.ReqAddExtracurricular{SchoolID: 1, Description: "test", Image: "gambar.jpg", Title: "tes"}
+				_, err := SchoolService.AddExtracurricular(ctx, req, image)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil Menambahakan Prestasi", func() {
+			BeforeEach(func() {
+				Mock.On("AddExtracurricular", mock.Anything, mock.Anything).Return(1, nil).Once()
+			})
+			It("Akan Mengembalikan Id Sekolah", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				req := entity.ReqAddExtracurricular{SchoolID: 1, Description: "test", Image: "gambar.jpg", Title: "tes"}
+				res, err := SchoolService.AddExtracurricular(ctx, req, image)
+				Expect(err).Should(BeNil())
+				Expect(res).To(Equal(1))
+			})
+		})
+
+	})
+
+	Context("Update Extracurricular", func() {
+		When("id tidak ada", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.UpdateExtracurricular(ctx, entity.ReqUpdateExtracurricular{}, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+		When("Format gambar tidak sesuai", func() {
+			BeforeEach(func() {
+				Mock.On("UpdateExtracurricular", mock.Anything, mock.Anything).Return(&entity.Extracurricular{}, nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.UpdateExtracurricular(ctx, entity.ReqUpdateExtracurricular{Id: 1, Image: "backdoor.aspx"}, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+
+		When("Terjadi Kesalahn Query Database", func() {
+			BeforeEach(func() {
+				Mock.On("UpdateExtracurricular", mock.Anything, mock.Anything).Return(nil, errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.UpdateExtracurricular(ctx, entity.ReqUpdateExtracurricular{Id: 1, Image: "img.jpg"}, image)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil memperbahrui data Extracurricular", func() {
+			BeforeEach(func() {
+				Mock.On("UpdateExtracurricular", mock.Anything, mock.Anything).Return(&entity.Extracurricular{SchoolID: 1}, nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				res, err := SchoolService.UpdateExtracurricular(ctx, entity.ReqUpdateExtracurricular{Id: 1, Image: "img.jpg"}, image)
+				Expect(err).Should(BeNil())
+				Expect(res).To(Equal(1))
+			})
+		})
+	})
+
+	Context("Delete Extracurricular", func() {
+		When("Id tidak ditemukan", func() {
+			BeforeEach(func() {
+				Mock.On("DeleteExtracurricular", mock.Anything, mock.Anything).Return(errors.New("Id not found")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeleteExtracurricular(ctx, 9999)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Id not found"))
+			})
+		})
+		When("Terjadi kesalahan query database", func() {
+			BeforeEach(func() {
+				Mock.On("DeleteExtracurricular", mock.Anything, mock.Anything).Return(errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeleteExtracurricular(ctx, 1)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil Menghapus data Extracurricular", func() {
+			BeforeEach(func() {
+				Mock.On("DeleteExtracurricular", mock.Anything, mock.Anything).Return(nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeleteExtracurricular(ctx, 1)
+				Expect(err).Should(BeNil())
+			})
+		})
+
+	})
 
 })

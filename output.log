@@ -300,3 +300,13 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-15T00:50:03+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T00:51:26+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-15T00:53:21+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T12:47:46+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T12:53:38+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T12:56:43+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Extracurricular REQ, Error: Key: 'ReqAddExtracurricular.SchoolID' Error:Field validation for 'SchoolID' failed on the 'required' tag","time":"2023-05-15T13:02:04+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Extracurricular REQ, Error: Key: 'ReqAddExtracurricular.SchoolID' Error:Field validation for 'SchoolID' failed on the 'required' tag","time":"2023-05-15T13:02:08+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Extracurricular REQ, Error: Key: 'ReqUpdateExtracurricular.Id' Error:Field validation for 'Id' failed on the 'required' tag","time":"2023-05-15T13:02:37+07:00"}
+{"level":"error","msg":"ERROR]WHEN UPDATE Extracurricular,Error: record not found ","time":"2023-05-15T13:03:09+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T13:04:29+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T13:05:58+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T13:06:29+07:00"}

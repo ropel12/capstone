@@ -165,6 +165,67 @@ func (u *School) DeleteAchievement(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
 }
+func (u *School) AddExtracurricular(c echo.Context) error {
+	req := entity.ReqAddExtracurricular{}
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQADDExtracurricular, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
+	}
+	filehead, err := c.FormFile("image")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Image is Missing", nil))
+	}
+	req.Image = filehead.Filename
+	image, err := filehead.Open()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot laod image", nil))
+	}
+	if filehead.Size > 2*1024*1024 {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
+	}
+	id, err := u.Service.AddExtracurricular(c.Request().Context(), req, image)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"id": id}))
+}
+
+func (u *School) UpdateExtracurricular(c echo.Context) error {
+	req := entity.ReqUpdateExtracurricular{}
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQUPDATEExtracurricular, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
+	}
+	filehead, err := c.FormFile("image")
+	var image multipart.File
+	if err == nil {
+		multipart, err := filehead.Open()
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot Load Image", nil))
+		}
+		req.Image = filehead.Filename
+		image = multipart
+	}
+	schoolid, err := u.Service.UpdateExtracurricular(c.Request().Context(), req, image)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"id": schoolid}))
+}
+func (u *School) DeleteExtracurricular(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Extracurricular id is missing", nil))
+	}
+	newid, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Extracurricular Id", nil))
+	}
+	if err := u.Service.DeleteExtracurricular(c.Request().Context(), newid); err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
+}
 
 func (u *School) GenerateUrl(c echo.Context) error {
 	req := entity.ReqCreateGmeet{}

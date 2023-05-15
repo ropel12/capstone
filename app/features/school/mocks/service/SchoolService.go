@@ -40,6 +40,30 @@ func (_m *SchoolService) AddAchievement(ctx context.Context, req entities.ReqAdd
 	return r0, r1
 }
 
+// AddExtracurricular provides a mock function with given fields: ctx, req, image
+func (_m *SchoolService) AddExtracurricular(ctx context.Context, req entities.ReqAddExtracurricular, image multipart.File) (int, error) {
+	ret := _m.Called(ctx, req, image)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqAddExtracurricular, multipart.File) (int, error)); ok {
+		return rf(ctx, req, image)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqAddExtracurricular, multipart.File) int); ok {
+		r0 = rf(ctx, req, image)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqAddExtracurricular, multipart.File) error); ok {
+		r1 = rf(ctx, req, image)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: ctx, req, image, pdf
 func (_m *SchoolService) Create(ctx context.Context, req entities.ReqCreateSchool, image multipart.File, pdf multipart.File) (int, error) {
 	ret := _m.Called(ctx, req, image, pdf)
@@ -66,6 +90,20 @@ func (_m *SchoolService) Create(ctx context.Context, req entities.ReqCreateSchoo
 
 // DeleteAchievement provides a mock function with given fields: ctx, id
 func (_m *SchoolService) DeleteAchievement(ctx context.Context, id int) error {
+	ret := _m.Called(ctx, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// DeleteExtracurricular provides a mock function with given fields: ctx, id
+func (_m *SchoolService) DeleteExtracurricular(ctx context.Context, id int) error {
 	ret := _m.Called(ctx, id)
 
 	var r0 error
@@ -188,6 +226,30 @@ func (_m *SchoolService) UpdateAchievement(ctx context.Context, req entities.Req
 	}
 
 	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqUpdateAchievemnt, multipart.File) error); ok {
+		r1 = rf(ctx, req, image)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateExtracurricular provides a mock function with given fields: ctx, req, image
+func (_m *SchoolService) UpdateExtracurricular(ctx context.Context, req entities.ReqUpdateExtracurricular, image multipart.File) (int, error) {
+	ret := _m.Called(ctx, req, image)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqUpdateExtracurricular, multipart.File) (int, error)); ok {
+		return rf(ctx, req, image)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqUpdateExtracurricular, multipart.File) int); ok {
+		r0 = rf(ctx, req, image)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqUpdateExtracurricular, multipart.File) error); ok {
 		r1 = rf(ctx, req, image)
 	} else {
 		r1 = ret.Error(1)

@@ -38,6 +38,30 @@ func (_m *SchoolRepo) AddAchievement(db *gorm.DB, achv entities.Achievement) (in
 	return r0, r1
 }
 
+// AddExtracurricular provides a mock function with given fields: db, achv
+func (_m *SchoolRepo) AddExtracurricular(db *gorm.DB, achv entities.Extracurricular) (int, error) {
+	ret := _m.Called(db, achv)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Extracurricular) (int, error)); ok {
+		return rf(db, achv)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Extracurricular) int); ok {
+		r0 = rf(db, achv)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Extracurricular) error); ok {
+		r1 = rf(db, achv)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: db, school
 func (_m *SchoolRepo) Create(db *gorm.DB, school entities.School) (int, error) {
 	ret := _m.Called(db, school)
@@ -64,6 +88,20 @@ func (_m *SchoolRepo) Create(db *gorm.DB, school entities.School) (int, error) {
 
 // DeleteAchievement provides a mock function with given fields: db, id
 func (_m *SchoolRepo) DeleteAchievement(db *gorm.DB, id int) error {
+	ret := _m.Called(db, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) error); ok {
+		r0 = rf(db, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// DeleteExtracurricular provides a mock function with given fields: db, id
+func (_m *SchoolRepo) DeleteExtracurricular(db *gorm.DB, id int) error {
 	ret := _m.Called(db, id)
 
 	var r0 error
@@ -186,6 +224,32 @@ func (_m *SchoolRepo) UpdateAchievement(db *gorm.DB, achv entities.Achievement) 
 	}
 
 	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Achievement) error); ok {
+		r1 = rf(db, achv)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateExtracurricular provides a mock function with given fields: db, achv
+func (_m *SchoolRepo) UpdateExtracurricular(db *gorm.DB, achv entities.Extracurricular) (*entities.Extracurricular, error) {
+	ret := _m.Called(db, achv)
+
+	var r0 *entities.Extracurricular
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Extracurricular) (*entities.Extracurricular, error)); ok {
+		return rf(db, achv)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Extracurricular) *entities.Extracurricular); ok {
+		r0 = rf(db, achv)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.Extracurricular)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Extracurricular) error); ok {
 		r1 = rf(db, achv)
 	} else {
 		r1 = ret.Error(1)
