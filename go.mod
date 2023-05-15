@@ -18,6 +18,8 @@ require (
 	github.com/stretchr/testify v1.8.2
 	go.uber.org/dig v1.17.0
 	golang.org/x/crypto v0.6.0
+	golang.org/x/oauth2 v0.0.0-20210514164344-f6687ab2804c
+	googlemaps.github.io/maps v1.4.0
 	gorm.io/driver/mysql v1.5.0
 	gorm.io/gorm v1.25.1
 )
@@ -64,7 +66,6 @@ require (
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/oauth2 v0.0.0-20210514164344-f6687ab2804c // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
@@ -74,7 +75,6 @@ require (
 	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c // indirect
 	google.golang.org/grpc v1.52.0-dev // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
-	googlemaps.github.io/maps v1.4.0 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

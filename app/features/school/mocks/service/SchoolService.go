@@ -16,6 +16,30 @@ type SchoolService struct {
 	mock.Mock
 }
 
+// AddAchievement provides a mock function with given fields: ctx, req, image
+func (_m *SchoolService) AddAchievement(ctx context.Context, req entities.ReqAddAchievemnt, image multipart.File) (int, error) {
+	ret := _m.Called(ctx, req, image)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqAddAchievemnt, multipart.File) (int, error)); ok {
+		return rf(ctx, req, image)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqAddAchievemnt, multipart.File) int); ok {
+		r0 = rf(ctx, req, image)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqAddAchievemnt, multipart.File) error); ok {
+		r1 = rf(ctx, req, image)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: ctx, req, image, pdf
 func (_m *SchoolService) Create(ctx context.Context, req entities.ReqCreateSchool, image multipart.File, pdf multipart.File) (int, error) {
 	ret := _m.Called(ctx, req, image, pdf)
@@ -40,6 +64,88 @@ func (_m *SchoolService) Create(ctx context.Context, req entities.ReqCreateSchoo
 	return r0, r1
 }
 
+// DeleteAchievement provides a mock function with given fields: ctx, id
+func (_m *SchoolService) DeleteAchievement(ctx context.Context, id int) error {
+	ret := _m.Called(ctx, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// GetByUid provides a mock function with given fields: ctx, uid
+func (_m *SchoolService) GetByUid(ctx context.Context, uid int) (*entities.ResDetailSchool, error) {
+	ret := _m.Called(ctx, uid)
+
+	var r0 *entities.ResDetailSchool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) (*entities.ResDetailSchool, error)); ok {
+		return rf(ctx, uid)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int) *entities.ResDetailSchool); ok {
+		r0 = rf(ctx, uid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.ResDetailSchool)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, uid)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetByid provides a mock function with given fields: ctx, id
+func (_m *SchoolService) GetByid(ctx context.Context, id int) (*entities.ResDetailSchool, error) {
+	ret := _m.Called(ctx, id)
+
+	var r0 *entities.ResDetailSchool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) (*entities.ResDetailSchool, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int) *entities.ResDetailSchool); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.ResDetailSchool)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Search provides a mock function with given fields: searchval
+func (_m *SchoolService) Search(searchval string) interface{} {
+	ret := _m.Called(searchval)
+
+	var r0 interface{}
+	if rf, ok := ret.Get(0).(func(string) interface{}); ok {
+		r0 = rf(searchval)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(interface{})
+		}
+	}
+
+	return r0
+}
+
 // Update provides a mock function with given fields: ctx, req, image, pdf
 func (_m *SchoolService) Update(ctx context.Context, req entities.ReqUpdateSchool, image multipart.File, pdf multipart.File) (*entities.ResUpdateSchool, error) {
 	ret := _m.Called(ctx, req, image, pdf)
@@ -59,6 +165,30 @@ func (_m *SchoolService) Update(ctx context.Context, req entities.ReqUpdateSchoo
 
 	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqUpdateSchool, multipart.File, multipart.File) error); ok {
 		r1 = rf(ctx, req, image, pdf)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateAchievement provides a mock function with given fields: ctx, req, image
+func (_m *SchoolService) UpdateAchievement(ctx context.Context, req entities.ReqUpdateAchievemnt, image multipart.File) (int, error) {
+	ret := _m.Called(ctx, req, image)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqUpdateAchievemnt, multipart.File) (int, error)); ok {
+		return rf(ctx, req, image)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqUpdateAchievemnt, multipart.File) int); ok {
+		r0 = rf(ctx, req, image)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqUpdateAchievemnt, multipart.File) error); ok {
+		r1 = rf(ctx, req, image)
 	} else {
 		r1 = ret.Error(1)
 	}

@@ -25,6 +25,11 @@ type (
 		Create(ctx context.Context, req entity.ReqCreateSchool, image multipart.File, pdf multipart.File) (int, error)
 		Update(ctx context.Context, req entity.ReqUpdateSchool, image multipart.File, pdf multipart.File) (*entity.ResUpdateSchool, error)
 		Search(searchval string) any
+		AddAchievement(ctx context.Context, req entity.ReqAddAchievemnt, image multipart.File) (int, error)
+		DeleteAchievement(ctx context.Context, id int) error
+		UpdateAchievement(ctx context.Context, req entity.ReqUpdateAchievemnt, image multipart.File) (int, error)
+		GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool, error)
+		GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, error)
 	}
 )
 
@@ -72,11 +77,12 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 		if err1 := s.dep.Gcp.UploadFile(image, filename); err1 != nil {
 			s.dep.Log.Errorf("Error Service : %v", err1)
 			errchan <- err1
+			image.Close()
 			return
 		}
 		data.Image = filename
-		image.Close()
 		errchan <- nil
+		image.Close()
 		return
 
 	}()
@@ -86,11 +92,12 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 		if err1 := s.dep.Gcp.UploadFile(pdf, filename); err1 != nil {
 			s.dep.Log.Errorf("Error Service : %v", err1)
 			errchan <- err1
+			pdf.Close()
 			return
 		}
 		data.Pdf = filename
-		image.Close()
 		errchan <- nil
+		pdf.Close()
 		return
 	}()
 	wg.Wait()
@@ -121,23 +128,26 @@ func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image m
 		}
 	}
 	data := entity.School{
-		Npsn:          req.Npsn,
-		Name:          req.Name,
-		Description:   req.Description,
-		Image:         req.Image,
-		Video:         req.Video,
-		Pdf:           req.Pdf,
-		Web:           req.Web,
-		Province:      req.Province,
-		City:          req.City,
-		District:      req.District,
-		Village:       req.Village,
-		Detail:        req.Detail,
-		ZipCode:       req.ZipCode,
-		Students:      req.Students,
-		Teachers:      req.Teachers,
-		Staff:         req.Staff,
-		Accreditation: req.Accreditation,
+		Npsn:            req.Npsn,
+		Name:            req.Name,
+		Description:     req.Description,
+		Image:           req.Image,
+		Video:           req.Video,
+		Pdf:             req.Pdf,
+		Web:             req.Web,
+		Province:        req.Province,
+		City:            req.City,
+		District:        req.District,
+		Village:         req.Village,
+		Detail:          req.Detail,
+		ZipCode:         req.ZipCode,
+		Students:        req.Students,
+		Teachers:        req.Teachers,
+		Staff:           req.Staff,
+		Accreditation:   req.Accreditation,
+		Gmeet:           req.Gmeet,
+		QuizLinkPub:     req.QuizLinkPub,
+		QuizLinkPreview: req.QuizLinkPreview,
 	}
 	data.ID = uint(req.Id)
 	if image != nil {
@@ -188,4 +198,146 @@ func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image m
 }
 func (s *school) Search(searchval string) any {
 	return pkg.NewClientGmaps(s.dep.Config.GmapsKey, s.dep.Log).Search(searchval)
+}
+
+func (s *school) AddAchievement(ctx context.Context, req entity.ReqAddAchievemnt, image multipart.File) (int, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE Add Achievement REQ, Error: %v", err)
+		return 0, errorr.NewBad("Missing or Invalid Request Body")
+	}
+	filename := fmt.Sprintf("%s_%d_%s", "Achv_", req.SchoolID, req.Image)
+	if err := s.dep.Gcp.UploadFile(image, filename); err != nil {
+		s.dep.Log.Errorf("Error Service : %v", err)
+		image.Close()
+		return 0, err
+	}
+	image.Close()
+	data := entity.Achievement{
+		SchoolID:    req.SchoolID,
+		Description: req.Description,
+		Image:       filename,
+		Title:       req.Title,
+	}
+	res, err := s.repo.AddAchievement(s.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return 0, err
+	}
+	return res, err
+}
+
+func (s *school) DeleteAchievement(ctx context.Context, id int) error {
+	if err := s.repo.DeleteAchievement(s.dep.Db.WithContext(ctx), id); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *school) UpdateAchievement(ctx context.Context, req entity.ReqUpdateAchievemnt, image multipart.File) (int, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE Add Achievement REQ, Error: %v", err)
+		return 0, errorr.NewBad("Missing or Invalid Request Body")
+	}
+	filename := fmt.Sprintf("%s_%d_%s", "Achv_", req.Id, req.Image)
+	data := entity.Achievement{
+		Description: req.Description,
+		Image:       filename,
+		Title:       req.Title,
+	}
+	data.ID = uint(req.Id)
+	res, err := s.repo.UpdateAchievement(s.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return 0, err
+	}
+	if image != nil {
+		if err := s.dep.Gcp.UploadFile(image, filename); err != nil {
+			s.dep.Log.Errorf("Error Service : %v", err)
+			image.Close()
+			return 0, err
+		}
+		image.Close()
+	}
+	return int(res.SchoolID), nil
+}
+
+func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool, error) {
+	data, err := s.repo.GetByUid(s.dep.Db.WithContext(ctx), uid)
+	if err != nil {
+		return nil, err
+	}
+	res := entity.ResDetailSchool{
+		Id:              int(data.ID),
+		Npsn:            data.Npsn,
+		Name:            data.Name,
+		Description:     data.Description,
+		Image:           data.Image,
+		Video:           data.Video,
+		Pdf:             data.Pdf,
+		Web:             data.Web,
+		Province:        data.Province,
+		City:            data.City,
+		District:        data.District,
+		Village:         data.Village,
+		Detail:          data.Detail,
+		ZipCode:         data.ZipCode,
+		Students:        data.Students,
+		Teachers:        data.Teachers,
+		Staff:           data.Staff,
+		Accreditation:   data.Accreditation,
+		Gmeet:           data.Gmeet,
+		QuizLinkPub:     data.QuizLinkPub,
+		QuizLinkPreview: data.QuizLinkPreview,
+	}
+	achivements := []entity.ResAchievement{}
+	for _, val := range data.Achievements {
+		achivement := entity.ResAchievement{
+			Name:        val.Title,
+			Img:         val.Image,
+			Description: val.Description,
+			Id:          int(val.ID),
+		}
+		achivements = append(achivements, achivement)
+	}
+	res.Achievements = achivements
+	return &res, nil
+}
+func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, error) {
+
+	data, err := s.repo.GetByUid(s.dep.Db.WithContext(ctx), id)
+	if err != nil {
+		return nil, err
+	}
+	res := entity.ResDetailSchool{
+		Id:              int(data.ID),
+		Npsn:            data.Npsn,
+		Name:            data.Name,
+		Description:     data.Description,
+		Image:           data.Image,
+		Video:           data.Video,
+		Pdf:             data.Pdf,
+		Web:             data.Web,
+		Province:        data.Province,
+		City:            data.City,
+		District:        data.District,
+		Village:         data.Village,
+		Detail:          data.Detail,
+		ZipCode:         data.ZipCode,
+		Students:        data.Students,
+		Teachers:        data.Teachers,
+		Staff:           data.Staff,
+		Accreditation:   data.Accreditation,
+		Gmeet:           data.Gmeet,
+		QuizLinkPub:     data.QuizLinkPub,
+		QuizLinkPreview: data.QuizLinkPreview,
+	}
+	achivements := []entity.ResAchievement{}
+	for _, val := range data.Achievements {
+		achivement := entity.ResAchievement{
+			Name:        val.Title,
+			Img:         val.Image,
+			Description: val.Description,
+		}
+		achivements = append(achivements, achivement)
+	}
+	res.Achievements = achivements
+	return &res, nil
 }

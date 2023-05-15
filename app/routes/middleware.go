@@ -3,9 +3,12 @@ package routes
 import (
 	"net/http"
 
+	"github.com/education-hub/BE/errorr"
 	"github.com/education-hub/BE/helper"
+	"github.com/go-playground/validator"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
+	"github.com/sirupsen/logrus"
 )
 
 func AdminMiddleWare(next echo.HandlerFunc) echo.HandlerFunc {
@@ -45,4 +48,17 @@ func StatusVerifiedMiddleWare(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		return next(c)
 	}
+}
+
+type CustomValidator struct {
+	validator *validator.Validate
+	log       *logrus.Logger
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		cv.log.Errorf("[ERROR]WHEN Validate CREATE GMEET REQ, Err: %v", err)
+		return errorr.NewBad("Missing Request Body")
+	}
+	return nil
 }

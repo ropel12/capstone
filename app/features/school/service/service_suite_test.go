@@ -37,7 +37,6 @@ var _ = Describe("school", func() {
 		SchoolService = school.NewSchoolService(Mock, Depend)
 		Depend.Config = &config.Config{GmapsKey: os.Getenv("GMAPS")}
 	})
-
 	Context("Menambah Sekolah Baru", func() {
 		When("Request Body kosong", func() {
 			It("Akan Mengembalikan Erorr", func() {
@@ -376,6 +375,143 @@ var _ = Describe("school", func() {
 				Expect(res).ShouldNot(BeEmpty())
 			})
 		})
+	})
+	Context("Add Achievement", func() {
+		When("Request Body kosong", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.AddAchievement(ctx, entity.ReqAddAchievemnt{}, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+		When("Format gambar tidak sesuai", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				req := entity.ReqAddAchievemnt{SchoolID: 1, Description: "test", Image: "gambar.php", Title: "tes"}
+				_, err := SchoolService.AddAchievement(ctx, req, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+
+		When("Format gambar tidak sesuai", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				req := entity.ReqAddAchievemnt{SchoolID: 1, Description: "test", Image: "gambar.php", Title: "tes"}
+				_, err := SchoolService.AddAchievement(ctx, req, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+
+		When("Terjadi Kesalahan Query Database", func() {
+			BeforeEach(func() {
+				Mock.On("AddAchievement", mock.Anything, mock.Anything).Return(0, errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				req := entity.ReqAddAchievemnt{SchoolID: 1, Description: "test", Image: "gambar.jpg", Title: "tes"}
+				_, err := SchoolService.AddAchievement(ctx, req, image)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil Menambahakan Prestasi", func() {
+			BeforeEach(func() {
+				Mock.On("AddAchievement", mock.Anything, mock.Anything).Return(1, nil).Once()
+			})
+			It("Akan Mengembalikan Id Sekolah", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				req := entity.ReqAddAchievemnt{SchoolID: 1, Description: "test", Image: "gambar.jpg", Title: "tes"}
+				res, err := SchoolService.AddAchievement(ctx, req, image)
+				Expect(err).Should(BeNil())
+				Expect(res).To(Equal(1))
+			})
+		})
+
+	})
+
+	Context("Update Achievement", func() {
+		When("id tidak ada", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.UpdateAchievement(ctx, entity.ReqUpdateAchievemnt{}, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+		When("Format gambar tidak sesuai", func() {
+			BeforeEach(func() {
+				Mock.On("UpdateAchievement", mock.Anything, mock.Anything).Return(&entity.Achievement{}, nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.UpdateAchievement(ctx, entity.ReqUpdateAchievemnt{Id: 1, Image: "backdoor.aspx"}, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+
+		When("Terjadi Kesalahn Query Database", func() {
+			BeforeEach(func() {
+				Mock.On("UpdateAchievement", mock.Anything, mock.Anything).Return(nil, errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.UpdateAchievement(ctx, entity.ReqUpdateAchievemnt{Id: 1, Image: "img.jpg"}, image)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil memperbahrui data achievement", func() {
+			BeforeEach(func() {
+				Mock.On("UpdateAchievement", mock.Anything, mock.Anything).Return(&entity.Achievement{SchoolID: 1}, nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				res, err := SchoolService.UpdateAchievement(ctx, entity.ReqUpdateAchievemnt{Id: 1, Image: "img.jpg"}, image)
+				Expect(err).Should(BeNil())
+				Expect(res).To(Equal(1))
+			})
+		})
+	})
+
+	Context("Delete Achievement", func() {
+		When("Id tidak ditemukan", func() {
+			BeforeEach(func() {
+				Mock.On("DeleteAchievement", mock.Anything, mock.Anything).Return(errors.New("Id not found")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeleteAchievement(ctx, 9999)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Id not found"))
+			})
+		})
+		When("Terjadi kesalahan query database", func() {
+			BeforeEach(func() {
+				Mock.On("DeleteAchievement", mock.Anything, mock.Anything).Return(errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeleteAchievement(ctx, 1)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil Menghapus data achievement", func() {
+			BeforeEach(func() {
+				Mock.On("DeleteAchievement", mock.Anything, mock.Anything).Return(nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeleteAchievement(ctx, 1)
+				Expect(err).Should(BeNil())
+			})
+		})
+
 	})
 
 })
