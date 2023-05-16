@@ -1,10 +1,13 @@
 package routes
 
 import (
+	"net/http"
+
 	schoolhand "github.com/education-hub/BE/app/features/school/handler"
 	userhand "github.com/education-hub/BE/app/features/user/handler"
 	"github.com/education-hub/BE/config/dependency"
 	"github.com/go-playground/validator"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/dig"
 )
@@ -22,7 +25,7 @@ func (r *Routes) RegisterRoutes() {
 	ro.Use(middleware.RemoveTrailingSlash())
 	ro.Use(middleware.Logger())
 	ro.Use(middleware.Recover())
-		corsConfig := middleware.CORSConfig{
+	corsConfig := middleware.CORSConfig{
 		AllowOrigins: []string{"https://education-hub-fe-3q5c.vercel.app"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
