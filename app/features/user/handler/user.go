@@ -109,7 +109,6 @@ func (u *User) ResetPass(c echo.Context) error {
 	if err := u.Service.ResetPass(c.Request().Context(), token, req.Password); err != nil {
 		return CreateErrorResponse(err, c)
 	}
-	c.Response().Header().Set("Access-Control-Allow-Origin", "https://education-hub-fe-3q5c.vercel.app")
 	return c.Redirect(http.StatusTemporaryRedirect, URLFRONTEND)
 }
 
