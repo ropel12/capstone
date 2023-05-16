@@ -22,7 +22,12 @@ func (r *Routes) RegisterRoutes() {
 	ro.Use(middleware.RemoveTrailingSlash())
 	ro.Use(middleware.Logger())
 	ro.Use(middleware.Recover())
-	ro.Use(middleware.CORS())
+		corsConfig := middleware.CORSConfig{
+		AllowOrigins: []string{"https://education-hub-fe-3q5c.vercel.app"},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}
+	ro.Use(middleware.CORSWithConfig(corsConfig))
 	//No Auth
 	ro.POST("/login", r.User.Login)
 	ro.POST("/register", r.User.Register)
