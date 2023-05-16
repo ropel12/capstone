@@ -96,6 +96,62 @@ func (u *School) Update(c echo.Context) error {
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
 }
 
+func (u *School) Delete(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "School id is missing", nil))
+	}
+	newid, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid School Id", nil))
+	}
+	if err := u.Service.Delete(c.Request().Context(), newid, helper.GetUid(c.Get("user").(*jwt.Token))); err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
+}
+func (u *School) GetById(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "School id is missing", nil))
+	}
+	newid, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid School Id", nil))
+	}
+	res, err := u.Service.GetByid(c.Request().Context(), newid)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
+}
+func (u *School) GetAll(c echo.Context) error {
+	page := c.QueryParam("page")
+	limit := c.QueryParam("limit")
+	search := c.QueryParam("search")
+	if page == "" || limit == "" {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "query params limit and page is missing", nil))
+	}
+	newpage, err := strconv.Atoi(page)
+	newlimit, err1 := strconv.Atoi(limit)
+	if err != nil || err1 != nil {
+		u.Dep.Log.Errorf("[ERROR]WHEN CONVERTING THE PAGE AND LIMIT PARAMS, Error : %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid query param", nil))
+	}
+	res, err := u.Service.GetAll(c.Request().Context(), newpage, newlimit, search)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
+}
+func (u *School) GetByUid(c echo.Context) error {
+	res, err := u.Service.GetByUid(c.Request().Context(), helper.GetUid(c.Get("user").(*jwt.Token)))
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
+}
+
 func (u *School) Search(c echo.Context) error {
 	searchval := c.QueryParam("q")
 	if searchval == "" {

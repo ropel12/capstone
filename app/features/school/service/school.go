@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"math"
 	"mime/multipart"
 	"sync"
 
@@ -24,7 +25,9 @@ type (
 	SchoolService interface {
 		Create(ctx context.Context, req entity.ReqCreateSchool, image multipart.File, pdf multipart.File) (int, error)
 		Update(ctx context.Context, req entity.ReqUpdateSchool, image multipart.File, pdf multipart.File) (*entity.ResUpdateSchool, error)
+		Delete(ctx context.Context, id int, uid int) error
 		Search(searchval string) any
+		GetAll(ctx context.Context, page, limit int, search string) (*entity.Response, error)
 		AddAchievement(ctx context.Context, req entity.ReqAddAchievemnt, image multipart.File) (int, error)
 		DeleteAchievement(ctx context.Context, id int) error
 		UpdateAchievement(ctx context.Context, req entity.ReqUpdateAchievemnt, image multipart.File) (int, error)
@@ -122,6 +125,12 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 		return 0, err2
 	}
 	return id, nil
+}
+func (s *school) Delete(ctx context.Context, id int, uid int) error {
+	if err := s.repo.Delete(s.dep.Db.WithContext(ctx), id, uid); err != nil {
+		return err
+	}
+	return nil
 }
 func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image multipart.File, pdf multipart.File) (*entity.ResUpdateSchool, error) {
 	if err := s.validator.Struct(req); err != nil {
@@ -393,9 +402,36 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 	}
 	return &res, nil
 }
+func (s *school) GetAll(ctx context.Context, page, limit int, search string) (*entity.Response, error) {
+	offset := (page - 1) * limit
+	data, total, err := s.repo.GetAll(s.dep.Db.WithContext(ctx), limit, offset, search)
+	if err != nil {
+		return nil, err
+	}
+	schools := []entity.ResAllSchool{}
+	for _, val := range data {
+		school := entity.ResAllSchool{
+			ID:            int(val.ID),
+			Name:          val.Name,
+			Location:      fmt.Sprintf("%s, %s", val.City, val.Province),
+			AdminName:     val.User.Username,
+			Accreditation: val.Accreditation,
+			Image:         val.Image,
+		}
+		schools = append(schools, school)
+	}
+	res := entity.Response{
+		Limit:     limit,
+		Page:      page,
+		TotalPage: int(math.Ceil(float64(total) / float64(limit))),
+		TotalData: total,
+		Data:      schools,
+	}
+	return &res, nil
+}
 func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, error) {
 
-	data, err := s.repo.GetByUid(s.dep.Db.WithContext(ctx), id)
+	data, err := s.repo.GetById(s.dep.Db.WithContext(ctx), id)
 	if err != nil {
 		return nil, err
 	}

@@ -389,3 +389,63 @@
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T07:56:54+07:00"}
 {"level":"error","msg":"[ERROR] WHEN VALIDATE Add Payment REQ, Error: Key: 'ReqAddPayment.Interval' Error:Field validation for 'Interval' failed on the 'required' tag","time":"2023-05-16T08:02:17+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-16T08:03:34+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T10:49:00+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T10:51:30+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T10:53:13+07:00"}
+{"level":"error","msg":"[ERROR]WHEN GETTING SCHOOL DATA, Err : Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '? or district like ? or village like ? or detail like ?)) AND `schools`.`deleted' at line 1","time":"2023-05-16T10:53:16+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T10:53:57+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T10:54:12+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T10:55:37+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T10:55:51+07:00"}
+{"level":"error","msg":"[ERROR]WHEN GETTING The School Data BY SchoolID, Err: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM `payments` WHERE `payments`.`school_id` = ? AND `payments`.`deleted_at` IS ' at line 1","time":"2023-05-16T10:55:55+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T10:58:48+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T10:58:53+07:00"}
+{"level":"error","msg":"[ERROR]WHEN GETTING The School Data BY SchoolID, Err: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM `payments` WHERE `payments`.`school_id` = ? AND `payments`.`deleted_at` IS ' at line 1","time":"2023-05-16T10:59:01+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:01:38+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:01:44+07:00"}
+{"level":"error","msg":"[ERROR] WHEN GETTING The School Data BY SchoolID, Err: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM `payments` WHERE `payments`.`school_id` = ? AND `payments`.`deleted_at` IS ' at line 1","time":"2023-05-16T11:01:58+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:02:15+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:03:54+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:04:51+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:05:42+07:00"}
+{"level":"error","msg":"[ERROR] WHEN GETTING The School Data BY SchoolID, Err: Error 1054 (42S22): Unknown column 'question' in 'field list'","time":"2023-05-16T11:05:45+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:06:22+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:06:27+07:00"}
+{"level":"error","msg":"[ERROR] WHEN GETTING The School Data BY SchoolID, Err: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM `payments` WHERE `payments`.`school_id` = ? AND `payments`.`deleted_at` IS ' at line 1","time":"2023-05-16T11:06:37+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:06:48+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:13:10+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:14:29+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:14:56+07:00"}
+{"level":"error","msg":"[ERROR] WHEN GETTING The School Data BY SchoolID, Err: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM `payments` WHERE `payments`.`school_id` = ? AND `payments`.`deleted_at` IS ' at line 1","time":"2023-05-16T11:15:09+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:19:49+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:19:55+07:00"}
+{"level":"error","msg":"[ERROR] WHEN GETTING The School Data BY SchoolID, Err: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM `payments` WHERE `payments`.`school_id` = ? AND `payments`.`deleted_at` IS ' at line 1","time":"2023-05-16T11:20:09+07:00"}
+{"level":"error","msg":"[ERROR] WHEN GETTING The School Data BY SchoolID, Err: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM `payments` WHERE `payments`.`school_id` = ? AND `payments`.`deleted_at` IS ' at line 1","time":"2023-05-16T11:21:23+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:22:04+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:22:09+07:00"}
+{"level":"error","msg":"[ERROR] WHEN GETTING The School Data BY SchoolID, Err: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM `payments` WHERE `payments`.`school_id` = ? AND `payments`.`deleted_at` IS ' at line 1","time":"2023-05-16T11:22:14+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:22:59+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:23:06+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:24:20+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:24:26+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:27:32+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:27:47+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:28:33+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:28:39+07:00"}
+{"level":"error","msg":"[ERROR]WHEN GETTING The School Data BY UID, Err: Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM `payments` WHERE `payments`.`school_id` = ? AND `payments`.`deleted_at` IS ' at line 1","time":"2023-05-16T11:28:43+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:29:16+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:29:22+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T11:42:32+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T11:52:19+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T12:14:55+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T12:15:03+07:00"}
+{"level":"error","msg":"[FAILED] to publish to NSQ: dial tcp [::1]:4150: i/o timeout","time":"2023-05-16T12:16:32+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T12:18:21+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T12:19:18+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-16T12:19:57+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-16T12:20:03+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-16T12:20:10+07:00"}
+{"level":"error","msg":"[FAILED] to publish to NSQ: dial tcp [::1]:4150: i/o timeout","time":"2023-05-16T12:21:29+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-16T12:22:27+07:00"}
+{"level":"error","msg":"[FAILED] to publish to NSQ: dial tcp [::1]:4150: i/o timeout","time":"2023-05-16T12:23:49+07:00"}
+{"level":"error","msg":"[FAILED] to publish to NSQ: dial tcp [::1]:4150: i/o timeout","time":"2023-05-16T12:24:19+07:00"}

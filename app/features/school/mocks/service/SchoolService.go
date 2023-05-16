@@ -136,6 +136,20 @@ func (_m *SchoolService) Create(ctx context.Context, req entities.ReqCreateSchoo
 	return r0, r1
 }
 
+// Delete provides a mock function with given fields: ctx, id, uid
+func (_m *SchoolService) Delete(ctx context.Context, id int, uid int) error {
+	ret := _m.Called(ctx, id, uid)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int, int) error); ok {
+		r0 = rf(ctx, id, uid)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // DeleteAchievement provides a mock function with given fields: ctx, id
 func (_m *SchoolService) DeleteAchievement(ctx context.Context, id int) error {
 	ret := _m.Called(ctx, id)
@@ -190,6 +204,32 @@ func (_m *SchoolService) DeletePayment(ctx context.Context, id int) error {
 	}
 
 	return r0
+}
+
+// GetAll provides a mock function with given fields: ctx, page, limit, search
+func (_m *SchoolService) GetAll(ctx context.Context, page int, limit int, search string) (*entities.Response, error) {
+	ret := _m.Called(ctx, page, limit, search)
+
+	var r0 *entities.Response
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int, int, string) (*entities.Response, error)); ok {
+		return rf(ctx, page, limit, search)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int, int, string) *entities.Response); ok {
+		r0 = rf(ctx, page, limit, search)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.Response)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int, int, string) error); ok {
+		r1 = rf(ctx, page, limit, search)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // GetByUid provides a mock function with given fields: ctx, uid

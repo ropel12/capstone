@@ -17,6 +17,7 @@ type (
 		Create(db *gorm.DB, school entity.School) (int, error)
 		FindByNPSN(db *gorm.DB, npsn string) error
 		Update(db *gorm.DB, school entity.School) (*entity.School, error)
+		Delete(db *gorm.DB, id int, uid int) error
 		AddAchievement(db *gorm.DB, achv entity.Achievement) (int, error)
 		DeleteAchievement(db *gorm.DB, id int) error
 		UpdateAchievement(db *gorm.DB, achv entity.Achievement) (*entity.Achievement, error)
@@ -30,6 +31,7 @@ type (
 		UpdateFaq(db *gorm.DB, extrac entity.Faq) (*entity.Faq, error)
 		AddPayment(db *gorm.DB, paym entity.Payment) (int, error)
 		DeletePayment(db *gorm.DB, id int) error
+		GetAll(db *gorm.DB, limit, offset int, search string) ([]entity.School, int, error)
 		UpdatePayment(db *gorm.DB, paym entity.Payment) (*entity.Payment, error)
 	}
 )
@@ -53,9 +55,7 @@ func (u *school) GetByUid(db *gorm.DB, uid int) (*entity.School, error) {
 		return db.Select("id,school_id,description,image,title")
 	}).Preload("Faqs", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,school_id,question,answer")
-	}).Preload("Payments", func(db *gorm.DB) *gorm.DB {
-		return db.Select("id,school_id,description,image,type,price,interval")
-	}).Where("user_id=?", uid).Find(&res).Error; err != nil {
+	}).Preload("Payments").Where("user_id=?", uid).Find(&res).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN GETTING The School Data BY UID, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
 	}
@@ -64,18 +64,45 @@ func (u *school) GetByUid(db *gorm.DB, uid int) (*entity.School, error) {
 	}
 	return &res, nil
 }
+func (u *school) GetAll(db *gorm.DB, limit, offset int, search string) ([]entity.School, int, error) {
+	res := []entity.School{}
+	search = "%" + search + "%"
+	var total int64
+	db.Model(&entity.School{}).Where("deleted_at IS NULL AND (name like ? or province like ? or district like ? or village like ? or detail like ?)", search, search, search, search, search).Count(&total)
+	if err := db.Preload("User", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,username")
+	}).Where("deleted_at IS NULL AND (name like ? or province like ? or district like ? or village like ? or detail like ?)", search, search, search, search, search).Find(&res).Error; err != nil {
+		u.log.Errorf("[ERROR]WHEN GETTING SCHOOL DATA, Err : %v", err)
+		return nil, 0, errorr.NewInternal("Internal Server Error")
+	}
+	return res, int(total), nil
+}
+
+func (u *school) Delete(db *gorm.DB, id int, uid int) error {
+
+	if err := db.Where("id=? AND user_id=?", id, uid).First(&entity.School{}).Error; err != nil {
+		if err != gorm.ErrRecordNotFound {
+			u.log.Errorf("[ERROR]WHEN GETTING The Achievement Data, Err: %v", err)
+			return errorr.NewInternal("Internal Server Error")
+		}
+		return errorr.NewBad("Id Not Found")
+	}
+	if err := db.Where("id=?", id).Delete(&entity.Achievement{}).Error; err != nil {
+		u.log.Errorf("[ERROR]WHEN DELETING Achievement, Err: %v", err)
+		return errorr.NewInternal("Internal Server Error")
+	}
+	return nil
+}
 func (u *school) GetById(db *gorm.DB, id int) (*entity.School, error) {
 	res := entity.School{}
 	if err := db.Preload("Achievements", func(db *gorm.DB) *gorm.DB {
-		return db.Select("id,school_id,description,image,title")
+		return db.Select("id, school_id, description, image, title")
 	}).Preload("Extracurriculars", func(db *gorm.DB) *gorm.DB {
-		return db.Select("id,school_id,description,image,title")
+		return db.Select("id, school_id, description, image, title")
 	}).Preload("Faqs", func(db *gorm.DB) *gorm.DB {
-		return db.Select("id,school_id,question,answer")
-	}).Preload("Payments", func(db *gorm.DB) *gorm.DB {
-		return db.Select("id,school_id,description,image,type,price,interval")
-	}).Where("id=?", id).Find(&res).Error; err != nil {
-		u.log.Errorf("[ERROR]WHEN GETTING The School Data BY SchoolID, Err: %v", err)
+		return db.Select("id, school_id, question, answer")
+	}).Preload("Payments").Where("id=?", id).Find(&res).Error; err != nil {
+		u.log.Errorf("[ERROR] WHEN GETTING The School Data BY SchoolID, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
 	}
 	if res.Name == "" {
