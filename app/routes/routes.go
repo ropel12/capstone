@@ -1,13 +1,10 @@
 package routes
 
 import (
-	"net/http"
-
 	schoolhand "github.com/education-hub/BE/app/features/school/handler"
 	userhand "github.com/education-hub/BE/app/features/user/handler"
 	"github.com/education-hub/BE/config/dependency"
 	"github.com/go-playground/validator"
-	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/dig"
 )
