@@ -131,7 +131,7 @@ func (u *User) VerifyCaptcha(c echo.Context) error {
 		u.Dep.Log.Errorf("[ERROR] WHEN BINDING CAPTCHA, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
 	}
-	if err := helper.VerifyCaptcha(req.CaptchaID, req.Value); err == true {
+	if !helper.VerifyCaptcha(req.CaptchaID, req.Value) {
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Wrong Answer", nil))
 	}
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))

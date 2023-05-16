@@ -28,6 +28,9 @@ type (
 		AddFaq(db *gorm.DB, faq entity.Faq) (int, error)
 		DeleteFaq(db *gorm.DB, id int) error
 		UpdateFaq(db *gorm.DB, extrac entity.Faq) (*entity.Faq, error)
+		AddPayment(db *gorm.DB, paym entity.Payment) (int, error)
+		DeletePayment(db *gorm.DB, id int) error
+		UpdatePayment(db *gorm.DB, paym entity.Payment) (*entity.Payment, error)
 	}
 )
 
@@ -47,7 +50,11 @@ func (u *school) GetByUid(db *gorm.DB, uid int) (*entity.School, error) {
 	if err := db.Preload("Achievements", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,school_id,description,image,title")
 	}).Preload("Extracurriculars", func(db *gorm.DB) *gorm.DB {
-		return db.Select("id,description,image,title")
+		return db.Select("id,school_id,description,image,title")
+	}).Preload("Faqs", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,school_id,question,answer")
+	}).Preload("Payments", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,school_id,description,image,type,price,interval")
 	}).Where("user_id=?", uid).Find(&res).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN GETTING The School Data BY UID, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
@@ -60,9 +67,13 @@ func (u *school) GetByUid(db *gorm.DB, uid int) (*entity.School, error) {
 func (u *school) GetById(db *gorm.DB, id int) (*entity.School, error) {
 	res := entity.School{}
 	if err := db.Preload("Achievements", func(db *gorm.DB) *gorm.DB {
-		return db.Select("id,description,image,title")
+		return db.Select("id,school_id,description,image,title")
 	}).Preload("Extracurriculars", func(db *gorm.DB) *gorm.DB {
-		return db.Select("id,description,image,title")
+		return db.Select("id,school_id,description,image,title")
+	}).Preload("Faqs", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,school_id,question,answer")
+	}).Preload("Payments", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,school_id,description,image,type,price,interval")
 	}).Where("id=?", id).Find(&res).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN GETTING The School Data BY SchoolID, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
@@ -249,6 +260,60 @@ func (s *school) UpdateFaq(db *gorm.DB, extrac entity.Faq) (*entity.Faq, error) 
 	}
 	if err := db.Save(&newdata).Error; err != nil {
 		s.log.Errorf("[ERROR]WHEN UPDATING Faq, Err: %v", err)
+		return nil, errorr.NewInternal("Internal server error")
+	}
+	return &newdata, nil
+}
+
+func (u *school) AddPayment(db *gorm.DB, paym entity.Payment) (int, error) {
+	if err := db.Save(&paym).Error; err != nil {
+		u.log.Errorf("[ERROR]WHEN ADDING Payment, Err: %v", err)
+		return 0, errorr.NewInternal("internal Server Error")
+	}
+	return int(paym.SchoolID), nil
+}
+
+func (u *school) DeletePayment(db *gorm.DB, id int) error {
+
+	if err := db.Where("id=?", id).First(&entity.Payment{}).Error; err != nil {
+		if err != gorm.ErrRecordNotFound {
+			u.log.Errorf("[ERROR]WHEN GETTING The Payment Data, Err: %v", err)
+			return errorr.NewInternal("Internal Server Error")
+		}
+		return errorr.NewBad("Id Not Found")
+	}
+	if err := db.Where("id=?", id).Delete(&entity.Payment{}).Error; err != nil {
+		u.log.Errorf("[ERROR]WHEN DELETING Payment, Err: %v", err)
+		return errorr.NewInternal("Internal Server Error")
+	}
+	return nil
+}
+
+func (s *school) UpdatePayment(db *gorm.DB, paym entity.Payment) (*entity.Payment, error) {
+	newdata := entity.Payment{}
+	if err := db.First(&newdata, paym.ID).Error; err == gorm.ErrRecordNotFound {
+		s.log.Errorf("ERROR]WHEN UPDATE Payment,Error: %v ", err)
+		return nil, errorr.NewBad("Id Not Found")
+	}
+	v := reflect.ValueOf(paym)
+	n := reflect.ValueOf(&newdata).Elem()
+
+	for i := 0; i < v.NumField(); i++ {
+		switch v.Field(i).Interface().(type) {
+		case string:
+			val := v.Field(i).Interface().(string)
+			if val != "" {
+				n.Field(i).SetString(val)
+			}
+		case int:
+			val := v.Field(i).Interface().(int)
+			if val != -1 {
+				n.Field(i).SetInt(int64(val))
+			}
+		}
+	}
+	if err := db.Save(&newdata).Error; err != nil {
+		s.log.Errorf("[ERROR]WHEN UPDATING Payment, Err: %v", err)
 		return nil, errorr.NewInternal("Internal server error")
 	}
 	return &newdata, nil

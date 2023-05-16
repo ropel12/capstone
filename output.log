@@ -320,3 +320,72 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-15T18:09:29+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T18:17:38+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-15T18:23:40+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T19:43:23+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T19:48:21+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T19:48:30+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T19:52:02+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T19:52:12+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T19:56:08+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T20:18:56+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T20:19:20+07:00"}
+{"level":"error","msg":"Failed to start server: listen tcp :8000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","time":"2023-05-15T20:19:20+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T20:19:20+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T20:19:40+07:00"}
+{"level":"error","msg":"Failed to start server: listen tcp :8000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.","time":"2023-05-15T20:19:40+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T20:19:40+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T20:19:42+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T20:19:57+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T20:27:27+07:00"}
+{"level":"info","msg":"Starting server on port 80","time":"2023-05-15T20:27:48+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T20:28:50+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T21:47:08+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T21:52:24+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T21:52:37+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T21:54:04+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T21:54:39+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Payment REQ, Error: Key: 'ReqAddPayment.Interval' Error:Field validation for 'Interval' failed on the 'required' tag","time":"2023-05-15T21:56:53+07:00"}
+{"level":"error","msg":"[ERROR]WHEN ADDING Payment, Err: Error 1146 (42S02): Table 'captone.payments' doesn't exist","time":"2023-05-15T21:57:01+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T21:57:06+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T21:57:38+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Payment REQ, Error: Key: 'ReqUpdatePayment.ID' Error:Field validation for 'ID' failed on the 'required' tag","time":"2023-05-15T21:59:01+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:02:06+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:02:15+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:09:52+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:09:59+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:12:20+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:12:56+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:19:31+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:19:40+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:22:46+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:22:59+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:24:11+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:24:19+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:26:26+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:26:33+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:26:38+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:26:58+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:42:30+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:43:48+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:45:16+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:46:17+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:47:31+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T22:50:06+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T22:55:04+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T23:02:15+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T23:04:54+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T23:04:59+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T23:15:48+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T23:15:55+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T23:17:23+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T23:17:32+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T23:18:50+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T23:19:46+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T23:20:14+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T23:21:03+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T23:21:57+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-15T23:22:34+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Payment REQ, Error: Key: 'ReqUpdatePayment.ID' Error:Field validation for 'ID' failed on the 'required' tag","time":"2023-05-15T23:22:41+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-15T23:23:51+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T07:56:54+07:00"}
+{"level":"error","msg":"[ERROR] WHEN VALIDATE Add Payment REQ, Error: Key: 'ReqAddPayment.Interval' Error:Field validation for 'Interval' failed on the 'required' tag","time":"2023-05-16T08:02:17+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T08:03:34+07:00"}

@@ -31,6 +31,7 @@ type (
 		Achievements     []Achievement
 		Extracurriculars []Extracurricular
 		Faqs             []Faq
+		Payments         []Payment
 	}
 	Achievement struct {
 		gorm.Model
@@ -51,6 +52,29 @@ type (
 		SchoolID uint
 		Question string `gorm:"type:varchar(255);not null"`
 		Answer   string `gorm:"type:varchar(255);not null"`
+	}
+	Payment struct {
+		gorm.Model
+		SchoolID    uint
+		Description string `gorm:"type:varchar(255);not null"`
+		Image       string `gorm:"type:varchar(70);not null"`
+		Type        string `gorm:"type:varchar(15);not null"`
+		Price       int
+		Interval    int
+	}
+	ReqAddPayment struct {
+		SchoolID    uint   `form:"school_id" validate:"required"`
+		Description string `form:"description" validate:"required"`
+		Price       int    `form:"price" validate:"required"`
+		Image       string `form:"image" validate:"required"`
+		Interval    *int   `form:"interval" validate:"required"`
+	}
+	ReqUpdatePayment struct {
+		ID          int    `form:"id" validate:"required"`
+		Description string `form:"description"`
+		Price       int    `form:"price"`
+		Image       string `form:"image"`
+		Interval    *int   `form:"interval"`
 	}
 	ReqAddFaq struct {
 		SchoolId int    `json:"school_id" validate:"required"`
@@ -97,6 +121,16 @@ type (
 		Img         string `json:"img"`
 		Description string `json:"description"`
 	}
+	ResPaymentType struct {
+		Id          int
+		Img         string
+		Description string
+		Price       int
+	}
+	ResPayment struct {
+		OneTime  []ResPaymentType `json:"onetime"`
+		Interval []ResPaymentType `json:"interval"`
+	}
 	ResDetailSchool struct {
 		Id               int           `json:"id"`
 		Npsn             string        `json:"npsn"`
@@ -121,6 +155,7 @@ type (
 		QuizLinkPreview  string        `json:"quizLinkPreview"`
 		Achievements     []ResAddItems `json:"achievements"`
 		Extracurriculars []ResAddItems `json:"extracurriculars"`
+		ResPayment       ResPayment    `json:"payments"`
 	}
 	ReqCreateSchool struct {
 		UserId        int

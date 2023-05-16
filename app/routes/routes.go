@@ -57,4 +57,7 @@ func (r *Routes) RegisterRoutes() {
 	radm.PUT("/extracurriculars", r.School.UpdateExtracurricular)
 	radm.DELETE("/extracurriculars/:id", r.School.DeleteExtracurricular)
 	radm.POST("/gmeet", r.School.GenerateUrl)
+	radm.POST("/payments", r.School.AddPayment)
+	radm.PUT("/payments", r.School.UpdatePayment)
+	radm.DELETE("/payments/:id", r.School.DeletePayment)
 }
