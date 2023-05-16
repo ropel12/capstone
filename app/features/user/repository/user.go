@@ -141,19 +141,21 @@ func (u *user) InsertForgotPassToken(db *gorm.DB, req entity.ForgotPass) error {
 }
 
 func (u *user) ResetPass(db *gorm.DB, newpass string, token string) error {
-	userdata := entity.ForgotPass{}
-	if err := db.Where("token = ?", token).First(&userdata).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return errorr.NewBad("Data not found")
+	return db.Transaction(func(tx *gorm.DB) error {
+		userdata := entity.ForgotPass{}
+		if err := db.Where("token = ? AND deleted_at IS NULL", token).Find(&userdata).Error; err != nil {
+			u.log.Errorf("[ERROR]WHEN Getting user information with forgot token,error:%v", err)
+			return errorr.NewInternal("Internal Server Error")
 		}
-		u.log.Errorf("[ERROR]WHEN Getting user information with forgot token,error:%v", err)
-		return errorr.NewInternal("Internal Server Error")
-	}
-	if err := db.Model(&entity.User{}).Where("email=?", userdata.Email).Update("password", newpass).Error; err != nil {
-		fmt.Println(err)
-		u.log.Errorf("[ERROR]When entering the password reset token,error:%v", err)
-		return errorr.NewInternal("Internal Server Error")
-	}
-	db.Where("token =?", token).Delete(&userdata)
-	return nil
+		if userdata.Email == "" {
+			return errorr.NewBad("Data Not Found")
+		}
+		if err := db.Model(&entity.User{}).Where("email=?", userdata.Email).Update("password", newpass).Error; err != nil {
+			fmt.Println(err)
+			u.log.Errorf("[ERROR]When entering the password reset token,error:%v", err)
+			return errorr.NewInternal("Internal Server Error")
+		}
+		db.Where("token =? AND deleted_at IS NULL", token).Delete(&userdata)
+		return nil
+	})
 }
