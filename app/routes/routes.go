@@ -40,8 +40,10 @@ func (r *Routes) RegisterRoutes() {
 	ro.POST("/reset/:token", r.User.ResetPass)
 	ro.GET("/getcaptcha", r.User.GetCaptcha)
 	ro.POST("/verifycaptcha", r.User.VerifyCaptcha)
-
+	//school
+	ro.GET("/school", r.School.GetAll)
 	ro.GET("/school/search", r.School.Search)
+	ro.GET("/school/:id", r.School.GetById)
 	ro.GET("/gmeet", r.School.CreateGmeet)
 	// AUTH
 	rauth := ro.Group("", middleware.JWT([]byte(r.Depend.Config.JwtSecret)))
@@ -54,6 +56,8 @@ func (r *Routes) RegisterRoutes() {
 	//ADMIN AREA
 	radm := rverif.Group("", AdminMiddleWare)
 	radm.POST("/school", r.School.Create)
+	radm.GET("/admin/school", r.School.GetByUid)
+	radm.DELETE("/school/:id", r.School.Delete)
 	radm.PUT("/school", r.School.Update)
 	radm.POST("/achievements", r.School.AddAchievement)
 	radm.PUT("/achievements", r.School.UpdateAchievement)

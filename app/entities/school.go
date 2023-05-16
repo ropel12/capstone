@@ -32,7 +32,9 @@ type (
 		Extracurriculars []Extracurricular
 		Faqs             []Faq
 		Payments         []Payment
+		User             *User
 	}
+
 	Achievement struct {
 		gorm.Model
 		SchoolID    uint
@@ -130,6 +132,21 @@ type (
 	ResPayment struct {
 		OneTime  []ResPaymentType `json:"onetime"`
 		Interval []ResPaymentType `json:"interval"`
+	}
+	Response struct {
+		Limit     int `json:"limit,omitempty"`
+		Page      int `json:"page,omitempty"`
+		TotalPage int `json:"total_page,omitempty"`
+		TotalData int `json:"total_data,omitempty"`
+		Data      any `json:"data"`
+	}
+	ResAllSchool struct {
+		ID            int    `json:"id"`
+		Name          string `json:"name"`
+		AdminName     string `json:"admin_name"`
+		Image         string `json:"image"`
+		Accreditation string `json:"accreditation"`
+		Location      string `json:"location"`
 	}
 	ResDetailSchool struct {
 		Id               int           `json:"id"`

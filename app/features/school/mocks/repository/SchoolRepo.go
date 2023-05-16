@@ -134,6 +134,20 @@ func (_m *SchoolRepo) Create(db *gorm.DB, school entities.School) (int, error) {
 	return r0, r1
 }
 
+// Delete provides a mock function with given fields: db, id, uid
+func (_m *SchoolRepo) Delete(db *gorm.DB, id int, uid int) error {
+	ret := _m.Called(db, id, uid)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int, int) error); ok {
+		r0 = rf(db, id, uid)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // DeleteAchievement provides a mock function with given fields: db, id
 func (_m *SchoolRepo) DeleteAchievement(db *gorm.DB, id int) error {
 	ret := _m.Called(db, id)
@@ -202,6 +216,39 @@ func (_m *SchoolRepo) FindByNPSN(db *gorm.DB, npsn string) error {
 	}
 
 	return r0
+}
+
+// GetAll provides a mock function with given fields: db, limit, offset, search
+func (_m *SchoolRepo) GetAll(db *gorm.DB, limit int, offset int, search string) ([]entities.School, int, error) {
+	ret := _m.Called(db, limit, offset, search)
+
+	var r0 []entities.School
+	var r1 int
+	var r2 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int, int, string) ([]entities.School, int, error)); ok {
+		return rf(db, limit, offset, search)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int, int, string) []entities.School); ok {
+		r0 = rf(db, limit, offset, search)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.School)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, int, int, string) int); ok {
+		r1 = rf(db, limit, offset, search)
+	} else {
+		r1 = ret.Get(1).(int)
+	}
+
+	if rf, ok := ret.Get(2).(func(*gorm.DB, int, int, string) error); ok {
+		r2 = rf(db, limit, offset, search)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
 }
 
 // GetById provides a mock function with given fields: db, id
