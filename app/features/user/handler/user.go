@@ -109,7 +109,7 @@ func (u *User) ResetPass(c echo.Context) error {
 	if err := u.Service.ResetPass(c.Request().Context(), token, req.Password); err != nil {
 		return CreateErrorResponse(err, c)
 	}
-	return c.Redirect(http.StatusFound, URLFRONTEND)
+	return c.Redirect(http.StatusTemporaryRedirect, URLFRONTEND)
 }
 
 func (u *User) GetCaptcha(c echo.Context) error {
