@@ -36,6 +36,9 @@ type (
 		AddFaq(ctx context.Context, req entity.ReqAddFaq) (int, error)
 		DeleteFaq(ctx context.Context, id int) error
 		UpdateFaq(ctx context.Context, req entity.ReqUpdateFaq) (int, error)
+		AddPayment(ctx context.Context, req entity.ReqAddPayment, image multipart.File) (int, error)
+		DeletePayment(ctx context.Context, id int) error
+		UpdatePayment(ctx context.Context, req entity.ReqUpdatePayment, image multipart.File) (int, error)
 	}
 )
 
@@ -351,17 +354,15 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		QuizLinkPub:     data.QuizLinkPub,
 		QuizLinkPreview: data.QuizLinkPreview,
 	}
-	achivements := []entity.ResAddItems{}
 	for _, val := range data.Achievements {
 		achivement := entity.ResAddItems{
 			Name:        val.Title,
 			Img:         val.Image,
 			Description: val.Description,
-			Id:          int(val.ID),
 		}
-		achivements = append(achivements, achivement)
+		res.Achievements = append(res.Achievements, achivement)
 	}
-	extracurriculars := []entity.ResAddItems{}
+
 	for _, val := range data.Extracurriculars {
 		extracurricular := entity.ResAddItems{
 			Name:        val.Title,
@@ -369,10 +370,27 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 			Description: val.Description,
 			Id:          int(val.ID),
 		}
-		achivements = append(extracurriculars, extracurricular)
+		res.Extracurriculars = append(res.Extracurriculars, extracurricular)
 	}
-	res.Achievements = achivements
-	res.Extracurriculars = extracurriculars
+	for _, val := range data.Payments {
+		if val.Type == "one" {
+			onetime := entity.ResPaymentType{
+				Id:          int(val.ID),
+				Img:         val.Image,
+				Description: val.Description,
+				Price:       val.Price,
+			}
+			res.ResPayment.OneTime = append(res.ResPayment.OneTime, onetime)
+		} else {
+			interval := entity.ResPaymentType{
+				Id:          int(val.ID),
+				Img:         val.Image,
+				Description: val.Description,
+				Price:       val.Price,
+			}
+			res.ResPayment.Interval = append(res.ResPayment.OneTime, interval)
+		}
+	}
 	return &res, nil
 }
 func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, error) {
@@ -404,16 +422,16 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 		QuizLinkPub:     data.QuizLinkPub,
 		QuizLinkPreview: data.QuizLinkPreview,
 	}
-	achivements := []entity.ResAddItems{}
+
 	for _, val := range data.Achievements {
 		achivement := entity.ResAddItems{
 			Name:        val.Title,
 			Img:         val.Image,
 			Description: val.Description,
 		}
-		achivements = append(achivements, achivement)
+		res.Achievements = append(res.Achievements, achivement)
 	}
-	extracurriculars := []entity.ResAddItems{}
+
 	for _, val := range data.Extracurriculars {
 		extracurricular := entity.ResAddItems{
 			Name:        val.Title,
@@ -421,10 +439,28 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 			Description: val.Description,
 			Id:          int(val.ID),
 		}
-		achivements = append(extracurriculars, extracurricular)
+		res.Extracurriculars = append(res.Extracurriculars, extracurricular)
 	}
-	res.Extracurriculars = extracurriculars
-	res.Achievements = achivements
+	for _, val := range data.Payments {
+		if val.Type == "one" {
+			onetime := entity.ResPaymentType{
+				Id:          int(val.ID),
+				Img:         val.Image,
+				Description: val.Description,
+				Price:       val.Price,
+			}
+			res.ResPayment.OneTime = append(res.ResPayment.OneTime, onetime)
+		} else {
+			interval := entity.ResPaymentType{
+				Id:          int(val.ID),
+				Img:         val.Image,
+				Description: val.Description,
+				Price:       val.Price,
+			}
+			res.ResPayment.Interval = append(res.ResPayment.OneTime, interval)
+		}
+	}
+
 	return &res, nil
 }
 
@@ -465,6 +501,85 @@ func (s *school) UpdateFaq(ctx context.Context, req entity.ReqUpdateFaq) (int, e
 	res, err := s.repo.UpdateFaq(s.dep.Db.WithContext(ctx), data)
 	if err != nil {
 		return 0, err
+	}
+	return int(res.SchoolID), nil
+}
+
+func (s *school) AddPayment(ctx context.Context, req entity.ReqAddPayment, image multipart.File) (int, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE Add Payment REQ, Error: %v", err)
+		return 0, errorr.NewBad("Missing or Invalid Request Body")
+	}
+	filename := fmt.Sprintf("%s_%d_%s", "Payment_", req.SchoolID, req.Image)
+	if err := s.dep.Gcp.UploadFile(image, filename); err != nil {
+		s.dep.Log.Errorf("Error Service : %v", err)
+		image.Close()
+		return 0, err
+	}
+	image.Close()
+	typee := "one"
+	if *req.Interval != 0 {
+		typee = "interval"
+	}
+	data := entity.Payment{
+		SchoolID:    uint(req.SchoolID),
+		Description: req.Description,
+		Price:       req.Price,
+		Interval:    *req.Interval,
+		Image:       filename,
+		Type:        typee,
+	}
+	res, err := s.repo.AddPayment(s.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return 0, err
+	}
+	return res, err
+}
+
+func (s *school) DeletePayment(ctx context.Context, id int) error {
+	if err := s.repo.DeletePayment(s.dep.Db.WithContext(ctx), id); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *school) UpdatePayment(ctx context.Context, req entity.ReqUpdatePayment, image multipart.File) (int, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE Add Payment REQ, Error: %v", err)
+		return 0, errorr.NewBad("Missing or Invalid Request Body")
+	}
+	filename := fmt.Sprintf("%s_%d_%s", "Payment_", req.ID, req.Image)
+	typee := ""
+	if req.Interval != nil {
+		if *req.Interval != 0 {
+			typee = "interval"
+		} else {
+			typee = "one"
+		}
+	}
+	Interval := -1
+	if req.Interval != nil {
+		Interval = *req.Interval
+	}
+	data := entity.Payment{
+		Description: req.Description,
+		Image:       req.Image,
+		Price:       req.Price,
+		Interval:    Interval,
+		Type:        typee,
+	}
+	data.ID = uint(req.ID)
+	res, err := s.repo.UpdatePayment(s.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return 0, err
+	}
+	if image != nil {
+		if err := s.dep.Gcp.UploadFile(image, filename); err != nil {
+			s.dep.Log.Errorf("Error Service : %v", err)
+			image.Close()
+			return 0, err
+		}
+		image.Close()
 	}
 	return int(res.SchoolID), nil
 }

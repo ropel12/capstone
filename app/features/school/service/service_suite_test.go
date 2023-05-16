@@ -748,4 +748,139 @@ var _ = Describe("school", func() {
 		})
 	})
 
+	Context("Add Payment", func() {
+		When("Request Body kosong", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.AddPayment(ctx, entity.ReqAddPayment{}, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+		When("Format gambar tidak sesuai", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				interval := 0
+				req := entity.ReqAddPayment{SchoolID: 1, Description: "test", Image: "gambar.php", Price: 20000, Interval: &interval}
+				_, err := SchoolService.AddPayment(ctx, req, image)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("File type not allowed"))
+			})
+		})
+
+		When("Terjadi Kesalahan Query Database", func() {
+			BeforeEach(func() {
+				Mock.On("AddPayment", mock.Anything, mock.Anything).Return(0, errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				interval := 0
+				req := entity.ReqAddPayment{SchoolID: 1, Description: "test", Image: "gambar.jpg", Price: 20000, Interval: &interval}
+				_, err := SchoolService.AddPayment(ctx, req, image)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil Menambahakan Payment", func() {
+			BeforeEach(func() {
+				Mock.On("AddPayment", mock.Anything, mock.Anything).Return(1, nil).Once()
+			})
+			It("Akan Mengembalikan Id Sekolah", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				interval := 1
+				req := entity.ReqAddPayment{SchoolID: 1, Description: "test", Image: "gambar.jpg", Price: 20000, Interval: &interval}
+				res, err := SchoolService.AddPayment(ctx, req, image)
+				Expect(err).Should(BeNil())
+				Expect(res).To(Equal(1))
+			})
+		})
+
+	})
+
+	Context("Update Payment", func() {
+		When("id tidak ada", func() {
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.UpdatePayment(ctx, entity.ReqUpdatePayment{}, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+		When("Format gambar tidak sesuai", func() {
+			BeforeEach(func() {
+				Mock.On("UpdatePayment", mock.Anything, mock.Anything).Return(&entity.Payment{}, nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				interval := 1
+				image = os.NewFile(uintptr(2), "2")
+				_, err := SchoolService.UpdatePayment(ctx, entity.ReqUpdatePayment{ID: 1, Image: "backdoor.aspx", Interval: &interval}, image)
+				Expect(err).ShouldNot(BeNil())
+			})
+		})
+
+		When("Terjadi Kesalahn Query Database", func() {
+			BeforeEach(func() {
+				Mock.On("UpdatePayment", mock.Anything, mock.Anything).Return(nil, errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				image = os.NewFile(uintptr(2), "2")
+				interval := 0
+				_, err := SchoolService.UpdatePayment(ctx, entity.ReqUpdatePayment{ID: 1, Image: "backdoor.jpg", Interval: &interval}, image)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil memperbahrui data Payment", func() {
+			BeforeEach(func() {
+				Mock.On("UpdatePayment", mock.Anything, mock.Anything).Return(&entity.Payment{SchoolID: 1}, nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				var image multipart.File
+				interval := 1
+				image = os.NewFile(uintptr(2), "2")
+				res, err := SchoolService.UpdatePayment(ctx, entity.ReqUpdatePayment{ID: 1, Image: "backdoor.jpg", Interval: &interval}, image)
+				Expect(err).Should(BeNil())
+				Expect(res).To(Equal(1))
+			})
+		})
+	})
+
+	Context("Delete Payment", func() {
+		When("Id tidak ditemukan", func() {
+			BeforeEach(func() {
+				Mock.On("DeletePayment", mock.Anything, mock.Anything).Return(errors.New("Id not found")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeletePayment(ctx, 9999)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Id not found"))
+			})
+		})
+		When("Terjadi kesalahan query database", func() {
+			BeforeEach(func() {
+				Mock.On("DeletePayment", mock.Anything, mock.Anything).Return(errors.New("Internal Server Error")).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeletePayment(ctx, 1)
+				Expect(err).ShouldNot(BeNil())
+				Expect(err.Error()).To(Equal("Internal Server Error"))
+			})
+		})
+		When("Berhasil Menghapus data Payment", func() {
+			BeforeEach(func() {
+				Mock.On("DeletePayment", mock.Anything, mock.Anything).Return(nil).Once()
+			})
+			It("Akan Mengembalikan Erorr", func() {
+				err := SchoolService.DeletePayment(ctx, 1)
+				Expect(err).Should(BeNil())
+			})
+		})
+
+	})
+
 })

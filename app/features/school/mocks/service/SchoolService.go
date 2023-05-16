@@ -88,6 +88,30 @@ func (_m *SchoolService) AddFaq(ctx context.Context, req entities.ReqAddFaq) (in
 	return r0, r1
 }
 
+// AddPayment provides a mock function with given fields: ctx, req, image
+func (_m *SchoolService) AddPayment(ctx context.Context, req entities.ReqAddPayment, image multipart.File) (int, error) {
+	ret := _m.Called(ctx, req, image)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqAddPayment, multipart.File) (int, error)); ok {
+		return rf(ctx, req, image)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqAddPayment, multipart.File) int); ok {
+		r0 = rf(ctx, req, image)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqAddPayment, multipart.File) error); ok {
+		r1 = rf(ctx, req, image)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: ctx, req, image, pdf
 func (_m *SchoolService) Create(ctx context.Context, req entities.ReqCreateSchool, image multipart.File, pdf multipart.File) (int, error) {
 	ret := _m.Called(ctx, req, image, pdf)
@@ -142,6 +166,20 @@ func (_m *SchoolService) DeleteExtracurricular(ctx context.Context, id int) erro
 
 // DeleteFaq provides a mock function with given fields: ctx, id
 func (_m *SchoolService) DeleteFaq(ctx context.Context, id int) error {
+	ret := _m.Called(ctx, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// DeletePayment provides a mock function with given fields: ctx, id
+func (_m *SchoolService) DeletePayment(ctx context.Context, id int) error {
 	ret := _m.Called(ctx, id)
 
 	var r0 error
@@ -313,6 +351,30 @@ func (_m *SchoolService) UpdateFaq(ctx context.Context, req entities.ReqUpdateFa
 
 	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqUpdateFaq) error); ok {
 		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdatePayment provides a mock function with given fields: ctx, req, image
+func (_m *SchoolService) UpdatePayment(ctx context.Context, req entities.ReqUpdatePayment, image multipart.File) (int, error) {
+	ret := _m.Called(ctx, req, image)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqUpdatePayment, multipart.File) (int, error)); ok {
+		return rf(ctx, req, image)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqUpdatePayment, multipart.File) int); ok {
+		r0 = rf(ctx, req, image)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqUpdatePayment, multipart.File) error); ok {
+		r1 = rf(ctx, req, image)
 	} else {
 		r1 = ret.Error(1)
 	}

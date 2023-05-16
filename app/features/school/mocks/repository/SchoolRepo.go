@@ -86,6 +86,30 @@ func (_m *SchoolRepo) AddFaq(db *gorm.DB, faq entities.Faq) (int, error) {
 	return r0, r1
 }
 
+// AddPayment provides a mock function with given fields: db, paym
+func (_m *SchoolRepo) AddPayment(db *gorm.DB, paym entities.Payment) (int, error) {
+	ret := _m.Called(db, paym)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Payment) (int, error)); ok {
+		return rf(db, paym)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Payment) int); ok {
+		r0 = rf(db, paym)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Payment) error); ok {
+		r1 = rf(db, paym)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: db, school
 func (_m *SchoolRepo) Create(db *gorm.DB, school entities.School) (int, error) {
 	ret := _m.Called(db, school)
@@ -140,6 +164,20 @@ func (_m *SchoolRepo) DeleteExtracurricular(db *gorm.DB, id int) error {
 
 // DeleteFaq provides a mock function with given fields: db, id
 func (_m *SchoolRepo) DeleteFaq(db *gorm.DB, id int) error {
+	ret := _m.Called(db, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) error); ok {
+		r0 = rf(db, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// DeletePayment provides a mock function with given fields: db, id
+func (_m *SchoolRepo) DeletePayment(db *gorm.DB, id int) error {
 	ret := _m.Called(db, id)
 
 	var r0 error
@@ -315,6 +353,32 @@ func (_m *SchoolRepo) UpdateFaq(db *gorm.DB, extrac entities.Faq) (*entities.Faq
 
 	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Faq) error); ok {
 		r1 = rf(db, extrac)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdatePayment provides a mock function with given fields: db, paym
+func (_m *SchoolRepo) UpdatePayment(db *gorm.DB, paym entities.Payment) (*entities.Payment, error) {
+	ret := _m.Called(db, paym)
+
+	var r0 *entities.Payment
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Payment) (*entities.Payment, error)); ok {
+		return rf(db, paym)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Payment) *entities.Payment); ok {
+		r0 = rf(db, paym)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.Payment)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Payment) error); ok {
+		r1 = rf(db, paym)
 	} else {
 		r1 = ret.Error(1)
 	}

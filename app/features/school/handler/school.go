@@ -304,3 +304,65 @@ func (u *School) CreateGmeet(c echo.Context) error {
 	delete(u.Gmeetsess, schoolid)
 	return c.Redirect(http.StatusFound, URLFRONTENDSUCCESSCREATEDGMEET)
 }
+
+func (u *School) AddPayment(c echo.Context) error {
+	req := entity.ReqAddPayment{}
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQADDPayment, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
+	}
+	filehead, err := c.FormFile("image")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Image is Missing", nil))
+	}
+	req.Image = filehead.Filename
+	image, err := filehead.Open()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot laod image", nil))
+	}
+	if filehead.Size > 2*1024*1024 {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
+	}
+	id, err := u.Service.AddPayment(c.Request().Context(), req, image)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"id": id}))
+}
+
+func (u *School) UpdatePayment(c echo.Context) error {
+	req := entity.ReqUpdatePayment{}
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQUPDATEPayment, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
+	}
+	filehead, err := c.FormFile("image")
+	var image multipart.File
+	if err == nil {
+		multipart, err := filehead.Open()
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot Load Image", nil))
+		}
+		req.Image = filehead.Filename
+		image = multipart
+	}
+	schoolid, err := u.Service.UpdatePayment(c.Request().Context(), req, image)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"id": schoolid}))
+}
+func (u *School) DeletePayment(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Payment id is missing", nil))
+	}
+	newid, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Payment Id", nil))
+	}
+	if err := u.Service.DeletePayment(c.Request().Context(), newid); err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
+}
