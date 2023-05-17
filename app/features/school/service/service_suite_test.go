@@ -72,9 +72,9 @@ var _ = Describe("school", func() {
 					Village:       "3",
 					Detail:        "3232",
 					ZipCode:       "323232",
-					Students:      21,
-					Teachers:      21,
-					Staff:         21,
+					Students:      "21",
+					Teachers:      "21",
+					Staff:         "21",
 					Accreditation: "A"}
 				_, err := SchoolService.Create(ctx, req, image, pdf)
 				Expect(err).ShouldNot(BeNil())
@@ -104,9 +104,9 @@ var _ = Describe("school", func() {
 					Village:       "3",
 					Detail:        "3232",
 					ZipCode:       "323232",
-					Students:      21,
-					Teachers:      21,
-					Staff:         21,
+					Students:      "21",
+					Teachers:      "21",
+					Staff:         "21",
 					Accreditation: "A"}
 				_, err := SchoolService.Create(ctx, req, image, pdf)
 				Expect(err).ShouldNot(BeNil())
@@ -136,9 +136,9 @@ var _ = Describe("school", func() {
 					Village:       "3",
 					Detail:        "3232",
 					ZipCode:       "323232",
-					Students:      21,
-					Teachers:      21,
-					Staff:         21,
+					Students:      "21",
+					Teachers:      "21",
+					Staff:         "21",
 					Accreditation: "A"}
 				_, err := SchoolService.Create(ctx, req, image, pdf)
 				Expect(err).ShouldNot(BeNil())
@@ -169,9 +169,9 @@ var _ = Describe("school", func() {
 					Village:       "3",
 					Detail:        "3232",
 					ZipCode:       "323232",
-					Students:      21,
-					Teachers:      21,
-					Staff:         21,
+					Students:      "21",
+					Teachers:      "21",
+					Staff:         "21",
 					Accreditation: "A"}
 				_, err := SchoolService.Create(ctx, req, image, pdf)
 				Expect(err).ShouldNot(BeNil())
@@ -202,9 +202,9 @@ var _ = Describe("school", func() {
 					Village:       "3",
 					Detail:        "3232",
 					ZipCode:       "323232",
-					Students:      21,
-					Teachers:      21,
-					Staff:         21,
+					Students:      "21",
+					Teachers:      "21",
+					Staff:         "21",
 					Accreditation: "A"}
 				id, err := SchoolService.Create(ctx, req, image, pdf)
 				Expect(err).Should(BeNil())

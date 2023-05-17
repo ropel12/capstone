@@ -21,9 +21,9 @@ type (
 		Village          string `gorm:"type:varchar(150);not null"`
 		Detail           string `gorm:"type:varchar(150);not null"`
 		ZipCode          string `gorm:"type:varchar(150);not null"`
-		Students         int    `gorm:"not null"`
-		Teachers         int    `gorm:"not null"`
-		Staff            int    `gorm:"not null"`
+		Students         string `gorm:"not null"`
+		Teachers         string `gorm:"not null"`
+		Staff            string `gorm:"not null"`
 		Accreditation    string `gorm:"type:varchar(3);not null"`
 		Gmeet            string `gorm:"type:varchar(70);default: "`
 		QuizLinkPub      string `gorm:"type:varchar(70);default:"`
@@ -273,9 +273,9 @@ type (
 		Village          string        `json:"village"`
 		Detail           string        `json:"detail"`
 		ZipCode          string        `json:"zipCode"`
-		Students         int           `json:"students"`
-		Teachers         int           `json:"teachers"`
-		Staff            int           `json:"staff"`
+		Students         string        `json:"students"`
+		Teachers         string        `json:"teachers"`
+		Staff            string        `json:"staff"`
 		Accreditation    string        `json:"accreditation"`
 		Gmeet            string        `json:"gmeet"`
 		QuizLinkPub      string        `json:"quizLinkPub"`
@@ -299,9 +299,9 @@ type (
 		Village       string `form:"village" validate:"required"`
 		Detail        string `form:"detail" validate:"required"`
 		ZipCode       string `form:"zipcode" validate:"required"`
-		Students      int    `form:"students" validate:"required"`
-		Teachers      int    `form:"teachers" validate:"required"`
-		Staff         int    `form:"staff" validate:"required"`
+		Students      string `form:"students" validate:"required"`
+		Teachers      string `form:"teachers" validate:"required"`
+		Staff         string `form:"staff" validate:"required"`
 		Accreditation string `form:"accreditation" validate:"required"`
 	}
 	ReqUpdateSchool struct {
@@ -319,9 +319,9 @@ type (
 		Village         string `form:"village" `
 		Detail          string `form:"detail" `
 		ZipCode         string `form:"zipcode" `
-		Students        int    `form:"students" `
-		Teachers        int    `form:"teachers" `
-		Staff           int    `form:"staff" `
+		Students        string `form:"students" `
+		Teachers        string `form:"teachers" `
+		Staff           string `form:"staff" `
 		Accreditation   string `form:"accreditation"`
 		Gmeet           string `json:"gmeet"`
 		QuizLinkPub     string `json:"quizLinkPub"`
@@ -344,9 +344,9 @@ type (
 		Video         string   `json:"video"`
 		Pdf           string   `json:"pdf"`
 		Web           string   `json:"school_web"`
-		Students      int      `json:"students"`
-		Teachers      int      `json:"teachers"`
-		Staff         int      `json:"staff"`
+		Students      string   `json:"students"`
+		Teachers      string   `json:"teachers"`
+		Staff         string   `json:"staff"`
 		Accreditation string   `json:"accreditation"`
 		Location      Location `json:"location"`
 	}
