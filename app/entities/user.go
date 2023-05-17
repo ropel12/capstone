@@ -18,6 +18,8 @@ type (
 		IsVerified       bool   `gorm:"not null" json:"-"`
 		VerificationCode string `gorm:"not null" json:"-"`
 		School           School
+		Progresses       []Progress
+		Submission       []Submission
 	}
 
 	ForgotPass struct {

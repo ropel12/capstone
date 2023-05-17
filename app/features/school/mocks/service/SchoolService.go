@@ -136,6 +136,30 @@ func (_m *SchoolService) Create(ctx context.Context, req entities.ReqCreateSchoo
 	return r0, r1
 }
 
+// CreateSubmission provides a mock function with given fields: ctx, req, studentph, signstudent, signparent
+func (_m *SchoolService) CreateSubmission(ctx context.Context, req entities.ReqCreateSubmission, studentph multipart.File, signstudent multipart.File, signparent multipart.File) (int, error) {
+	ret := _m.Called(ctx, req, studentph, signstudent, signparent)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqCreateSubmission, multipart.File, multipart.File, multipart.File) (int, error)); ok {
+		return rf(ctx, req, studentph, signstudent, signparent)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.ReqCreateSubmission, multipart.File, multipart.File, multipart.File) int); ok {
+		r0 = rf(ctx, req, studentph, signstudent, signparent)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqCreateSubmission, multipart.File, multipart.File, multipart.File) error); ok {
+		r1 = rf(ctx, req, studentph, signstudent, signparent)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Delete provides a mock function with given fields: ctx, id, uid
 func (_m *SchoolService) Delete(ctx context.Context, id int, uid int) error {
 	ret := _m.Called(ctx, id, uid)
@@ -232,6 +256,58 @@ func (_m *SchoolService) GetAll(ctx context.Context, page int, limit int, search
 	return r0, r1
 }
 
+// GetAllProgressAndSubmissionByuid provides a mock function with given fields: ctx, uid
+func (_m *SchoolService) GetAllProgressAndSubmissionByuid(ctx context.Context, uid int) ([]entities.ResAllProgressSubmission, error) {
+	ret := _m.Called(ctx, uid)
+
+	var r0 []entities.ResAllProgressSubmission
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) ([]entities.ResAllProgressSubmission, error)); ok {
+		return rf(ctx, uid)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int) []entities.ResAllProgressSubmission); ok {
+		r0 = rf(ctx, uid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.ResAllProgressSubmission)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, uid)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetAllProgressByUid provides a mock function with given fields: ctx, uid
+func (_m *SchoolService) GetAllProgressByUid(ctx context.Context, uid int) ([]entities.ResAllProgress, error) {
+	ret := _m.Called(ctx, uid)
+
+	var r0 []entities.ResAllProgress
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) ([]entities.ResAllProgress, error)); ok {
+		return rf(ctx, uid)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int) []entities.ResAllProgress); ok {
+		r0 = rf(ctx, uid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.ResAllProgress)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, uid)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetByUid provides a mock function with given fields: ctx, uid
 func (_m *SchoolService) GetByUid(ctx context.Context, uid int) (*entities.ResDetailSchool, error) {
 	ret := _m.Called(ctx, uid)
@@ -272,6 +348,58 @@ func (_m *SchoolService) GetByid(ctx context.Context, id int) (*entities.ResDeta
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entities.ResDetailSchool)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetProgressById provides a mock function with given fields: ctx, id
+func (_m *SchoolService) GetProgressById(ctx context.Context, id int) (*entities.ResDetailProgress, error) {
+	ret := _m.Called(ctx, id)
+
+	var r0 *entities.ResDetailProgress
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) (*entities.ResDetailProgress, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int) *entities.ResDetailProgress); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.ResDetailProgress)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetSubmissionByid provides a mock function with given fields: ctx, id
+func (_m *SchoolService) GetSubmissionByid(ctx context.Context, id int) (*entities.ResDetailSubmission, error) {
+	ret := _m.Called(ctx, id)
+
+	var r0 *entities.ResDetailSubmission
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) (*entities.ResDetailSubmission, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int) *entities.ResDetailSubmission); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.ResDetailSubmission)
 		}
 	}
 
@@ -415,6 +543,30 @@ func (_m *SchoolService) UpdatePayment(ctx context.Context, req entities.ReqUpda
 
 	if rf, ok := ret.Get(1).(func(context.Context, entities.ReqUpdatePayment, multipart.File) error); ok {
 		r1 = rf(ctx, req, image)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateProgressByid provides a mock function with given fields: ctx, id, status
+func (_m *SchoolService) UpdateProgressByid(ctx context.Context, id int, status string) (int, error) {
+	ret := _m.Called(ctx, id, status)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int, string) (int, error)); ok {
+		return rf(ctx, id, status)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int, string) int); ok {
+		r0 = rf(ctx, id, status)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int, string) error); ok {
+		r1 = rf(ctx, id, status)
 	} else {
 		r1 = ret.Error(1)
 	}

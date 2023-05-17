@@ -33,8 +33,118 @@ type (
 		Faqs             []Faq
 		Payments         []Payment
 		User             *User
+		Submissions      []Submission
+		Progresses       []Progress
 	}
 
+	Submission struct {
+		ID               uint `gorm:"primaryKey;autoIncrement;not null"`
+		SchoolID         uint
+		UserID           uint
+		StudentPhoto     string `gorm:"type:varchar(255);not null"`
+		StudentName      string `gorm:"type:varchar(255);not null"`
+		PlaceDate        string `gorm:"type:varchar(255);not null"`
+		Gender           string `gorm:"type:varchar(255);not null"`
+		Religion         string `gorm:"type:varchar(255);not null"`
+		GraduationFrom   string `gorm:"type:varchar(255);not null"`
+		NISN             string `gorm:"type:varchar(255);not null"`
+		StudentAddress   string `gorm:"type:varchar(255);not null"`
+		ParentName       string `gorm:"type:varchar(255);not null"`
+		ParentJob        string `gorm:"type:varchar(255);not null"`
+		ParentReligion   string `gorm:"type:varchar(255);not null"`
+		ParentAddress    string `gorm:"type:varchar(255);not null"`
+		ParentPhone      string `gorm:"type:varchar(255);not null"`
+		ParentSignature  string `gorm:"type:varchar(255);not null"`
+		StudentSignature string `gorm:"type:varchar(255);not null"`
+		Date             string `gorm:"type:varchar(255);not null"`
+		School           School
+		User             User
+	}
+	ReqAdressSubmission struct {
+		Province string `json:"province" `
+		District string `json:"district" `
+		Village  string `json:"village" `
+		ZipCode  string `json:"zip_code" `
+		City     string `json:"city" `
+	}
+	ReqCreateSubmission struct {
+		UserID           uint
+		SchoolID         int    `json:"student_id" validate:"required"`
+		StudentPhoto     string `json:"student_photo" validate:"required"`
+		StudentName      string `json:"student_name" validate:"required"`
+		PlaceDate        string `json:"place_date" validate:"required"`
+		Gender           string `json:"gender" validate:"required"`
+		Religion         string `json:"religion" validate:"required"`
+		GraduationFrom   string `json:"graduation_from" validate:"required"`
+		NISN             string `json:"nisn" validate:"required"`
+		StudentProvince  string `json:"student_province" validate:"required"`
+		StudentDistrict  string `json:"student_district" validate:"required"`
+		StudentVillage   string `json:"student_village" validate:"required"`
+		StudentZipCode   string `json:"student_zip_code" validate:"required"`
+		StudentCity      string `json:"student_city" validate:"required"`
+		ParentProvince   string `json:"parent_province" validate:"required"`
+		ParentDistrict   string `json:"parent_district" validate:"required"`
+		ParentVillage    string `json:"parent_village" validate:"required"`
+		ParentZipCode    string `json:"parent_zip_code" validate:"required"`
+		ParentCity       string `json:"parent_city" validate:"required"`
+		ParentName       string `json:"parent_name" validate:"required"`
+		ParentJob        string `json:"parent_job" validate:"required"`
+		ParentReligion   string `json:"parent_religion" validate:"required"`
+		ParentPhone      string `json:"parent_phone" validate:"required"`
+		ParentSignature  string `json:"parent_signature" validate:"required"`
+		StudentSignature string `json:"student_signature" validate:"required"`
+		Date             string `json:"date"`
+	}
+	Progress struct {
+		ID       uint `gorm:"primaryKey;autoIncrement;not null"`
+		UserID   uint
+		SchoolID uint
+		Status   string
+		School   School
+		User     User
+	}
+	ResAllProgress struct {
+		SchoolName  string `json:"school_name"`
+		SchoolImage string `json:"school_image"`
+		SchoolWeb   string `json:"school_web"`
+		ProgressId  int    `json:"progress_id"`
+	}
+	ResDetailProgress struct {
+		Id     int    `json:"progress_id"`
+		Status string `json:"progress_status"`
+	}
+	ResAllProgressSubmission struct {
+		UserId       int    `json:"user_id"`
+		UserImage    string `json:"user_image"`
+		UserName     string `json:"user_name"`
+		SubmissionId int    `json:"submission_id"`
+		ProgressId   int    `json:"progress_id"`
+	}
+
+	StudentData struct {
+		Photo          string              `json:"photo"`
+		Name           string              `json:"name"`
+		PlaceDate      string              `json:"place_date"`
+		Gender         string              `json:"gender"`
+		Religion       string              `json:"religion"`
+		GraduationFrom string              `json:"graduation_from"`
+		NISN           string              `json:"nisn"`
+		Adress         ReqAdressSubmission `json:"address"`
+	}
+	ParentData struct {
+		Name     string              `json:"name"`
+		Job      string              `json:"job"`
+		Religion string              `json:"religion"`
+		Phone    string              `json:"phone"`
+		Adress   ReqAdressSubmission `json:"address"`
+	}
+	ResDetailSubmission struct {
+		StudentData      StudentData `json:"student_data"`
+		ParentData       ParentData  `json:"parent_data"`
+		ParentSignature  string      `json:"parent_signature"`
+		StudentSignature string      `json:"student_signature"`
+		DatePlace        string      `json:"date_place"`
+	}
 	Achievement struct {
 		gorm.Model
 		SchoolID    uint
