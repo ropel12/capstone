@@ -3,6 +3,7 @@ package handler
 import (
 	"mime/multipart"
 	"net/http"
+	"time"
 
 	entity "github.com/education-hub/BE/app/entities"
 	"github.com/education-hub/BE/app/features/user/service"
@@ -32,8 +33,12 @@ func (u *User) Login(c echo.Context) error {
 	if err != nil {
 		return CreateErrorResponse(err, c)
 	}
-	c.SetCookie(&http.Cookie{Name: "verified", Value: "true"})
-	c.SetCookie(&http.Cookie{Name: "role", Value: role})
+	c.SetCookie(&http.Cookie{Name: "verified", Value: "true", Domain: "go-event.online",
+		Path:    "/",
+		Expires: time.Now().Add(24 * time.Hour)})
+	c.SetCookie(&http.Cookie{Name: "role", Value: role, Domain: "go-event.online",
+		Path:    "/",
+		Expires: time.Now().Add(24 * time.Hour)})
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"token": token, "role": role}))
 }
 
