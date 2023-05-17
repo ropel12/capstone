@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"net/http"
+
 	schoolhand "github.com/education-hub/BE/app/features/school/handler"
 	userhand "github.com/education-hub/BE/app/features/user/handler"
 	"github.com/education-hub/BE/config/dependency"
@@ -22,7 +24,13 @@ func (r *Routes) RegisterRoutes() {
 	ro.Use(middleware.RemoveTrailingSlash())
 	ro.Use(middleware.Logger())
 	ro.Use(middleware.Recover())
-	ro.Use(middleware.CORS())
+	corsConfig := middleware.CORSConfig{
+		AllowOrigins:     []string{"*"},
+		AllowCredentials: true,
+		AllowHeaders:     []string{"Content-Type", "withCredentials"},
+		AllowMethods:     []string{http.MethodPost, http.MethodDelete, http.MethodOptions, http.MethodPut, http.MethodGet, http.MethodPatch},
+	}
+	ro.Use(middleware.CORSWithConfig(corsConfig))
 	//No Auth
 	ro.POST("/login", r.User.Login)
 	ro.POST("/register", r.User.Register)
