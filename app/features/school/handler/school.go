@@ -422,3 +422,131 @@ func (u *School) DeletePayment(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
 }
+
+func (u *School) CreateSubbmision(c echo.Context) error {
+	req := entity.ReqCreateSubmission{}
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING CreateSubbmision, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
+	}
+	/// student photo
+	studentphotohead, err := c.FormFile("student_photo")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Image is Missing", nil))
+	}
+	req.StudentPhoto = studentphotohead.Filename
+	studentphoto, err := studentphotohead.Open()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot laod image", nil))
+	}
+	if studentphotohead.Size > 2*1024*1024 {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
+	}
+
+	///// parent signature
+	parentsignaturehead, err := c.FormFile("parent_signature")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Image is Missing", nil))
+	}
+	req.ParentSignature = parentsignaturehead.Filename
+	parensign, err := parentsignaturehead.Open()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot laod image", nil))
+	}
+	if parentsignaturehead.Size > 2*1024*1024 {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
+	}
+	//// student signature
+	studentsignaturehead, err := c.FormFile("parent_signature")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Image is Missing", nil))
+	}
+	req.StudentSignature = studentsignaturehead.Filename
+	studentsign, err := studentsignaturehead.Open()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot laod image", nil))
+	}
+	if studentsignaturehead.Size > 2*1024*1024 {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
+	}
+	res, err := u.Service.CreateSubmission(c.Request().Context(), req, studentphoto, studentsign, parensign)
+	if err != nil {
+		CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusCreated, CreateWebResponse(http.StatusCreated, "StatusCreated", map[string]any{"id": res}))
+}
+
+func (u *School) UpdateProgressByid(c echo.Context) error {
+	progid := c.Param("id")
+	if progid == "" {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Progress Id is missing", nil))
+	}
+	newprogid, err := strconv.Atoi(progid)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Progress Id", nil))
+	}
+	req := struct {
+		ProgressStatus string `json:"progress_status" validate:"required"`
+	}{}
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING UpdateSubbmision Req, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
+	}
+	if err := c.Validate(req); err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	res, err := u.Service.UpdateProgressByid(c.Request().Context(), newprogid, req.ProgressStatus)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Sucess Operation", map[string]any{"progress_id": res}))
+
+}
+
+func (u *School) GetAllProgressByUid(c echo.Context) error {
+
+	res, err := u.Service.GetAllProgressByUid(c.Request().Context(), helper.GetUid(c.Get("user").(*jwt.Token)))
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
+}
+
+func (u *School) GetProgressById(c echo.Context) error {
+	progid := c.Param("id")
+	if progid == "" {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Progress Id is missing", nil))
+	}
+	newprogid, err := strconv.Atoi(progid)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Progress Id", nil))
+	}
+	res, err := u.Service.GetProgressById(c.Request().Context(), newprogid)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
+}
+func (u *School) GetAllAdmission(c echo.Context) error {
+	res, err := u.Service.GetAllProgressAndSubmissionByuid(c.Request().Context(), helper.GetUid(c.Get("user").(*jwt.Token)))
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
+}
+
+func (u *School) GetSubmissionByid(c echo.Context) error {
+	subid := c.Param("id")
+	if subid == "" {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Progress Id is missing", nil))
+	}
+	newsubid, err := strconv.Atoi(subid)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Progress Id", nil))
+	}
+	res, err := u.Service.GetSubmissionByid(c.Request().Context(), newsubid)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
+}
