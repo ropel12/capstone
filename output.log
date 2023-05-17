@@ -449,5 +449,27 @@
 {"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-16T12:22:27+07:00"}
 {"level":"error","msg":"[FAILED] to publish to NSQ: dial tcp [::1]:4150: i/o timeout","time":"2023-05-16T12:23:49+07:00"}
 {"level":"error","msg":"[FAILED] to publish to NSQ: dial tcp [::1]:4150: i/o timeout","time":"2023-05-16T12:24:19+07:00"}
-{"level":"info","msg":"Starting server on port 8000","time":"2023-05-17T10:29:45+07:00"}
-{"level":"info","msg":"Shutting down server","time":"2023-05-17T10:35:32+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-16T22:29:37+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-16T23:20:42+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-17T08:49:44+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-17T08:50:22+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-17T08:52:08+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-17T08:52:55+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-17T08:54:30+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-17T08:55:28+07:00"}
+{"level":"error","msg":"[ERROR]WHEN GETTING PRORGRESS AND SUBMISSION DATA, Err: Error 1054 (42S22): Unknown column 'failed' in 'where clause'","time":"2023-05-17T08:57:16+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-17T08:58:33+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-17T08:58:42+07:00"}
+{"level":"error","msg":"[ERROR]WHEN GETTING Student Progress Data, Err : Error 1054 (42S22): Unknown column 'failed' in 'where clause'","time":"2023-05-17T09:09:04+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-17T09:09:23+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-17T09:09:33+07:00"}
+{"level":"error","msg":"[ERROR]WHEN GETTING Student Progress Data, Err : Error 1054 (42S22): Unknown column 'website' in 'field list'","time":"2023-05-17T09:09:37+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-17T09:10:06+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-17T09:10:24+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-17T09:11:32+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-17T09:14:18+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-17T09:14:31+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-17T09:14:55+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-17T09:15:43+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-17T09:15:58+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-17T09:16:20+07:00"}

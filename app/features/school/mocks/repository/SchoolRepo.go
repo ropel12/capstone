@@ -134,6 +134,30 @@ func (_m *SchoolRepo) Create(db *gorm.DB, school entities.School) (int, error) {
 	return r0, r1
 }
 
+// CreateSubmission provides a mock function with given fields: db, subm
+func (_m *SchoolRepo) CreateSubmission(db *gorm.DB, subm entities.Submission) (int, error) {
+	ret := _m.Called(db, subm)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Submission) (int, error)); ok {
+		return rf(db, subm)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Submission) int); ok {
+		r0 = rf(db, subm)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Submission) error); ok {
+		r1 = rf(db, subm)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Delete provides a mock function with given fields: db, id, uid
 func (_m *SchoolRepo) Delete(db *gorm.DB, id int, uid int) error {
 	ret := _m.Called(db, id, uid)
@@ -251,6 +275,58 @@ func (_m *SchoolRepo) GetAll(db *gorm.DB, limit int, offset int, search string) 
 	return r0, r1, r2
 }
 
+// GetAllProgressAndSubmissionByuid provides a mock function with given fields: db, uid
+func (_m *SchoolRepo) GetAllProgressAndSubmissionByuid(db *gorm.DB, uid int) (*entities.School, error) {
+	ret := _m.Called(db, uid)
+
+	var r0 *entities.School
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) (*entities.School, error)); ok {
+		return rf(db, uid)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) *entities.School); ok {
+		r0 = rf(db, uid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.School)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, int) error); ok {
+		r1 = rf(db, uid)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetAllProgressByuid provides a mock function with given fields: db, uid
+func (_m *SchoolRepo) GetAllProgressByuid(db *gorm.DB, uid int) ([]entities.Progress, error) {
+	ret := _m.Called(db, uid)
+
+	var r0 []entities.Progress
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) ([]entities.Progress, error)); ok {
+		return rf(db, uid)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) []entities.Progress); ok {
+		r0 = rf(db, uid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entities.Progress)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, int) error); ok {
+		r1 = rf(db, uid)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetById provides a mock function with given fields: db, id
 func (_m *SchoolRepo) GetById(db *gorm.DB, id int) (*entities.School, error) {
 	ret := _m.Called(db, id)
@@ -296,6 +372,58 @@ func (_m *SchoolRepo) GetByUid(db *gorm.DB, uid int) (*entities.School, error) {
 
 	if rf, ok := ret.Get(1).(func(*gorm.DB, int) error); ok {
 		r1 = rf(db, uid)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetProgressByid provides a mock function with given fields: db, id
+func (_m *SchoolRepo) GetProgressByid(db *gorm.DB, id int) (*entities.Progress, error) {
+	ret := _m.Called(db, id)
+
+	var r0 *entities.Progress
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) (*entities.Progress, error)); ok {
+		return rf(db, id)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) *entities.Progress); ok {
+		r0 = rf(db, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.Progress)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, int) error); ok {
+		r1 = rf(db, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetSubmissionByid provides a mock function with given fields: db, id
+func (_m *SchoolRepo) GetSubmissionByid(db *gorm.DB, id int) (*entities.Submission, error) {
+	ret := _m.Called(db, id)
+
+	var r0 *entities.Submission
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) (*entities.Submission, error)); ok {
+		return rf(db, id)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) *entities.Submission); ok {
+		r0 = rf(db, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.Submission)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, int) error); ok {
+		r1 = rf(db, id)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -431,6 +559,20 @@ func (_m *SchoolRepo) UpdatePayment(db *gorm.DB, paym entities.Payment) (*entiti
 	}
 
 	return r0, r1
+}
+
+// UpdateProgress provides a mock function with given fields: db, id, status
+func (_m *SchoolRepo) UpdateProgress(db *gorm.DB, id int, status string) error {
+	ret := _m.Called(db, id, status)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int, string) error); ok {
+		r0 = rf(db, id, status)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 type mockConstructorTestingTNewSchoolRepo interface {

@@ -2,10 +2,12 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"math"
 	"mime/multipart"
 	"sync"
+	"time"
 
 	entity "github.com/education-hub/BE/app/entities"
 	"github.com/education-hub/BE/app/features/school/repository"
@@ -42,6 +44,12 @@ type (
 		AddPayment(ctx context.Context, req entity.ReqAddPayment, image multipart.File) (int, error)
 		DeletePayment(ctx context.Context, id int) error
 		UpdatePayment(ctx context.Context, req entity.ReqUpdatePayment, image multipart.File) (int, error)
+		CreateSubmission(ctx context.Context, req entity.ReqCreateSubmission, studentph, signstudent, signparent multipart.File) (int, error)
+		UpdateProgressByid(ctx context.Context, id int, status string) (int, error)
+		GetAllProgressByUid(ctx context.Context, uid int) ([]entity.ResAllProgress, error)
+		GetProgressById(ctx context.Context, id int) (*entity.ResDetailProgress, error)
+		GetAllProgressAndSubmissionByuid(ctx context.Context, uid int) ([]entity.ResAllProgressSubmission, error)
+		GetSubmissionByid(ctx context.Context, id int) (*entity.ResDetailSubmission, error)
 	}
 )
 
@@ -618,4 +626,182 @@ func (s *school) UpdatePayment(ctx context.Context, req entity.ReqUpdatePayment,
 		image.Close()
 	}
 	return int(res.SchoolID), nil
+}
+
+func (s *school) CreateSubmission(ctx context.Context, req entity.ReqCreateSubmission, studentph, studentsign, parentsign multipart.File) (int, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR]WHEN VALIDATE CREATESUBMISSION REQ, err : %v", err)
+		return 0, errorr.NewBad("Missing Or Invalid Req Body")
+	}
+	studentphoname := fmt.Sprintf("%s_%d_%s", "Student_", req.UserID, req.StudentPhoto)
+	studentsignname := fmt.Sprintf("%s_%d_%s", "StudentSign_", req.UserID, req.StudentSignature)
+	parentsignname := fmt.Sprintf("%s_%d_%s", "ParentSign_", req.UserID, req.ParentSignature)
+	wg := &sync.WaitGroup{}
+	wg.Add(3)
+	errchan := make(chan error)
+	go func() {
+		defer wg.Done()
+		if err := s.dep.Gcp.UploadFile(studentph, studentphoname); err != nil {
+			s.dep.Log.Errorf("Error Service : %v", err)
+			studentph.Close()
+			errchan <- err
+			return
+		}
+		studentph.Close()
+		errchan <- nil
+	}()
+	go func() {
+		defer wg.Done()
+		if err := s.dep.Gcp.UploadFile(studentsign, studentsignname); err != nil {
+			s.dep.Log.Errorf("Error Service : %v", err)
+			studentsign.Close()
+			errchan <- err
+			return
+		}
+		studentsign.Close()
+		errchan <- nil
+	}()
+	go func() {
+		defer wg.Done()
+		if err := s.dep.Gcp.UploadFile(parentsign, parentsignname); err != nil {
+			s.dep.Log.Errorf("Error Service : %v", err)
+			parentsign.Close()
+			errchan <- err
+			return
+		}
+		parentsign.Close()
+		errchan <- nil
+	}()
+	wg.Wait()
+	close(errchan)
+	for err := range errchan {
+		if err != nil {
+			return 0, err
+		}
+	}
+	parentaddres := entity.ReqAdressSubmission{
+		Province: req.ParentProvince,
+		District: req.ParentDistrict,
+		Village:  req.ParentVillage,
+		ZipCode:  req.ParentZipCode,
+		City:     req.ParentCity,
+	}
+	studentaddres := entity.ReqAdressSubmission{
+		Province: req.StudentProvince,
+		District: req.StudentDistrict,
+		Village:  req.StudentVillage,
+		ZipCode:  req.StudentZipCode,
+		City:     req.StudentCity,
+	}
+	studentadd, _ := json.Marshal(studentaddres)
+	parentadd, _ := json.Marshal(parentaddres)
+	data := entity.Submission{
+		SchoolID:         uint(req.SchoolID),
+		UserID:           req.UserID,
+		StudentPhoto:     studentphoname,
+		StudentName:      req.StudentName,
+		ParentName:       req.ParentName,
+		ParentJob:        req.ParentJob,
+		Religion:         req.Religion,
+		ParentReligion:   req.Religion,
+		PlaceDate:        req.PlaceDate,
+		Gender:           req.Gender,
+		GraduationFrom:   req.GraduationFrom,
+		NISN:             req.NISN,
+		ParentPhone:      req.ParentPhone,
+		ParentSignature:  parentsignname,
+		StudentSignature: studentsignname,
+		Date:             time.Now().Format("2006-01-02"),
+		ParentAddress:    string(parentadd),
+		StudentAddress:   string(studentadd),
+	}
+	res, err := s.repo.CreateSubmission(s.dep.Db.WithContext(ctx), data)
+	if err != nil {
+		return 0, err
+	}
+	return res, nil
+}
+
+func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) (int, error) {
+	if err := s.repo.UpdateProgress(s.dep.Db.WithContext(ctx), id, status); err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
+func (s *school) GetAllProgressByUid(ctx context.Context, uid int) ([]entity.ResAllProgress, error) {
+	data, err := s.repo.GetAllProgressByuid(s.dep.Db.WithContext(ctx), uid)
+	if err != nil {
+		return nil, err
+	}
+	res := []entity.ResAllProgress{}
+	for _, val := range data {
+		progrss := entity.ResAllProgress{
+			SchoolName:  val.School.Name,
+			SchoolImage: val.School.Image,
+			SchoolWeb:   val.School.Web,
+			ProgressId:  int(val.ID),
+		}
+		res = append(res, progrss)
+	}
+	return res, nil
+}
+func (s *school) GetProgressById(ctx context.Context, id int) (*entity.ResDetailProgress, error) {
+	data, err := s.repo.GetProgressByid(s.dep.Db.WithContext(ctx), id)
+	if err != nil {
+		return nil, err
+	}
+	return &entity.ResDetailProgress{Id: int(data.ID), Status: data.Status}, nil
+}
+
+func (s *school) GetAllProgressAndSubmissionByuid(ctx context.Context, uid int) ([]entity.ResAllProgressSubmission, error) {
+	data, err := s.repo.GetAllProgressAndSubmissionByuid(s.dep.Db.WithContext(ctx), uid)
+	if err != nil {
+		return nil, err
+	}
+	res := []entity.ResAllProgressSubmission{}
+	for id, val := range data.Progresses {
+		progresssubmission := entity.ResAllProgressSubmission{
+			UserId:       int(val.User.ID),
+			UserImage:    val.User.Image,
+			UserName:     val.User.FirstName + " " + val.User.SureName,
+			SubmissionId: int(data.Submissions[id].ID),
+			ProgressId:   int(val.ID),
+		}
+		res = append(res, progresssubmission)
+	}
+	return res, nil
+}
+func (s *school) GetSubmissionByid(ctx context.Context, id int) (*entity.ResDetailSubmission, error) {
+	data, err := s.repo.GetSubmissionByid(s.dep.Db.WithContext(ctx), id)
+	if err != nil {
+		return nil, err
+	}
+	studentaddress := entity.ReqAdressSubmission{}
+	Parentaddress := entity.ReqAdressSubmission{}
+	json.Unmarshal([]byte(data.StudentAddress), &studentaddress)
+	json.Unmarshal([]byte(data.ParentAddress), &Parentaddress)
+	res := entity.ResDetailSubmission{
+		ParentSignature:  data.ParentSignature,
+		StudentSignature: data.StudentSignature,
+		DatePlace:        fmt.Sprintf("%s, %s", studentaddress.City, data.Date),
+		StudentData: entity.StudentData{
+			Photo:          data.StudentPhoto,
+			Name:           data.StudentName,
+			PlaceDate:      data.PlaceDate,
+			NISN:           data.NISN,
+			GraduationFrom: data.GraduationFrom,
+			Religion:       data.Religion,
+			Gender:         data.Gender,
+			Adress:         studentaddress,
+		},
+		ParentData: entity.ParentData{
+			Name:     data.ParentName,
+			Job:      data.ParentJob,
+			Religion: data.ParentReligion,
+			Phone:    data.ParentPhone,
+			Adress:   Parentaddress,
+		},
+	}
+	return &res, nil
 }

@@ -24,7 +24,26 @@ func AdminMiddleWare(next echo.HandlerFunc) echo.HandlerFunc {
 		if role != cookie.Value {
 			return c.JSON(http.StatusUnauthorized, map[string]any{"code": 401, "message": "UnAuthorization"})
 		}
-		if role != "admin" {
+		if role != "administrator" {
+			return c.JSON(http.StatusUnauthorized, map[string]any{"code": 401, "message": "UnAuthorization"})
+		}
+		return next(c)
+	}
+}
+func StudentMiddleWare(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		role := helper.GetRole(c.Get("user").(*jwt.Token))
+		cookie, err := c.Request().Cookie("role")
+		if err != nil {
+			if err == http.ErrNoCookie {
+				return c.JSON(http.StatusUnauthorized, map[string]any{"code": 401, "message": "Cookie Not Found"})
+			}
+			return c.JSON(http.StatusInternalServerError, map[string]any{"code": 500, "message": "Internal Server Error"})
+		}
+		if role != cookie.Value {
+			return c.JSON(http.StatusUnauthorized, map[string]any{"code": 401, "message": "UnAuthorization"})
+		}
+		if role != "student" {
 			return c.JSON(http.StatusUnauthorized, map[string]any{"code": 401, "message": "UnAuthorization"})
 		}
 		return next(c)

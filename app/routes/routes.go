@@ -33,22 +33,31 @@ func (r *Routes) RegisterRoutes() {
 	ro.GET("/getcaptcha", r.User.GetCaptcha)
 	ro.POST("/verifycaptcha", r.User.VerifyCaptcha)
 	//school
-	ro.GET("/school", r.School.GetAll)
-	ro.GET("/school/search", r.School.Search)
-	ro.GET("/school/:id", r.School.GetById)
+	ro.GET("/schools", r.School.GetAll)
+	ro.GET("/schools/search", r.School.Search)
+	ro.GET("/schools/:id", r.School.GetById)
 	ro.GET("/gmeet", r.School.CreateGmeet)
 	// AUTH
 	rauth := ro.Group("", middleware.JWT([]byte(r.Depend.Config.JwtSecret)))
-	//user
+	//User
 	rauth.PUT("/users", r.User.Update)
 	rauth.DELETE("/users", r.User.Delete)
 	rauth.GET("/users", r.User.GetProfile)
-	//school
+	rauth.GET("/progresses/:id", r.School.GetProgressById)
 	rverif := rauth.Group("", StatusVerifiedMiddleWare)
+
+	rstdnt := rverif.Group("", StudentMiddleWare)
+	///student Area
+	rstdnt.POST("/school/register", r.School.CreateSubbmision)
+	rstdnt.GET("/users/progress", r.School.GetAllProgressByUid)
+
 	//ADMIN AREA
 	radm := rverif.Group("", AdminMiddleWare)
 	radm.POST("/school", r.School.Create)
 	radm.GET("/admin/school", r.School.GetByUid)
+	radm.GET("/admin/admission", r.School.GetAllAdmission)
+	radm.GET("/admin/admission/:id", r.School.GetSubmissionByid)
+	radm.PUT("/progresses/:id", r.School.UpdateProgressByid)
 	radm.DELETE("/school/:id", r.School.Delete)
 	radm.PUT("/school", r.School.Update)
 	radm.POST("/achievements", r.School.AddAchievement)

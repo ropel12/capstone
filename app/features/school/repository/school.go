@@ -33,6 +33,12 @@ type (
 		DeletePayment(db *gorm.DB, id int) error
 		GetAll(db *gorm.DB, limit, offset int, search string) ([]entity.School, int, error)
 		UpdatePayment(db *gorm.DB, paym entity.Payment) (*entity.Payment, error)
+		CreateSubmission(db *gorm.DB, subm entity.Submission) (int, error)
+		UpdateProgress(db *gorm.DB, id int, status string) error
+		GetAllProgressByuid(db *gorm.DB, uid int) ([]entity.Progress, error)
+		GetProgressByid(db *gorm.DB, id int) (*entity.Progress, error)
+		GetAllProgressAndSubmissionByuid(db *gorm.DB, uid int) (*entity.School, error)
+		GetSubmissionByid(db *gorm.DB, id int) (*entity.Submission, error)
 	}
 )
 
@@ -344,4 +350,93 @@ func (s *school) UpdatePayment(db *gorm.DB, paym entity.Payment) (*entity.Paymen
 		return nil, errorr.NewInternal("Internal server error")
 	}
 	return &newdata, nil
+}
+
+func (s *school) CreateSubmission(db *gorm.DB, subm entity.Submission) (int, error) {
+	progress := entity.Progress{UserID: subm.UserID, SchoolID: subm.SchoolID, Status: "Checking File"}
+	err := db.Transaction(func(db *gorm.DB) error {
+
+		if err := db.Create(&subm).Error; err != nil {
+			s.log.Errorf("[ERROR]WHEN CREATING Submission, Err: %v", err)
+			return errorr.NewInternal("Internal server error")
+		}
+		if err := db.Create(&progress).Error; err != nil {
+			return errorr.NewInternal("Internal server error")
+		}
+		return nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	return int(progress.ID), nil
+}
+
+func (s *school) UpdateProgress(db *gorm.DB, id int, status string) error {
+	if err := db.First(&entity.Progress{}, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return errorr.NewBad("Data not found")
+		}
+		s.log.Errorf("[ERORR]WHEN GETTING Progress DATA, Err: %v", err)
+		return errorr.NewInternal("Internal Server Error")
+	}
+	if err := db.Model(&entity.Progress{}).Where("id = ?", id).Update("status", status).Error; err != nil {
+		s.log.Errorf("[ERROR]WHEN UPDATING Submission, Err : %v", err)
+		return errorr.NewInternal("Internal Server Erorr")
+	}
+	return nil
+}
+func (s *school) GetAllProgressByuid(db *gorm.DB, uid int) ([]entity.Progress, error) {
+	res := []entity.Progress{}
+	if err := db.Preload("School", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,image,name,web")
+	}).Where("user_id=? AND status != 'failed'", uid).Find(&res).Error; err != nil {
+		s.log.Errorf("[ERROR]WHEN GETTING Student Progress Data, Err : %v", err)
+		return nil, errorr.NewInternal("Internal Server Error")
+	}
+	if len(res) == 0 {
+		return nil, errorr.NewBad("Data Not Found")
+	}
+	return res, nil
+}
+
+func (s *school) GetProgressByid(db *gorm.DB, id int) (*entity.Progress, error) {
+	res := entity.Progress{}
+	if err := db.First(&res).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, errorr.NewBad("Data Not Found")
+		}
+		s.log.Errorf("[ERROR]WHEN GETTING Student Progress Data, Err : %v", err)
+		return nil, errorr.NewInternal("Internal Server Error")
+	}
+	return &res, nil
+}
+
+func (s *school) GetAllProgressAndSubmissionByuid(db *gorm.DB, uid int) (*entity.School, error) {
+	res := entity.School{}
+	if err := db.Preload("Progresses", func(db *gorm.DB) *gorm.DB {
+		return db.Preload("User", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id,first_name,sure_name,image")
+		}).Select("school_id,id,user_id")
+	}).Preload("Submissions", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id,school_id")
+	}).Joins("join progresses p on p.school_id=schools.id").Where("schools.user_id=? AND p.status != 'failed'", uid).Find(&res).Error; err != nil {
+		s.log.Errorf("[ERROR]WHEN GETTING PRORGRESS AND SUBMISSION DATA, Err: %v", err)
+		return nil, errorr.NewInternal("Internal Server Erorr")
+	}
+	if res.Name == "" {
+		return nil, errorr.NewBad("Data Not Found")
+	}
+	return &res, nil
+}
+
+func (s *school) GetSubmissionByid(db *gorm.DB, id int) (*entity.Submission, error) {
+	res := entity.Submission{}
+	if err := db.First(&res, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, errorr.NewBad("Data Not Found")
+		}
+		s.log.Errorf("[ERROR]WHEN GETTING SUBMISSION DATA, Err: %v", err)
+		return nil, errorr.NewInternal("Internal Server Error")
+	}
+	return &res, nil
 }
