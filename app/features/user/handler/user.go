@@ -33,12 +33,21 @@ func (u *User) Login(c echo.Context) error {
 	if err != nil {
 		return CreateErrorResponse(err, c)
 	}
-	c.SetCookie(&http.Cookie{Name: "verified", Value: "true", Domain: "go-event.online",
-		Path:    "/",
-		Expires: time.Now().Add(24 * time.Hour)})
-	c.SetCookie(&http.Cookie{Name: "role", Value: role, Domain: "go-event.online",
-		Path:    "/",
-		Expires: time.Now().Add(24 * time.Hour)})
+	c.SetCookie(&http.Cookie{Name: "verified", Value: "true",
+		Path:     "/",
+		HttpOnly: true,
+		Expires:  time.Now().Add(24 * time.Hour),
+		Domain:   "go-event.online",
+		SameSite: http.SameSiteNoneMode,
+		Secure:   true,
+	})
+	c.SetCookie(&http.Cookie{Name: "role", Value: role,
+		Path:     "/",
+		HttpOnly: true,
+		SameSite: http.SameSiteNoneMode,
+		Domain:   "go-event.online",
+		Secure:   true,
+		Expires:  time.Now().Add(24 * time.Hour)})
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"token": token, "role": role}))
 }
 
