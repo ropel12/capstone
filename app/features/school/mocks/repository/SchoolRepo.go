@@ -110,6 +110,30 @@ func (_m *SchoolRepo) AddPayment(db *gorm.DB, paym entities.Payment) (int, error
 	return r0, r1
 }
 
+// AddReview provides a mock function with given fields: db, data
+func (_m *SchoolRepo) AddReview(db *gorm.DB, data entities.Reviews) (int, error) {
+	ret := _m.Called(db, data)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Reviews) (int, error)); ok {
+		return rf(db, data)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, entities.Reviews) int); ok {
+		r0 = rf(db, data)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, entities.Reviews) error); ok {
+		r1 = rf(db, data)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: db, school
 func (_m *SchoolRepo) Create(db *gorm.DB, school entities.School) (int, error) {
 	ret := _m.Called(db, school)
@@ -562,12 +586,38 @@ func (_m *SchoolRepo) UpdatePayment(db *gorm.DB, paym entities.Payment) (*entiti
 }
 
 // UpdateProgress provides a mock function with given fields: db, id, status
-func (_m *SchoolRepo) UpdateProgress(db *gorm.DB, id int, status string) error {
+func (_m *SchoolRepo) UpdateProgress(db *gorm.DB, id int, status string) (*entities.Progress, error) {
 	ret := _m.Called(db, id, status)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(*gorm.DB, int, string) error); ok {
+	var r0 *entities.Progress
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int, string) (*entities.Progress, error)); ok {
+		return rf(db, id, status)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int, string) *entities.Progress); ok {
 		r0 = rf(db, id, status)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.Progress)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(*gorm.DB, int, string) error); ok {
+		r1 = rf(db, id, status)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateProgressByUid provides a mock function with given fields: db, uid, schid, status
+func (_m *SchoolRepo) UpdateProgressByUid(db *gorm.DB, uid int, schid int, status string) error {
+	ret := _m.Called(db, uid, schid, status)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int, int, string) error); ok {
+		r0 = rf(db, uid, schid, status)
 	} else {
 		r0 = ret.Error(0)
 	}

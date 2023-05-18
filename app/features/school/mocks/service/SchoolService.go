@@ -112,6 +112,30 @@ func (_m *SchoolService) AddPayment(ctx context.Context, req entities.ReqAddPaym
 	return r0, r1
 }
 
+// AddReview provides a mock function with given fields: ctx, req
+func (_m *SchoolService) AddReview(ctx context.Context, req entities.Reviews) (int, error) {
+	ret := _m.Called(ctx, req)
+
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, entities.Reviews) (int, error)); ok {
+		return rf(ctx, req)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, entities.Reviews) int); ok {
+		r0 = rf(ctx, req)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, entities.Reviews) error); ok {
+		r1 = rf(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Create provides a mock function with given fields: ctx, req, image, pdf
 func (_m *SchoolService) Create(ctx context.Context, req entities.ReqCreateSchool, image multipart.File, pdf multipart.File) (int, error) {
 	ret := _m.Called(ctx, req, image, pdf)
