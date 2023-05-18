@@ -59,6 +59,3 @@ func (q *Quiz) CreateQuiz(schname string, log *logrus.Logger) (string, string, e
 	return quizlink, prevlink, nil
 }
 
-func (q *Quiz) GetResult(prevlink string) (string, string, error) {
-
-}
