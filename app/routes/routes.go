@@ -80,4 +80,6 @@ func (r *Routes) RegisterRoutes() {
 	radm.POST("/payments", r.School.AddPayment)
 	radm.PUT("/payments", r.School.UpdatePayment)
 	radm.DELETE("/payments/:id", r.School.DeletePayment)
+	radm.POST("/quiz", r.School.CreateQuiz)
+	radm.GET("/quiz", r.School.GetTestResult)
 }

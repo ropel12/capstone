@@ -570,3 +570,25 @@ func (u *School) AddReview(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusCreated, "Status Created", map[string]any{"id": res}))
 }
+
+func (u *School) CreateQuiz(c echo.Context) error {
+	req := []entity.ReqAddQuiz{}
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING CreateQuiz, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
+	}
+	err := u.Service.CreateQuiz(c.Request().Context(), req)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusCreated, "Status Created", nil))
+}
+
+func (u *School) GetTestResult(c echo.Context) error {
+
+	res, err := u.Service.GetTestResult(c.Request().Context(), helper.GetUid(c.Get("user").(*jwt.Token)))
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusCreated, "Status Created", res))
+}

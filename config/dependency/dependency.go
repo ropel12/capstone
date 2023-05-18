@@ -23,4 +23,5 @@ type Depend struct {
 	Validation *pkg.Validation
 	Pusher     *pkg.Pusher
 	Calendar   *pkg.Calendar
+	Quiz       *pkg.Quiz
 }

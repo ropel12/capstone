@@ -26,8 +26,9 @@ type (
 		Staff            string `gorm:"not null"`
 		Accreditation    string `gorm:"type:varchar(3);not null"`
 		Gmeet            string `gorm:"type:varchar(70);default: "`
-		QuizLinkPub      string `gorm:"type:varchar(70);default:"`
-		QuizLinkPreview  string `gorm:"type:varchar(70);default:"`
+		QuizLinkPub      string `gorm:"type:varchar(150);default:"`
+		QuizLinkPreview  string `gorm:"type:varchar(150);default:"`
+		QuizLinkResult   string `gorm:"type:varchar(150);default:"`
 		Achievements     []Achievement
 		Extracurriculars []Extracurricular
 		Faqs             []Faq
@@ -69,9 +70,24 @@ type (
 		ZipCode  string `json:"zip_code" `
 		City     string `json:"city" `
 	}
+	ReqAddQuiz struct {
+		SchoolID int    `json:"school_id" validate:"required"`
+		Question string `json:"question" validate:"required"`
+		Option1  string `json:"option1" validate:"required"`
+		Option2  string `json:"option2" validate:"required"`
+		Option3  string `json:"option3" validate:"required"`
+		Option4  string `json:"option4" validate:"required"`
+		Answer   int    `json:"answer" validate:"required"`
+	}
+	ReqDataQuiz struct {
+		PubLink    string       `json:"pub_link"`
+		Prevlink   string       `json:"prev_link"`
+		ResultLink string       `json:"result_link"`
+		Data       []ReqAddQuiz `json:"data"`
+	}
 	ReqCreateSubmission struct {
 		UserID           uint
-		SchoolID         int    `json:"student_id" validate:"required"`
+		SchoolID         int    `json:"school_id" validate:"required"`
 		StudentPhoto     string `json:"student_photo" validate:"required"`
 		StudentName      string `json:"student_name" validate:"required"`
 		PlaceDate        string `json:"place_date" validate:"required"`

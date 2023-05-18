@@ -45,6 +45,7 @@ type NSQConfig struct {
 	Topic6 string `mapstructure:"TOPIC6"`
 	Topic7 string `mapstructure:"TOPIC7"`
 	Topic8 string `mapstructure:"TOPIC8"`
+	Topic9 string `mapstructure:"TOPIC9"`
 }
 type PusherConfig struct {
 	AppId   string `mapstructure:"APPID"`
@@ -68,6 +69,7 @@ type Config struct {
 	NSQ        NSQConfig      `mapstructure:"NSQ"`
 	GCP        GCPConfig      `mapstructure:"GCP"`
 	Pusher     PusherConfig   `mapstructure:"PUSHER"`
+	QuizAuth   string         `mapstructure:"QUIZ"`
 }
 
 func InitConfiguration() (*Config, error) {

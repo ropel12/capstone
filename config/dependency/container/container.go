@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/csv"
 	"io"
+	"net/http"
 	"os"
 
 	"cloud.google.com/go/storage"
@@ -18,6 +19,7 @@ import (
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 	"go.uber.org/dig"
+	"golang.org/x/net/http2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/calendar/v3"
 )
@@ -44,6 +46,9 @@ func RunAll() {
 		panic(err)
 	}
 	if err := Container.Provide(NewStorage); err != nil {
+		panic(err)
+	}
+	if err := Container.Provide(NewQuiz); err != nil {
 		panic(err)
 	}
 	if err := Container.Provide(NewCalendar); err != nil {
@@ -129,7 +134,19 @@ func NewCalendar(log *logrus.Logger) (*pkg.Calendar, error) {
 	}
 	return calendar, nil
 }
-
+func NewQuiz(conf *config.Config) *pkg.Quiz {
+	t := &http2.Transport{}
+	client := &http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+		Transport: t}
+	quiz := &pkg.Quiz{
+		Client: client,
+		Auth:   conf.QuizAuth,
+	}
+	return quiz
+}
 func NewLog() (*log.Logger, error) {
 	var logger = log.New()
 	file, _ := os.OpenFile("output.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, os.ModePerm)
