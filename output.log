@@ -610,13 +610,49 @@
 {"level":"error","msg":"[ERROR] When Binding Midtrans Reponse : code=400, message=Unmarshal type error: expected=int, got=string, field=gross_amount, offset=528, internal=json: cannot unmarshal string into Go struct field MidtransNotifResponse.gross_amount of type int","time":"2023-05-18T10:19:15+07:00"}
 {"level":"error","msg":"[ERROR] When Binding Midtrans Reponse : code=400, message=Unmarshal type error: expected=int, got=string, field=gross_amount, offset=571, internal=json: cannot unmarshal string into Go struct field MidtransNotifResponse.gross_amount of type int","time":"2023-05-18T10:19:34+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-18T10:33:02+07:00"}
-{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T17:24:12+07:00"}
-{"level":"info","msg":"Shutting down server","time":"2023-05-18T17:27:18+07:00"}
-{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T17:27:32+07:00"}
-{"level":"info","msg":"Shutting down server","time":"2023-05-18T17:29:06+07:00"}
-{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T17:29:22+07:00"}
-{"level":"info","msg":"Shutting down server","time":"2023-05-18T17:30:00+07:00"}
-{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T17:30:50+07:00"}
-{"level":"info","msg":"Shutting down server","time":"2023-05-18T17:31:02+07:00"}
-{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T17:32:25+07:00"}
-{"level":"info","msg":"Shutting down server","time":"2023-05-18T17:33:23+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:09:10+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:09:22+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:09:58+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:10:55+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:11:38+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:12:05+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:14:40+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:14:52+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:16:02+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:16:17+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:18:04+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:18:17+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:18:44+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:18:57+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:20:00+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:21:20+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:24:46+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:24:54+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:27:47+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:28:00+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:29:13+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:29:58+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:30:13+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:34:09+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T18:36:44+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T18:56:29+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T19:04:27+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T21:03:03+07:00"}
+{"level":"error","msg":"[ERROR]WHEN UPDATING SCHOOL, Err: context canceled","time":"2023-05-18T21:04:43+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T21:07:22+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T21:07:35+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T21:09:10+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T21:09:41+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T21:15:16+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T21:16:22+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T21:19:31+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T21:20:21+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T21:20:53+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T21:21:22+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T21:24:26+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T21:24:39+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T21:26:41+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T21:27:08+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T21:28:30+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T21:28:41+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T21:41:48+07:00"}

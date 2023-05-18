@@ -20,6 +20,7 @@ require (
 	github.com/stretchr/testify v1.8.2
 	go.uber.org/dig v1.17.0
 	golang.org/x/crypto v0.6.0
+	golang.org/x/net v0.7.0
 	golang.org/x/oauth2 v0.0.0-20210514164344-f6687ab2804c
 	google.golang.org/api v0.47.0
 	googlemaps.github.io/maps v1.4.0
@@ -68,7 +69,6 @@ require (
 	golang.org/x/image v0.0.0-20190802002840-cff245a6509b // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/time v0.3.0 // indirect

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"mime/multipart"
+	"strings"
 	"sync"
 	"time"
 
@@ -53,6 +54,8 @@ type (
 		GetAllProgressAndSubmissionByuid(ctx context.Context, uid int) ([]entity.ResAllProgressSubmission, error)
 		GetSubmissionByid(ctx context.Context, id int) (*entity.ResDetailSubmission, error)
 		AddReview(ctx context.Context, req entity.Reviews) (int, error)
+		CreateQuiz(ctx context.Context, req []entity.ReqAddQuiz) error
+		GetTestResult(ctx context.Context, uid int) ([]pkg.TestResult, error)
 	}
 )
 
@@ -866,6 +869,57 @@ func (s *school) AddReview(ctx context.Context, req entity.Reviews) (int, error)
 	return res, nil
 }
 
-// func (s *school) CreateTest(ctx context.Context, req entity.Reviews) error {
+func (s *school) CreateQuiz(ctx context.Context, req []entity.ReqAddQuiz) error {
 
-// }
+	if len(req) == 0 {
+		return errorr.NewBad("Missing or Invalid Request Body")
+	}
+	data, err := s.repo.GetById(s.dep.Db.WithContext(ctx), req[0].SchoolID)
+	if err != nil {
+		return err
+	}
+	quizlink, prev, result, err := s.dep.Quiz.CreateQuiz(data.Name, s.dep.Log)
+	if err != nil {
+		return err
+	}
+	newdata := entity.School{
+		QuizLinkPub:     quizlink,
+		QuizLinkPreview: prev,
+		QuizLinkResult:  result,
+	}
+	reqdata := entity.ReqDataQuiz{
+		PubLink:    strings.ReplaceAll(quizlink, "https://www.flexiquiz.com/SC/N/", ""),
+		Prevlink:   prev,
+		ResultLink: result,
+		Data:       req,
+	}
+	newdata.ID = uint(req[0].SchoolID)
+	_, err = s.repo.Update(s.dep.Db.WithContext(ctx), newdata)
+	if err != nil {
+		return err
+	}
+	encodeddata, _ := json.Marshal(reqdata)
+	go func() {
+		if err := s.dep.Nsq.Publish("9", encodeddata); err != nil {
+			s.dep.Log.Errorf("Failed to publish to NSQ: %v", err)
+		}
+	}()
+
+	return err
+}
+
+func (s *school) GetTestResult(ctx context.Context, uid int) ([]pkg.TestResult, error) {
+
+	schooldata, err := s.repo.GetByUid(s.dep.Db.WithContext(ctx), uid)
+	if err != nil {
+		return nil, err
+	}
+	res, err := s.dep.Quiz.GetResult(schooldata.QuizLinkResult, s.dep.Log)
+	if err != nil {
+		return nil, err
+	}
+	if len(res) == 0 {
+		return nil, errorr.NewBad("Data Not Found")
+	}
+	return res, nil
+}
