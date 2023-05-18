@@ -610,3 +610,13 @@
 {"level":"error","msg":"[ERROR] When Binding Midtrans Reponse : code=400, message=Unmarshal type error: expected=int, got=string, field=gross_amount, offset=528, internal=json: cannot unmarshal string into Go struct field MidtransNotifResponse.gross_amount of type int","time":"2023-05-18T10:19:15+07:00"}
 {"level":"error","msg":"[ERROR] When Binding Midtrans Reponse : code=400, message=Unmarshal type error: expected=int, got=string, field=gross_amount, offset=571, internal=json: cannot unmarshal string into Go struct field MidtransNotifResponse.gross_amount of type int","time":"2023-05-18T10:19:34+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-18T10:33:02+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T17:24:12+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T17:27:18+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T17:27:32+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T17:29:06+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T17:29:22+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T17:30:00+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T17:30:50+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T17:31:02+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T17:32:25+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T17:33:23+07:00"}

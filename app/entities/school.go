@@ -298,7 +298,7 @@ type (
 		Description   string `form:"description" validate:"required"`
 		Image         string `form:"image"`
 		Video         string `form:"video" validate:"required"`
-		Pdf           string `form:"pdf" `
+		Pdf           string `form:"pdf"`
 		Web           string `form:"web" validate:"required"`
 		Province      string `form:"province" validate:"required"`
 		City          string `form:"city" validate:"required"`

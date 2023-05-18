@@ -29,13 +29,12 @@ func (u *School) Create(c echo.Context) error {
 		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQREGISTERSCHOOL, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
 	}
-
 	pdffile, err3 := c.FormFile("pdf")
 	imagefile, err2 := c.FormFile("image")
 	var imagesc multipart.File
 	var pdfsc multipart.File
 	//image
-	if err2 != nil {
+	if err2 == nil {
 		if imagefile.Size > 2*1024*1024 {
 			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
 
@@ -47,7 +46,7 @@ func (u *School) Create(c echo.Context) error {
 		req.Image = imagefile.Filename
 		imagesc = image
 	}
-	if err3 != nil {
+	if err3 == nil {
 		if pdffile.Size > 2*1024*1024 {
 			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
 
