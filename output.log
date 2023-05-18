@@ -656,3 +656,5 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-18T21:28:30+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T21:28:41+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-18T21:41:48+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-18T22:55:13+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-18T23:41:57+07:00"}

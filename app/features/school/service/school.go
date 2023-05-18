@@ -388,6 +388,14 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		}
 		res.Achievements = append(res.Achievements, achivement)
 	}
+	for _, val := range data.Faqs {
+		faq := entity.ResFaq{
+			Id:       int(val.ID),
+			Question: val.Question,
+			Answer:   val.Answer,
+		}
+		res.Faqs = append(res.Faqs, faq)
+	}
 
 	for _, val := range data.Extracurriculars {
 		extracurricular := entity.ResAddItems{
@@ -492,7 +500,14 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 		}
 		res.Reviews = append(res.Reviews, review)
 	}
-
+	for _, val := range data.Faqs {
+		faq := entity.ResFaq{
+			Id:       int(val.ID),
+			Question: val.Question,
+			Answer:   val.Answer,
+		}
+		res.Faqs = append(res.Faqs, faq)
+	}
 	for _, val := range data.Extracurriculars {
 		extracurricular := entity.ResAddItems{
 			Name:        val.Title,

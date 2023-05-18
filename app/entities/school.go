@@ -183,6 +183,11 @@ type (
 		Question string `gorm:"type:varchar(255);not null"`
 		Answer   string `gorm:"type:varchar(255);not null"`
 	}
+	ResFaq struct {
+		Id       int    `json:"id"`
+		Question string `json:"question"`
+		Answer   string `json:"answer"`
+	}
 	Payment struct {
 		gorm.Model
 		SchoolID    uint
@@ -306,6 +311,7 @@ type (
 		Extracurriculars []ResAddItems `json:"extracurriculars"`
 		ResPayment       ResPayment    `json:"payments"`
 		Reviews          []ResReview   `json:"reviews"`
+		Faqs             []ResFaq      `json:"faqs"`
 	}
 	ReqCreateSchool struct {
 		UserId        int
