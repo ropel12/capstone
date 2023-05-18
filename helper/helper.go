@@ -74,12 +74,11 @@ func GenerateExpiretime(timee string, duration int) string {
 	}
 	return t.Add(time.Minute * time.Duration(duration)).Format("2006-01-02 15:04:05")
 }
-func GenerateInvoice(eventid int, userid int) string {
+func GenerateInvoice(schoolid int, userid int) string {
 	rand.Seed(time.Now().UnixNano())
 
 	randomNum := rand.Intn(9999) + 1000
-
-	return fmt.Sprintf("INV-%d%d%d", userid, eventid, randomNum)
+	return fmt.Sprintf("INV-%d%d%d", userid, schoolid, randomNum)
 
 }
 

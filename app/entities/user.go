@@ -20,6 +20,8 @@ type (
 		School           School
 		Progresses       []Progress
 		Submission       []Submission
+		Reviews          []Reviews
+		Carts            []Carts
 	}
 
 	ForgotPass struct {
