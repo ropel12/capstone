@@ -296,9 +296,9 @@ type (
 		Npsn          string `form:"npsn" validate:"required"`
 		Name          string `form:"name" validate:"required"`
 		Description   string `form:"description" validate:"required"`
-		Image         string `form:"image" validate:"required"`
+		Image         string `form:"image"`
 		Video         string `form:"video" validate:"required"`
-		Pdf           string `form:"pdf" validate:"required"`
+		Pdf           string `form:"pdf" `
 		Web           string `form:"web" validate:"required"`
 		Province      string `form:"province" validate:"required"`
 		City          string `form:"city" validate:"required"`

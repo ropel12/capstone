@@ -32,28 +32,36 @@ func (u *School) Create(c echo.Context) error {
 
 	pdffile, err3 := c.FormFile("pdf")
 	imagefile, err2 := c.FormFile("image")
-	if err2 != nil || err3 != nil {
-		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Missing Image or PDF", nil))
-	}
-	if pdffile.Size > 2*1024*1024 || imagefile.Size > 2*1024*1024 {
-		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
+	var imagesc multipart.File
+	var pdfsc multipart.File
+	//image
+	if err2 != nil {
+		if imagefile.Size > 2*1024*1024 {
+			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
 
+		}
+		image, err := imagefile.Open()
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot Load Image", nil))
+		}
+		req.Image = imagefile.Filename
+		imagesc = image
 	}
-	//load image
-	image, err := imagefile.Open()
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot Load Image", nil))
+	if err3 != nil {
+		if pdffile.Size > 2*1024*1024 {
+			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
+
+		}
+		pdf, err := pdffile.Open()
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot Load PDF", nil))
+		}
+		req.Pdf = pdffile.Filename
+		pdfsc = pdf
 	}
-	req.Image = imagefile.Filename
-	//load pdf
-	pdf, err := pdffile.Open()
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot Load PDF", nil))
-	}
-	req.Pdf = pdffile.Filename
 	req.UserId = helper.GetUid(c.Get("user").(*jwt.Token))
 	//END
-	id, err := u.Service.Create(c.Request().Context(), req, image, pdf)
+	id, err := u.Service.Create(c.Request().Context(), req, imagesc, pdfsc)
 	if err != nil {
 		return CreateErrorResponse(err, c)
 	}

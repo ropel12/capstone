@@ -91,43 +91,45 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 		Staff:         req.Staff,
 		Accreditation: req.Accreditation,
 	}
-	wg := &sync.WaitGroup{}
-	errchan := make(chan error, 2)
-	wg.Add(2)
-	go func() {
-		defer wg.Done()
-		filename := fmt.Sprintf("%s_%s_%s", "School_", req.Npsn, req.Image)
-		if err1 := s.dep.Gcp.UploadFile(image, filename); err1 != nil {
-			s.dep.Log.Errorf("Error Service : %v", err1)
-			errchan <- err1
+	if image != nil && pdf != nil {
+		wg := &sync.WaitGroup{}
+		errchan := make(chan error, 2)
+		wg.Add(2)
+		go func() {
+			defer wg.Done()
+			filename := fmt.Sprintf("%s_%s_%s", "School_", req.Npsn, req.Image)
+			if err1 := s.dep.Gcp.UploadFile(image, filename); err1 != nil {
+				s.dep.Log.Errorf("Error Service : %v", err1)
+				errchan <- err1
+				image.Close()
+				return
+			}
+			data.Image = filename
+			errchan <- nil
 			image.Close()
 			return
-		}
-		data.Image = filename
-		errchan <- nil
-		image.Close()
-		return
 
-	}()
-	go func() {
-		defer wg.Done()
-		filename := fmt.Sprintf("%s_%s_%s", "School_", req.Npsn, req.Pdf)
-		if err1 := s.dep.Gcp.UploadFile(pdf, filename); err1 != nil {
-			s.dep.Log.Errorf("Error Service : %v", err1)
-			errchan <- err1
+		}()
+		go func() {
+			defer wg.Done()
+			filename := fmt.Sprintf("%s_%s_%s", "School_", req.Npsn, req.Pdf)
+			if err1 := s.dep.Gcp.UploadFile(pdf, filename); err1 != nil {
+				s.dep.Log.Errorf("Error Service : %v", err1)
+				errchan <- err1
+				pdf.Close()
+				return
+			}
+			data.Pdf = filename
+			errchan <- nil
 			pdf.Close()
 			return
-		}
-		data.Pdf = filename
-		errchan <- nil
-		pdf.Close()
-		return
-	}()
-	wg.Wait()
-	close(errchan)
-	for err := range errchan {
-		if err != nil {
-			return 0, err
+		}()
+		wg.Wait()
+		close(errchan)
+		for err := range errchan {
+			if err != nil {
+				return 0, err
+			}
 		}
 	}
 	data.UserID = uint(req.UserId)
