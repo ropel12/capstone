@@ -18,7 +18,9 @@ type Depend struct {
 	Log        *logrus.Logger
 	Gcp        *pkg.StorageGCP
 	Rds        *redis.Client
+	Mds        *pkg.Midtrans
 	Nsq        *pkg.NSQProducer
 	Validation *pkg.Validation
+	Pusher     *pkg.Pusher
 	Calendar   *pkg.Calendar
 }

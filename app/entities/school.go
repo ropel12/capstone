@@ -35,6 +35,8 @@ type (
 		User             *User
 		Submissions      []Submission
 		Progresses       []Progress
+		Reviews          []Reviews
+		Carts            []Carts
 	}
 
 	Submission struct {
@@ -258,6 +260,10 @@ type (
 		Accreditation string `json:"accreditation"`
 		Location      string `json:"location"`
 	}
+	ResReview struct {
+		UserImage string `json:"img"`
+		Review    string `json:"review"`
+	}
 	ResDetailSchool struct {
 		Id               int           `json:"id"`
 		Npsn             string        `json:"npsn"`
@@ -283,6 +289,7 @@ type (
 		Achievements     []ResAddItems `json:"achievements"`
 		Extracurriculars []ResAddItems `json:"extracurriculars"`
 		ResPayment       ResPayment    `json:"payments"`
+		Reviews          []ResReview   `json:"reviews"`
 	}
 	ReqCreateSchool struct {
 		UserId        int
@@ -349,5 +356,11 @@ type (
 		Staff         string   `json:"staff"`
 		Accreditation string   `json:"accreditation"`
 		Location      Location `json:"location"`
+	}
+	Reviews struct {
+		SchoolID uint   `json:"school_id" validate:"required"`
+		UserID   uint   `json:"user_id"  validate:"required"`
+		Review   string `json:"review"  validate:"required"`
+		User     User   `json:"-"`
 	}
 )

@@ -9,16 +9,19 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/labstack/echo/v4 v4.10.2
+	github.com/midtrans/midtrans-go v1.3.6
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/nsqio/go-nsq v1.1.0
 	github.com/onsi/ginkgo/v2 v2.0.0
 	github.com/onsi/gomega v1.18.1
+	github.com/pusher/pusher-http-go v4.0.1+incompatible
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.8.1
 	github.com/stretchr/testify v1.8.2
 	go.uber.org/dig v1.17.0
 	golang.org/x/crypto v0.6.0
 	golang.org/x/oauth2 v0.0.0-20210514164344-f6687ab2804c
+	google.golang.org/api v0.47.0
 	googlemaps.github.io/maps v1.4.0
 	gorm.io/driver/mysql v1.5.0
 	gorm.io/gorm v1.25.1
@@ -70,7 +73,6 @@ require (
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.1.12 // indirect
-	google.golang.org/api v0.47.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c // indirect
 	google.golang.org/grpc v1.52.0-dev // indirect

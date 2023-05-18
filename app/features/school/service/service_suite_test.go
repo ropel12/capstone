@@ -10,6 +10,7 @@ import (
 	entity "github.com/education-hub/BE/app/entities"
 	mocks "github.com/education-hub/BE/app/features/school/mocks/repository"
 	school "github.com/education-hub/BE/app/features/school/service"
+	mocksu "github.com/education-hub/BE/app/features/user/mocks/repository"
 	"github.com/education-hub/BE/config"
 	dependcy "github.com/education-hub/BE/config/dependency"
 	. "github.com/onsi/ginkgo/v2"
@@ -25,6 +26,7 @@ func TestService(t *testing.T) {
 
 var _ = Describe("school", func() {
 	var Mock *mocks.SchoolRepo
+	var Mocks *mocksu.UserRepo
 	var SchoolService school.SchoolService
 	var Depend dependcy.Depend
 	var ctx context.Context
@@ -34,7 +36,8 @@ var _ = Describe("school", func() {
 		Depend.Log = log
 		ctx = context.Background()
 		Mock = mocks.NewSchoolRepo(GinkgoT())
-		SchoolService = school.NewSchoolService(Mock, Depend)
+		Mocks = mocksu.NewUserRepo(GinkgoT())
+		SchoolService = school.NewSchoolService(Mock, Depend, Mocks)
 		Depend.Config = &config.Config{GmapsKey: os.Getenv("GMAPS")}
 	})
 	Context("Menambah Sekolah Baru", func() {

@@ -550,3 +550,16 @@ func (u *School) GetSubmissionByid(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
 }
+
+func (u *School) AddReview(c echo.Context) error {
+	req := entity.Reviews{}
+	if err := c.Bind(&req); err != nil {
+		u.Dep.Log.Errorf("[ERROR] WHEN BINDING CreateSubbmision, ERROR: %v", err)
+		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
+	}
+	res, err := u.Service.AddReview(c.Request().Context(), req)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusCreated, "Status Created", map[string]any{"id": res}))
+}

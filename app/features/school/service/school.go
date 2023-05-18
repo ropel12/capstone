@@ -11,6 +11,7 @@ import (
 
 	entity "github.com/education-hub/BE/app/entities"
 	"github.com/education-hub/BE/app/features/school/repository"
+	user "github.com/education-hub/BE/app/features/user/repository"
 	"github.com/education-hub/BE/config/dependency"
 	"github.com/education-hub/BE/errorr"
 	"github.com/education-hub/BE/helper"
@@ -23,6 +24,7 @@ type (
 		repo      repository.SchoolRepo
 		validator *validator.Validate
 		dep       dependency.Depend
+		userrepo  user.UserRepo
 	}
 	SchoolService interface {
 		Create(ctx context.Context, req entity.ReqCreateSchool, image multipart.File, pdf multipart.File) (int, error)
@@ -50,11 +52,12 @@ type (
 		GetProgressById(ctx context.Context, id int) (*entity.ResDetailProgress, error)
 		GetAllProgressAndSubmissionByuid(ctx context.Context, uid int) ([]entity.ResAllProgressSubmission, error)
 		GetSubmissionByid(ctx context.Context, id int) (*entity.ResDetailSubmission, error)
+		AddReview(ctx context.Context, req entity.Reviews) (int, error)
 	}
 )
 
-func NewSchoolService(repo repository.SchoolRepo, dep dependency.Depend) SchoolService {
-	return &school{repo: repo, dep: dep, validator: validator.New()}
+func NewSchoolService(repo repository.SchoolRepo, dep dependency.Depend, user user.UserRepo) SchoolService {
+	return &school{repo: repo, dep: dep, validator: validator.New(), userrepo: user}
 }
 
 func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image multipart.File, pdf multipart.File) (int, error) {
@@ -373,6 +376,7 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 	}
 	for _, val := range data.Achievements {
 		achivement := entity.ResAddItems{
+			Id:          int(val.ID),
 			Name:        val.Title,
 			Img:         val.Image,
 			Description: val.Description,
@@ -472,8 +476,16 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 			Name:        val.Title,
 			Img:         val.Image,
 			Description: val.Description,
+			Id:          int(val.ID),
 		}
 		res.Achievements = append(res.Achievements, achivement)
+	}
+	for _, val := range data.Reviews {
+		review := entity.ResReview{
+			UserImage: val.User.Image,
+			Review:    val.Review,
+		}
+		res.Reviews = append(res.Reviews, review)
 	}
 
 	for _, val := range data.Extracurriculars {
@@ -723,10 +735,41 @@ func (s *school) CreateSubmission(ctx context.Context, req entity.ReqCreateSubmi
 }
 
 func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) (int, error) {
-	if err := s.repo.UpdateProgress(s.dep.Db.WithContext(ctx), id, status); err != nil {
+	if status != "File Registration" && status != "File Approved" && status != "Send Detail Costs Registration" &&
+		status != "Done Payment" && status != "Send Test Link" && status != "Check Test Result" &&
+		status != "Test Result" && status != "Send Detail Costs Her-Registration" &&
+		status != "Already Paid Her-Registration" && status != "Finish" {
+		return 0, errorr.NewBad("Invalid Request Body")
+	}
+	res, err := s.repo.UpdateProgress(s.dep.Db.WithContext(ctx), id, status)
+	if err != nil {
 		return 0, err
 	}
-	return id, nil
+	if status == "File Approved" {
+		user, err := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
+		if err != nil {
+			s.dep.Log.Errorf("[ERROR]WHEN GETTING USER DATA: %v", err)
+		}
+		school, err := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
+		if err != nil {
+			s.dep.Log.Errorf("[ERROR]WHEN GETTING SCHOOL DATA: %v", err)
+		}
+		if err := s.dep.Pusher.Publish(map[string]string{"username": user.Username, "type": "admission", "school_name": school.Name, "status": "File Approved"}, 1); err != nil {
+			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
+		}
+	}
+	if status == "Send Test Link" {
+		schooldata, _ := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
+		userdata, _ := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))
+		encodeddata, _ := json.Marshal(map[string]any{"email": userdata.Email, "name": userdata.FirstName + " " + userdata.SureName, "school": schooldata.Name, "test": schooldata.QuizLinkPub})
+		go func() {
+			if err := s.dep.Nsq.Publish("8", encodeddata); err != nil {
+				s.dep.Log.Errorf("Failed to publish to NSQ: %v", err)
+			}
+		}()
+
+	}
+	return int(res.ID), nil
 }
 
 func (s *school) GetAllProgressByUid(ctx context.Context, uid int) ([]entity.ResAllProgress, error) {
@@ -805,3 +848,22 @@ func (s *school) GetSubmissionByid(ctx context.Context, id int) (*entity.ResDeta
 	}
 	return &res, nil
 }
+
+func (s *school) AddReview(ctx context.Context, req entity.Reviews) (int, error) {
+	if err := s.validator.Struct(req); err != nil {
+		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE Add Review REQ, Error: %v", err)
+		return 0, errorr.NewBad("Missing or Invalid Request Body")
+	}
+	if !s.dep.Validation.Validate(req.Review) {
+		return 0, errorr.NewBad("Your comment contains bad words")
+	}
+	res, err := s.repo.AddReview(s.dep.Db.WithContext(ctx), req)
+	if err != nil {
+		return 0, err
+	}
+	return res, nil
+}
+
+// func (s *school) CreateTest(ctx context.Context, req entity.Reviews) error {
+
+// }

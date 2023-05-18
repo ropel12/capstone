@@ -2,6 +2,7 @@ package routes
 
 import (
 	schoolhand "github.com/education-hub/BE/app/features/school/handler"
+	trxhand "github.com/education-hub/BE/app/features/transaction/handler"
 	userhand "github.com/education-hub/BE/app/features/user/handler"
 	"github.com/education-hub/BE/config/dependency"
 	"github.com/go-playground/validator"
@@ -14,6 +15,7 @@ type Routes struct {
 	Depend dependency.Depend
 	User   userhand.User
 	School schoolhand.School
+	Trx    trxhand.Transaction
 }
 
 func (r *Routes) RegisterRoutes() {
@@ -37,6 +39,8 @@ func (r *Routes) RegisterRoutes() {
 	ro.GET("/schools/search", r.School.Search)
 	ro.GET("/schools/:id", r.School.GetById)
 	ro.GET("/gmeet", r.School.CreateGmeet)
+	///Third-Party Payment Notification
+	ro.POST("/notif", r.Trx.MidtransNotification)
 	// AUTH
 	rauth := ro.Group("", middleware.JWT([]byte(r.Depend.Config.JwtSecret)))
 	//User
@@ -48,6 +52,9 @@ func (r *Routes) RegisterRoutes() {
 
 	rstdnt := rverif.Group("", StudentMiddleWare)
 	///student Area
+	rstdnt.GET("/transactions", r.Trx.GetTransactionStudent)
+	rstdnt.GET("/transactions/:id", r.Trx.GetDetailTransaction)
+	rstdnt.POST("/transactions/checkout", r.Trx.CreateTransaction)
 	rstdnt.POST("/school/register", r.School.CreateSubbmision)
 	rstdnt.GET("/users/progress", r.School.GetAllProgressByUid)
 
