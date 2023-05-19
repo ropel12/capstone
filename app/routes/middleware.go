@@ -97,7 +97,10 @@ func MetricsMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 
 		defer timer.ObserveDuration()
 		totalRequests.WithLabelValues(path, method).Inc()
-		next(c)
+		err := next(c)
+		if err != nil {
+			return err
+		}
 		statusCode := c.Response().Status
 		responseStatus.WithLabelValues(path, method, strconv.Itoa(statusCode)).Inc()
 		if statusCode >= 400 {

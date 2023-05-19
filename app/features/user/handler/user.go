@@ -28,12 +28,11 @@ func (u *User) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
 	}
 	user, err := u.Service.Login(c.Request().Context(), req)
-	token = helper.GenerateJWT(int(user.ID), user.Role, "true", u.Dep)
-
 	if err != nil {
 		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}
+	token = helper.GenerateJWT(int(user.ID), user.Role, "true", u.Dep)
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"token": token, "role": user.Role, "username": user.Username}))
 }
 

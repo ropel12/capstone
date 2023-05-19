@@ -782,3 +782,40 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-20T00:39:41+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T00:40:25+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-20T00:40:58+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T00:47:28+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T00:48:21+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T00:52:40+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T00:53:57+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:20:02+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:20:19+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:21:20+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:21:31+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:21:35+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:21:40+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:21:57+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:22:05+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:22:56+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:23:04+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:23:07+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:23:09+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:23:11+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:23:37+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:23:43+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:24:13+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:24:23+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:24:29+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:24:32+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:24:35+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:25:14+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:25:18+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:25:23+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:26:35+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:26:50+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:27:03+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:27:45+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-20T01:27:49+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:28:19+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:29:01+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:29:29+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-20T01:29:51+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-20T01:29:58+07:00"}

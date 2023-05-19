@@ -144,10 +144,9 @@ func (u *user) InsertForgotPassToken(db *gorm.DB, req entity.ForgotPass) error {
 }
 
 func (u *user) ResetPass(db *gorm.DB, newpass string, token string) error {
-	return db.Transaction(func(tx *gorm.DB) error {
+	return db.Transaction(func(db *gorm.DB) error {
 		userdata := entity.ForgotPass{}
 		if err := db.Where("token = ? AND deleted_at IS NULL", token).Find(&userdata).Error; err != nil {
-
 			u.log.Errorf("[ERROR]WHEN Getting user information with forgot token,error:%v", err)
 			return errorr.NewInternal("Internal Server Error")
 		}
