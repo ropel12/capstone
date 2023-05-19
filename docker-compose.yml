@@ -36,11 +36,11 @@ services:
     depends_on:
       - nsqlookupd
   grafana:
-    image: ~/grafana/grafana:latest
+    image: grafana/grafana:latest
     ports:
       - "3000:3000"
     volumes:
-      - grafana-storage:/var/lib/grafana
+      - ~/grafana-storage:/var/lib/grafana
     user: root
     restart: always
 
