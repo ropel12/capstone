@@ -115,8 +115,6 @@ func (q *Quiz) GetPreviewQuiz(url string, log *logrus.Logger) *entity.StaticData
 		log.Errorf("[ERROR]WHEN GETTING PREVIEW QUIZ DATA")
 		return nil
 	}
-	fmt.Println(url, "tee")
-
 	cookie := &http.Cookie{
 		Name:  ".ASPXAUTH",
 		Value: q.Auth,
