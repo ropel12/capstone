@@ -1,12 +1,16 @@
 package routes
 
 import (
+	"text/template"
+
 	schoolhand "github.com/education-hub/BE/app/features/school/handler"
 	trxhand "github.com/education-hub/BE/app/features/transaction/handler"
 	userhand "github.com/education-hub/BE/app/features/user/handler"
 	"github.com/education-hub/BE/config/dependency"
 	"github.com/go-playground/validator"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/dig"
 )
 
@@ -21,11 +25,18 @@ type Routes struct {
 func (r *Routes) RegisterRoutes() {
 	ro := r.Depend.Echo
 	ro.Validator = &CustomValidator{validator: validator.New(), log: r.Depend.Log}
+	ro.Use(MetricsMiddleware)
 	ro.Use(middleware.RemoveTrailingSlash())
 	ro.Use(middleware.Logger())
 	ro.Use(middleware.Recover())
 	ro.Use(middleware.CORS())
+	ro.GET("/prometheus", echo.WrapHandler(promhttp.Handler()))
+	//static
+	ro.Renderer = &TemplateRenderer{
+		templates: template.Must(template.ParseGlob("./template/*.html")),
+	}
 	//No Auth
+	ro.GET("/quiz/:url", r.School.PreviewQuiz)
 	ro.POST("/login", r.User.Login)
 	ro.POST("/register", r.User.Register)
 	ro.GET("/verify/:verifcode", r.User.Verify)

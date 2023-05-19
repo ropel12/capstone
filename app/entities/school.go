@@ -68,7 +68,8 @@ type (
 		District string `json:"district" `
 		Village  string `json:"village" `
 		ZipCode  string `json:"zip_code" `
-		City     string `json:"city" `
+		City     string `json:"city"`
+		Detail   string `json:"detail"`
 	}
 	ReqAddQuiz struct {
 		SchoolID int    `json:"school_id" validate:"required"`
@@ -87,31 +88,33 @@ type (
 	}
 	ReqCreateSubmission struct {
 		UserID           uint
-		SchoolID         int    `json:"school_id" validate:"required"`
-		StudentPhoto     string `json:"student_photo" validate:"required"`
-		StudentName      string `json:"student_name" validate:"required"`
-		PlaceDate        string `json:"place_date" validate:"required"`
-		Gender           string `json:"gender" validate:"required"`
-		Religion         string `json:"religion" validate:"required"`
-		GraduationFrom   string `json:"graduation_from" validate:"required"`
-		NISN             string `json:"nisn" validate:"required"`
-		StudentProvince  string `json:"student_province" validate:"required"`
-		StudentDistrict  string `json:"student_district" validate:"required"`
-		StudentVillage   string `json:"student_village" validate:"required"`
-		StudentZipCode   string `json:"student_zip_code" validate:"required"`
-		StudentCity      string `json:"student_city" validate:"required"`
-		ParentProvince   string `json:"parent_province" validate:"required"`
-		ParentDistrict   string `json:"parent_district" validate:"required"`
-		ParentVillage    string `json:"parent_village" validate:"required"`
-		ParentZipCode    string `json:"parent_zip_code" validate:"required"`
-		ParentCity       string `json:"parent_city" validate:"required"`
-		ParentName       string `json:"parent_name" validate:"required"`
-		ParentJob        string `json:"parent_job" validate:"required"`
-		ParentReligion   string `json:"parent_religion" validate:"required"`
-		ParentPhone      string `json:"parent_phone" validate:"required"`
-		ParentSignature  string `json:"parent_signature" validate:"required"`
-		StudentSignature string `json:"student_signature" validate:"required"`
-		Date             string `json:"date"`
+		SchoolID         int    `form:"school_id" validate:"required"`
+		StudentPhoto     string `form:"student_photo" validate:"required"`
+		StudentName      string `form:"student_name" validate:"required"`
+		PlaceDate        string `form:"place_date" validate:"required"`
+		Gender           string `form:"gender" validate:"required"`
+		Religion         string `form:"religion" validate:"required"`
+		GraduationFrom   string `form:"graduation_from" validate:"required"`
+		NISN             string `form:"nisn" validate:"required"`
+		StudentProvince  string `form:"student_province" validate:"required"`
+		StudentDistrict  string `form:"student_district" validate:"required"`
+		StudentVillage   string `form:"student_village" validate:"required"`
+		StudentZipCode   string `form:"student_zip_code" validate:"required"`
+		StudentCity      string `form:"student_city" validate:"required"`
+		StudentDetail    string `form:"student_detail" validate:"required"`
+		ParentProvince   string `form:"parent_province" validate:"required"`
+		ParentDistrict   string `form:"parent_district" validate:"required"`
+		ParentVillage    string `form:"parent_village" validate:"required"`
+		ParentZipCode    string `form:"parent_zip_code" validate:"required"`
+		ParentCity       string `form:"parent_city" validate:"required"`
+		ParentDetail     string `form:"parent_detail" validate:"required"`
+		ParentName       string `form:"parent_name" validate:"required"`
+		ParentJob        string `form:"parent_job" validate:"required"`
+		ParentReligion   string `form:"parent_religion" validate:"required"`
+		ParentPhone      string `form:"parent_phone" validate:"required"`
+		ParentSignature  string `form:"parent_signature" validate:"required"`
+		StudentSignature string `form:"student_signature" validate:"required"`
+		Date             string `form:"date"`
 	}
 	Progress struct {
 		ID       uint `gorm:"primaryKey;autoIncrement;not null"`
@@ -381,8 +384,12 @@ type (
 	}
 	Reviews struct {
 		SchoolID uint   `json:"school_id" validate:"required"`
-		UserID   uint   `json:"user_id"  validate:"required"`
+		UserID   uint   `json:"user_id"`
 		Review   string `json:"review"  validate:"required"`
 		User     User   `json:"-"`
+	}
+	StaticData struct {
+		Title   string
+		Content string
 	}
 )

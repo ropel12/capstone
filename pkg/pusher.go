@@ -17,6 +17,8 @@ func (p *Pusher) Publish(data any, event int) error {
 		return p.Client.Trigger(p.Env.Channel, p.Env.Event1, data)
 	case 2:
 		return p.Client.Trigger(p.Env.Channel, p.Env.Event2, data)
+	case 3:
+		return p.Client.Trigger(p.Env.Channel, p.Env.Event3, data)
 	}
 	return errorr.NewBad("Event Not Available")
 }

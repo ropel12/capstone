@@ -24,4 +24,5 @@ type Depend struct {
 	Pusher     *pkg.Pusher
 	Calendar   *pkg.Calendar
 	Quiz       *pkg.Quiz
+	PromErr    map[string]string
 }

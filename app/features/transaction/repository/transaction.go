@@ -40,7 +40,7 @@ func (t *transaction) CreateTranscation(db *gorm.DB, data entity.Transaction, ty
 		} else {
 			status = "Sending Detail Cost Her-Registration"
 		}
-		if err := db.Model(&entity.Progress{}).Where("user_id=? AND school_id=? AND status != 'Finish' AND status != 'failed'", data.UserID, data.SchoolID).Update("status", status).Error; err != nil {
+		if err := db.Model(&entity.Progress{}).Where("user_id=? AND school_id=? AND status != 'Finish' AND status != 'Failed Test Result' AND status != '!= 'Failed File Approved''", data.UserID, data.SchoolID).Update("status", status).Error; err != nil {
 			return errorr.NewInternal("Internal Server Error")
 		}
 		return nil

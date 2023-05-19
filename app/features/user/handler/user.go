@@ -23,25 +23,29 @@ func (u *User) Login(c echo.Context) error {
 	var req entity.LoginReq
 	var token string
 	if err := c.Bind(&req); err != nil {
+		c.Set("err", err.Error())
 		u.Dep.Log.Errorf("[ERROR] WHEN BINDING LOGIN, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
 	}
-	uid, role, err := u.Service.Login(c.Request().Context(), req)
-	token = helper.GenerateJWT(uid, role, "true", u.Dep)
+	user, err := u.Service.Login(c.Request().Context(), req)
+	token = helper.GenerateJWT(int(user.ID), user.Role, "true", u.Dep)
 
 	if err != nil {
+		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}
-	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"token": token, "role": role}))
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"token": token, "role": user.Role, "username": user.Username}))
 }
 
 func (u *User) Register(c echo.Context) error {
 	var req entity.RegisterReq
 	if err := c.Bind(&req); err != nil {
+		c.Set("err", err.Error())
 		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REGISTER, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
 	}
 	if err := u.Service.Register(c.Request().Context(), req); err != nil {
+		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}
 	return c.JSON(http.StatusCreated, CreateWebResponse(http.StatusCreated, "Status Created", nil))
@@ -53,6 +57,7 @@ func (u *User) Verify(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Missing verifcode in path", nil))
 	}
 	if err := u.Service.VerifyEmail(c.Request().Context(), verifcode); err != nil {
+		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}
 	return c.Redirect(http.StatusFound, URLFRONTEND)
@@ -75,6 +80,7 @@ func (u *User) Forgotpass(c echo.Context) error {
 		Email string `json:"email"`
 	}{}
 	if err := c.Bind(&req); err != nil {
+		c.Set("err", err.Error())
 		u.Dep.Log.Errorf("[ERROR] WHEN BINDING FORGOTPASS, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
 	}
@@ -82,6 +88,7 @@ func (u *User) Forgotpass(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Missing Email Request", nil))
 	}
 	if err := u.Service.ForgetPass(c.Request().Context(), req.Email); err != nil {
+		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
@@ -92,6 +99,7 @@ func (u *User) ResetPass(c echo.Context) error {
 		Password string `json:"password"`
 	}{}
 	if err := c.Bind(&req); err != nil {
+		c.Set("err", err.Error())
 		u.Dep.Log.Errorf("[ERROR] WHEN BINDING RESETPASS, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
 	}
@@ -105,6 +113,7 @@ func (u *User) ResetPass(c echo.Context) error {
 	}
 	req.Password = hashpass
 	if err := u.Service.ResetPass(c.Request().Context(), token, req.Password); err != nil {
+		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
@@ -114,6 +123,7 @@ func (u *User) GetCaptcha(c echo.Context) error {
 
 	id, captcha, err := helper.GenerateCaptcha()
 	if err != nil {
+		c.Set("err", u.Dep.PromErr["error"])
 		u.Dep.Log.Errorf("[ERROR] WHEN GENERATE CAPTCHA, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Missing token", nil))
 	}
@@ -126,6 +136,7 @@ func (u *User) VerifyCaptcha(c echo.Context) error {
 		Value     string `json:"value"`
 	}{}
 	if err := c.Bind(&req); err != nil {
+		c.Set("err", err.Error())
 		u.Dep.Log.Errorf("[ERROR] WHEN BINDING CAPTCHA, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
 	}
@@ -138,6 +149,7 @@ func (u *User) VerifyCaptcha(c echo.Context) error {
 func (u *User) Update(c echo.Context) error {
 	var req entity.UpdateReq
 	if err := c.Bind(&req); err != nil {
+		c.Set("err", err.Error())
 		u.Dep.Log.Errorf("Error service: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
 	}
@@ -154,6 +166,7 @@ func (u *User) Update(c echo.Context) error {
 	}
 	data, err := u.Service.Update(c.Request().Context(), req, filee)
 	if err != nil {
+		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}
 	newtoken := ""
@@ -175,6 +188,7 @@ func (u *User) Update(c echo.Context) error {
 
 func (u *User) Delete(c echo.Context) error {
 	if err := u.Service.Delete(c.Request().Context(), helper.GetUid(c.Get("user").(*jwt.Token))); err != nil {
+		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
@@ -183,6 +197,7 @@ func (u *User) Delete(c echo.Context) error {
 func (u *User) GetProfile(c echo.Context) error {
 	data, err := u.Service.GetProfile(c.Request().Context(), helper.GetUid(c.Get("user").(*jwt.Token)))
 	if err != nil {
+		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}
 	res := map[string]any{

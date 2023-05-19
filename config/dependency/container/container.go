@@ -69,6 +69,9 @@ func RunAll() {
 	Container.Provide(func() map[int]bool {
 		return make(map[int]bool)
 	})
+	Container.Provide(func() map[string]string {
+		return make(map[string]string)
+	})
 	if err := feat.RegisterRepo(Container); err != nil {
 		panic(err)
 	}
@@ -77,6 +80,7 @@ func RunAll() {
 	}
 
 }
+
 func NewPusher(conf *config.Config) (ps *pkg.Pusher) {
 	ps = &pkg.Pusher{}
 	ps.Env = conf.Pusher
@@ -89,7 +93,6 @@ func NewPusher(conf *config.Config) (ps *pkg.Pusher) {
 	}
 	return ps
 }
-
 func NewStorage(cfg *config.Config) (*pkg.StorageGCP, error) {
 	os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", cfg.GCP.Credential)
 	client, err := storage.NewClient(context.Background())

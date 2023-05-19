@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	entity "github.com/education-hub/BE/app/entities"
 	"github.com/education-hub/BE/errorr"
 	"github.com/sirupsen/logrus"
 )
@@ -106,4 +107,38 @@ func (q *Quiz) GetResult(prevlink string, log *logrus.Logger) ([]TestResult, err
 		}
 	})
 	return responses, nil
+}
+
+func (q *Quiz) GetPreviewQuiz(url string, log *logrus.Logger) *entity.StaticData {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		log.Errorf("[ERROR]WHEN GETTING PREVIEW QUIZ DATA")
+		return nil
+	}
+
+	cookie := &http.Cookie{
+		Name:  ".ASPXAUTH",
+		Value: q.Auth,
+	}
+	req.AddCookie(cookie)
+
+	resp, err := q.Client.Do(req)
+	if err != nil {
+		log.Errorf("[ERROR]WHEN GETTING PREVIEW QUIZ DATA")
+		return nil
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Errorf("[ERROR]WHEN GETTING PREVIEW QUIZ DATA")
+		return nil
+	}
+	// Membuat instance Data dengan data dari permintaan HTTP
+	data := entity.StaticData{
+		Title:   "Halaman Statis",
+		Content: string(body),
+	}
+	resp.Body.Close()
+
+	return &data
+
 }

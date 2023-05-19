@@ -56,6 +56,7 @@ type PusherConfig struct {
 	Channel string `mapstructure:"CHANNEL"`
 	Event1  string `mapstructure:"EVENT1"`
 	Event2  string `mapstructure:"EVENT2"`
+	Event3  string `mapstructure:"EVENT3"`
 }
 type Config struct {
 	Server     Server         `mapstructure:"SERVER"`

@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"reflect"
 
 	entity "github.com/education-hub/BE/app/entities"
@@ -47,6 +46,7 @@ func (u *user) FindByEmail(db *gorm.DB, email string) (*entity.User, error) {
 	}
 	if err != nil {
 		if err != gorm.ErrRecordNotFound {
+
 			u.log.Errorf("ERROR]WHEN FIND USER EMAIL,Error: %v ", err)
 			return nil, errorr.NewInternal(err.Error())
 		} else {
@@ -64,6 +64,7 @@ func (u *user) FindByUsername(db *gorm.DB, username string) (*entity.User, error
 	}
 	if err != nil {
 		if err != gorm.ErrRecordNotFound {
+
 			u.log.Errorf("ERROR]WHEN FIND USERNAME,Error: %v ", err)
 			return nil, errorr.NewInternal(err.Error())
 		} else {
@@ -113,6 +114,7 @@ func (u *user) GetById(db *gorm.DB, id int) (*entity.User, error) {
 	}
 	if err != nil {
 		if err != gorm.ErrRecordNotFound {
+
 			u.log.Errorf("ERROR]WHEN GET USER DATA BY ID,Error: %v ", err)
 			return nil, errorr.NewInternal(err.Error())
 		} else {
@@ -126,6 +128,7 @@ func (u *user) GetById(db *gorm.DB, id int) (*entity.User, error) {
 func (u *user) VerifyEmail(db *gorm.DB, verificationcode string) error {
 	if err := db.Model(&entity.User{}).Where("verification_code = ?", verificationcode).Update("is_verified", true).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
+
 			return errorr.NewBad("Data not found")
 		}
 		u.log.Errorf("[ERROR]When Verify Email, Error: %v", err)
@@ -144,6 +147,7 @@ func (u *user) ResetPass(db *gorm.DB, newpass string, token string) error {
 	return db.Transaction(func(tx *gorm.DB) error {
 		userdata := entity.ForgotPass{}
 		if err := db.Where("token = ? AND deleted_at IS NULL", token).Find(&userdata).Error; err != nil {
+
 			u.log.Errorf("[ERROR]WHEN Getting user information with forgot token,error:%v", err)
 			return errorr.NewInternal("Internal Server Error")
 		}
@@ -151,7 +155,7 @@ func (u *user) ResetPass(db *gorm.DB, newpass string, token string) error {
 			return errorr.NewBad("Data Not Found")
 		}
 		if err := db.Model(&entity.User{}).Where("email=?", userdata.Email).Update("password", newpass).Error; err != nil {
-			fmt.Println(err)
+
 			u.log.Errorf("[ERROR]When entering the password reset token,error:%v", err)
 			return errorr.NewInternal("Internal Server Error")
 		}

@@ -612,17 +612,27 @@ func (_m *SchoolRepo) UpdateProgress(db *gorm.DB, id int, status string) (*entit
 }
 
 // UpdateProgressByUid provides a mock function with given fields: db, uid, schid, status
-func (_m *SchoolRepo) UpdateProgressByUid(db *gorm.DB, uid int, schid int, status string) error {
+func (_m *SchoolRepo) UpdateProgressByUid(db *gorm.DB, uid int, schid int, status string) (int, error) {
 	ret := _m.Called(db, uid, schid, status)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(*gorm.DB, int, int, string) error); ok {
+	var r0 int
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int, int, string) (int, error)); ok {
+		return rf(db, uid, schid, status)
+	}
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int, int, string) int); ok {
 		r0 = rf(db, uid, schid, status)
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(int)
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(*gorm.DB, int, int, string) error); ok {
+		r1 = rf(db, uid, schid, status)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 type mockConstructorTestingTNewSchoolRepo interface {

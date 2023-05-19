@@ -39,7 +39,7 @@ var _ = Describe("user", func() {
 	Context("User Login", func() {
 		When("Request Body kosong", func() {
 			It("Akan Mengembalikan Erorr", func() {
-				err, _, _ := UserService.Login(ctx, entity.LoginReq{})
+				_, err := UserService.Login(ctx, entity.LoginReq{})
 				Expect(err).ShouldNot(BeNil())
 			})
 		})
@@ -49,7 +49,7 @@ var _ = Describe("user", func() {
 				Mock.On("FindByUsername", mock.Anything, "1321321ewqewq").Return(nil, errors.New("Username not registered")).Once()
 			})
 			It("Akan Mengembalikan error dengan pesan 'Username not registered'", func() {
-				_, _, err := UserService.Login(ctx, entity.LoginReq{Username: "1321321ewqewq", Password: "123"})
+				_, err := UserService.Login(ctx, entity.LoginReq{Username: "1321321ewqewq", Password: "123"})
 				Expect(err).ShouldNot(BeNil())
 				Expect(err.Error()).To(Equal("Username not registered"))
 			})
@@ -59,7 +59,7 @@ var _ = Describe("user", func() {
 				Mock.On("FindByUsername", mock.Anything, "satrio123").Return(&entity.User{Username: "satrio2@gmail.com", Password: "321"}, nil).Once()
 			})
 			It("Akan Mengembalikan error dengan pesan 'wrong password' ", func() {
-				_, _, err := UserService.Login(ctx, entity.LoginReq{Username: "satrio123", Password: "123"})
+				_, err := UserService.Login(ctx, entity.LoginReq{Username: "satrio123", Password: "123"})
 				Expect(err).ShouldNot(BeNil())
 				Expect(err.Error()).To(Equal("Wrong password"))
 			})
@@ -70,7 +70,7 @@ var _ = Describe("user", func() {
 				Mock.On("FindByUsername", mock.Anything, "satrio").Return(data, nil).Once()
 			})
 			It("Akan Mengembalikan error dengan pesan 'Email Not Verified'", func() {
-				_, _, err := UserService.Login(ctx, entity.LoginReq{Username: "satrio", Password: "123"})
+				_, err := UserService.Login(ctx, entity.LoginReq{Username: "satrio", Password: "123"})
 				Expect(err).ShouldNot(BeNil())
 				Expect(err.Error()).To(Equal("Email Not Verified"))
 			})
@@ -83,10 +83,10 @@ var _ = Describe("user", func() {
 				Mock.On("FindByUsername", mock.Anything, "satrio").Return(data, nil).Once()
 			})
 			It("Akan Mengembalikan error", func() {
-				uid, role, err := UserService.Login(ctx, entity.LoginReq{Username: "satrio", Password: "123"})
+				user, err := UserService.Login(ctx, entity.LoginReq{Username: "satrio", Password: "123"})
 				Expect(err).Should(BeNil())
-				Expect(uid).To(Equal(1))
-				Expect(role).To(Equal("student"))
+				Expect(user.ID).To(Equal(1))
+				Expect(user.Role).To(Equal("student"))
 			})
 		})
 

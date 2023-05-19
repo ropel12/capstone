@@ -40,7 +40,7 @@ type (
 		GetAllProgressAndSubmissionByuid(db *gorm.DB, uid int) (*entity.School, error)
 		GetSubmissionByid(db *gorm.DB, id int) (*entity.Submission, error)
 		AddReview(db *gorm.DB, data entity.Reviews) (int, error)
-		UpdateProgressByUid(db *gorm.DB, uid int, schid int, status string) error
+		UpdateProgressByUid(db *gorm.DB, uid int, schid int, status string) (int, error)
 	}
 )
 
@@ -49,6 +49,9 @@ func NewSchoolRepo(log *logrus.Logger) SchoolRepo {
 }
 
 func (u *school) Create(db *gorm.DB, school entity.School) (int, error) {
+	if err := db.Where("user_id=?", school.UserID).First(&entity.School{}).Error; err == nil {
+		return 0, errorr.NewBad("You have already registered your school")
+	}
 	if err := db.Create(&school).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN CREATE USER,Error: %v ", err)
 		return 0, errorr.NewInternal("Internal Server Error")
@@ -92,6 +95,7 @@ func (u *school) Delete(db *gorm.DB, id int, uid int) error {
 		if err != gorm.ErrRecordNotFound {
 			u.log.Errorf("[ERROR]WHEN GETTING The Achievement Data, Err: %v", err)
 			return errorr.NewInternal("Internal Server Error")
+
 		}
 		return errorr.NewBad("Id Not Found")
 	}
@@ -357,9 +361,19 @@ func (s *school) UpdatePayment(db *gorm.DB, paym entity.Payment) (*entity.Paymen
 }
 
 func (s *school) CreateSubmission(db *gorm.DB, subm entity.Submission) (int, error) {
-	progress := entity.Progress{UserID: subm.UserID, SchoolID: subm.SchoolID, Status: "Checking File"}
+	progress := entity.Progress{UserID: subm.UserID, SchoolID: subm.SchoolID, Status: "Check File Registration"}
 	err := db.Transaction(func(db *gorm.DB) error {
-
+		existdata1 := entity.Progress{}
+		if err := db.Where("user_id=? AND status ='Finish'", subm.UserID).First(&existdata1).Error; err == nil {
+			return errorr.NewBad("You are already registered as a student")
+		}
+		existdata2 := entity.Submission{}
+		if err := db.Joins("JOIN progresses p  on p.user_id= submissions.user_id AND submissions.school_id = p.school_id").Where("submissions.user_id=? AND submissions.school_id=? AND p.status != 'Failed File Approved' AND p.status != 'Failed Test Result' ", subm.UserID, subm.SchoolID).Find(&existdata2).Error; err != nil {
+			return errorr.NewInternal("Internal Server Error")
+		}
+		if existdata2.StudentName != "" {
+			return errorr.NewBad("You have already registered at this school")
+		}
 		if err := db.Create(&subm).Error; err != nil {
 			s.log.Errorf("[ERROR]WHEN CREATING Submission, Err: %v", err)
 			return errorr.NewInternal("Internal server error")
@@ -377,7 +391,7 @@ func (s *school) CreateSubmission(db *gorm.DB, subm entity.Submission) (int, err
 
 func (s *school) UpdateProgress(db *gorm.DB, id int, status string) (*entity.Progress, error) {
 	prog := entity.Progress{}
-	if err := db.Where("status != 'Finish' AND status != 'Failed'").First(&prog, id).Error; err != nil {
+	if err := db.Where("status != 'Finish' AND status != 'Failed Test Result' AND status != 'Failed File Approved'").First(&prog, id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, errorr.NewBad("Data not found")
 		}
@@ -388,6 +402,10 @@ func (s *school) UpdateProgress(db *gorm.DB, id int, status string) (*entity.Pro
 		s.log.Errorf("[ERROR]WHEN UPDATING Submission, Err : %v", err)
 		return nil, errorr.NewInternal("Internal Server Erorr")
 	}
+	if status == "Finish" {
+		db.Model(&entity.Progress{}).Where("user_id = ? AND school_id != ?", prog.UserID, prog.SchoolID).Update("status", "Failed")
+		db.Where("user_id=?", prog.UserID).Delete(&entity.Carts{})
+	}
 	if status == "Send Detail Costs Registration" {
 		db.Create(&entity.Carts{UserID: prog.UserID, SchoolID: prog.SchoolID, Type: "registration"})
 	} else if status == "Send Detail Costs Her-Registration" {
@@ -395,25 +413,26 @@ func (s *school) UpdateProgress(db *gorm.DB, id int, status string) (*entity.Pro
 	}
 	return &prog, nil
 }
-func (s *school) UpdateProgressByUid(db *gorm.DB, uid int, schid int, status string) error {
-	if err := db.Where("status != 'Finish' AND status != 'Failed' AND user_id=? AND school_id=?", uid, schid).First(&entity.Progress{}).Error; err != nil {
+func (s *school) UpdateProgressByUid(db *gorm.DB, uid int, schid int, status string) (int, error) {
+	progress := entity.Progress{}
+	if err := db.Where("status != 'Finish' AND status != 'Failed Test Result' AND status != 'Failed File Approved' AND user_id=? AND school_id=?", uid, schid).First(&progress).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return errorr.NewBad("Data not found")
+			return 0, errorr.NewBad("Data not found")
 		}
 		s.log.Errorf("[ERORR]WHEN GETTING Progress DATA, Err: %v", err)
-		return errorr.NewInternal("Internal Server Error")
+		return 0, errorr.NewInternal("Internal Server Error")
 	}
 	if err := db.Model(&entity.Progress{}).Where("user_id = ? AND school_id=?", uid, schid).Update("status", status).Error; err != nil {
 		s.log.Errorf("[ERROR]WHEN UPDATING PROGRESS, Err : %v", err)
-		return errorr.NewInternal("Internal Server Erorr")
+		return 0, errorr.NewInternal("Internal Server Erorr")
 	}
-	return nil
+	return int(progress.ID), nil
 }
 func (s *school) GetAllProgressByuid(db *gorm.DB, uid int) ([]entity.Progress, error) {
 	res := []entity.Progress{}
 	if err := db.Preload("School", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,image,name,web")
-	}).Where("user_id=? AND status != 'Failed' AND status !='Finish'", uid).Find(&res).Error; err != nil {
+	}).Where("user_id=? AND status != 'Failed Test Result' AND status != 'Failed File Approved' AND status !='Finish'", uid).Find(&res).Error; err != nil {
 		s.log.Errorf("[ERROR]WHEN GETTING Student Progress Data, Err : %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
 	}
@@ -443,7 +462,7 @@ func (s *school) GetAllProgressAndSubmissionByuid(db *gorm.DB, uid int) (*entity
 		}).Select("school_id,id,user_id")
 	}).Preload("Submissions", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,school_id")
-	}).Joins("join progresses p on p.school_id=schools.id").Where("schools.user_id=? AND p.status != 'Failed'", uid).Find(&res).Error; err != nil {
+	}).Joins("join progresses p on p.school_id=schools.id").Where("schools.user_id=? AND p.status != 'Failed Test Result' AND p.status != 'Failed File Approved'", uid).Find(&res).Error; err != nil {
 		s.log.Errorf("[ERROR]WHEN GETTING PRORGRESS AND SUBMISSION DATA, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Erorr")
 	}
