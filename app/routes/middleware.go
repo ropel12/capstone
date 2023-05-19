@@ -101,8 +101,9 @@ func MetricsMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		statusCode := c.Response().Status
 		responseStatus.WithLabelValues(path, method, strconv.Itoa(statusCode)).Inc()
 		if statusCode >= 400 {
-			exception := c.Get("err").(string)
-			httpError.WithLabelValues(path, method, exception).Inc()
+			if val, ok := c.Get("err").(string); ok {
+				httpError.WithLabelValues(path, method, val).Inc()
+			}
 		}
 		return nil
 	}
