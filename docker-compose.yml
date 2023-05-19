@@ -36,7 +36,7 @@ services:
     depends_on:
       - nsqlookupd
   grafana:
-    image: grafana/grafana:latest
+    image: ~/grafana/grafana:latest
     ports:
       - "3000:3000"
     volumes:
@@ -48,7 +48,7 @@ services:
     image: prom/prometheus:v2.27.1
     volumes:
       - ~/promo/:/etc/prometheus/
-      - prometheus_data/:/prometheus/
+      - ~/prometheus_data/:/prometheus/
     user: root
     command:
       - '--config.file=/etc/prometheus/config.yml'
