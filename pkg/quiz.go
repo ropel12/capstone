@@ -110,11 +110,12 @@ func (q *Quiz) GetResult(prevlink string, log *logrus.Logger) ([]TestResult, err
 }
 
 func (q *Quiz) GetPreviewQuiz(url string, log *logrus.Logger) *entity.StaticData {
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s?preview=1", url), nil)
 	if err != nil {
 		log.Errorf("[ERROR]WHEN GETTING PREVIEW QUIZ DATA")
 		return nil
 	}
+	fmt.Println(url, "tee")
 
 	cookie := &http.Cookie{
 		Name:  ".ASPXAUTH",
