@@ -67,7 +67,7 @@ func (u *user) Register(ctx context.Context, req entity.RegisterReq) error {
 	}
 	_, err := u.repo.FindByUsername(u.dep.Db.WithContext(ctx), req.Username)
 	if err == nil {
-		u.dep.PromErr["error"] = err.Error()
+		u.dep.PromErr["error"] = "Username already registered"
 		return errorr.NewBad("Username already registered")
 	}
 	user, err := u.repo.FindByEmail(u.dep.Db.WithContext(ctx), req.Email)
@@ -103,8 +103,7 @@ func (u *user) Register(ctx context.Context, req entity.RegisterReq) error {
 			return
 		}
 	}()
-	err = u.repo.Create(u.dep.Db.WithContext(ctx), data)
-	if err != nil {
+	if err := u.repo.Create(u.dep.Db.WithContext(ctx), data); err != nil {
 		u.dep.PromErr["error"] = err.Error()
 		return err
 	}

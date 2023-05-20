@@ -43,7 +43,8 @@ func (u *User) Register(c echo.Context) error {
 		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REGISTER, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Request Body", nil))
 	}
-	if err := u.Service.Register(c.Request().Context(), req); err != nil {
+	err := u.Service.Register(c.Request().Context(), req)
+	if err != nil {
 		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}

@@ -46,7 +46,6 @@ func (u *user) FindByEmail(db *gorm.DB, email string) (*entity.User, error) {
 	}
 	if err != nil {
 		if err != gorm.ErrRecordNotFound {
-
 			u.log.Errorf("ERROR]WHEN FIND USER EMAIL,Error: %v ", err)
 			return nil, errorr.NewInternal(err.Error())
 		} else {
@@ -58,13 +57,9 @@ func (u *user) FindByEmail(db *gorm.DB, email string) (*entity.User, error) {
 }
 func (u *user) FindByUsername(db *gorm.DB, username string) (*entity.User, error) {
 	res := entity.User{}
-	err := db.Where("username = ?", username).Find(&res).Error
-	if res.Username == "" {
-		return nil, errorr.NewBad("Username not registered")
-	}
+	err := db.Where("username = ?", username).First(&res).Error
 	if err != nil {
 		if err != gorm.ErrRecordNotFound {
-
 			u.log.Errorf("ERROR]WHEN FIND USERNAME,Error: %v ", err)
 			return nil, errorr.NewInternal(err.Error())
 		} else {

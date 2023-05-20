@@ -162,7 +162,7 @@ func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image m
 	}
 	if req.Npsn != "" {
 		if err := s.repo.FindByNPSN(s.dep.Db.WithContext(ctx), req.Npsn); err == nil {
-			s.dep.PromErr["error"] = err.Error()
+			s.dep.PromErr["error"] = "School Already Registered"
 			return nil, errorr.NewBad("School Already Registered")
 		}
 		if err := helper.CheckNPSN(req.Npsn, s.dep.Log); err != nil {
@@ -942,7 +942,7 @@ func (s *school) AddReview(ctx context.Context, req entity.Reviews) (int, error)
 		return 0, errorr.NewBad("Missing or Invalid Request Body")
 	}
 	if !s.dep.Validation.Validate(req.Review) {
-		s.dep.PromErr["error"] = "Your comment contains bad words"
+		s.dep.PromErr["error"] = "comment contains bad words"
 		return 0, errorr.NewBad("Your comment contains bad words")
 	}
 	res, err := s.repo.AddReview(s.dep.Db.WithContext(ctx), req)
@@ -961,7 +961,7 @@ func (s *school) CreateQuiz(ctx context.Context, req []entity.ReqAddQuiz) error 
 	}
 	data, err := s.repo.GetById(s.dep.Db.WithContext(ctx), req[0].SchoolID)
 	if err != nil {
-		s.dep.PromErr["error"] = "school id doesm't exist"
+		s.dep.PromErr["error"] = "school id doesn't exist"
 		return err
 	}
 	quizlink, prev, result, err := s.dep.Quiz.CreateQuiz(data.Name, s.dep.Log)

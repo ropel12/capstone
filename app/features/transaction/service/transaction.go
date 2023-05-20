@@ -53,6 +53,7 @@ func (t *transaction) CreateTransaction(ctx context.Context, req entity.ReqCheck
 	itemdetails := []midtrans.ItemDetails{}
 	transactionitems := []entity.TransactionItems{}
 	if req.Type != "herregistration" && req.Type != "registration" {
+		t.dep.PromErr["error"] = "req body is not the content of herregistration or registration"
 		return nil, errorr.NewBad("Invalid Req Body")
 	}
 	if req.Type == "registration" {
@@ -62,6 +63,7 @@ func (t *transaction) CreateTransaction(ctx context.Context, req entity.ReqCheck
 	} else {
 		data, err := t.repo.GetSchoolPayment(t.dep.Db.WithContext(ctx), req.SchoolID)
 		if err != nil {
+			t.dep.PromErr["error"] = err.Error()
 			return nil, err
 		}
 		for i, val := range data.Payments {
@@ -89,6 +91,7 @@ func (t *transaction) CreateTransaction(ctx context.Context, req entity.ReqCheck
 	}
 	res, err := t.dep.Mds.CreateCharge(reqcharge)
 	if err != nil {
+		t.dep.PromErr["error"] = err.Error()
 		return nil, errorr.NewBad(err.Error())
 	}
 	if res.Expire == "" {
@@ -107,6 +110,7 @@ func (t *transaction) CreateTransaction(ctx context.Context, req entity.ReqCheck
 	}
 
 	if err := t.repo.CreateTranscation(t.dep.Db.WithContext(ctx), trxdata, req.Type); err != nil {
+		t.dep.PromErr["error"] = err.Error()
 		return nil, err
 	}
 	userdetail, _ := t.userrepo.GetById(t.dep.Db.WithContext(ctx), uid)
@@ -121,6 +125,7 @@ func (t *transaction) CreateTransaction(ctx context.Context, req entity.ReqCheck
 func (t *transaction) GetAllTrasactionCart(ctx context.Context, uid int) ([]entity.ResGetAllTrasaction, error) {
 	data, err := t.repo.GetAllCartByuid(t.dep.Db.WithContext(ctx), uid)
 	if err != nil {
+		t.dep.PromErr["error"] = err.Error()
 		return nil, err
 	}
 	res := []entity.ResGetAllTrasaction{}
@@ -149,6 +154,7 @@ func (t *transaction) GetDetailTransaction(ctx context.Context, schid, uid int) 
 	}
 	trxcart, err := t.repo.GetCart(t.dep.Db.WithContext(ctx), schid, uid)
 	if err != nil {
+		t.dep.PromErr["error"] = err.Error()
 		return nil, err
 	}
 	if trxcart.Type == "registration" {
