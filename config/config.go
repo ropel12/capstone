@@ -35,17 +35,18 @@ type MidtransConfig struct {
 	Unit           string `mapstructure:"UNIT"`
 }
 type NSQConfig struct {
-	Host   string `mapstructure:"HOST"`
-	Port   string `mapstructure:"PORT"`
-	Topic  string `mapstructure:"TOPIC"`
-	Topic2 string `mapstructure:"TOPIC2"`
-	Topic3 string `mapstructure:"TOPIC3"`
-	Topic4 string `mapstructure:"TOPIC4"`
-	Topic5 string `mapstructure:"TOPIC5"`
-	Topic6 string `mapstructure:"TOPIC6"`
-	Topic7 string `mapstructure:"TOPIC7"`
-	Topic8 string `mapstructure:"TOPIC8"`
-	Topic9 string `mapstructure:"TOPIC9"`
+	Host    string `mapstructure:"HOST"`
+	Port    string `mapstructure:"PORT"`
+	Topic   string `mapstructure:"TOPIC"`
+	Topic2  string `mapstructure:"TOPIC2"`
+	Topic3  string `mapstructure:"TOPIC3"`
+	Topic4  string `mapstructure:"TOPIC4"`
+	Topic5  string `mapstructure:"TOPIC5"`
+	Topic6  string `mapstructure:"TOPIC6"`
+	Topic7  string `mapstructure:"TOPIC7"`
+	Topic8  string `mapstructure:"TOPIC8"`
+	Topic9  string `mapstructure:"TOPIC9"`
+	Topic10 string `mapstructure:"TOPIC10"`
 }
 type PusherConfig struct {
 	AppId   string `mapstructure:"APPID"`

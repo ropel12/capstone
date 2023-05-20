@@ -189,6 +189,7 @@ func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image m
 		Staff:           req.Staff,
 		Accreditation:   req.Accreditation,
 		Gmeet:           req.Gmeet,
+		GmeetDate:       req.GmeetDate,
 		QuizLinkPub:     req.QuizLinkPub,
 		QuizLinkPreview: req.QuizLinkPreview,
 	}

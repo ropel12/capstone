@@ -31,6 +31,8 @@ func (np *NSQProducer) Publish(Topic string, message []byte) error {
 		return np.Producer.Publish(np.Env.Topic8, message)
 	case "9":
 		return np.Producer.Publish(np.Env.Topic9, message)
+	case "10":
+		return np.Producer.Publish(np.Env.Topic10, message)
 	}
 	return errorr.NewBad("Topic not available")
 }

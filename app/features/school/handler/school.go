@@ -10,6 +10,7 @@ import (
 	entity "github.com/education-hub/BE/app/entities"
 	"github.com/education-hub/BE/app/features/school/service"
 	"github.com/education-hub/BE/config/dependency"
+	"github.com/education-hub/BE/errorr"
 	"github.com/education-hub/BE/helper"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
@@ -363,6 +364,15 @@ func (u *School) GenerateUrl(c echo.Context) error {
 		c.Set("err", u.Dep.PromErr["error"])
 		return CreateErrorResponse(err, c)
 	}
+	data, err := u.Service.GetByUid(c.Request().Context(), helper.GetUid(c.Get("user").(*jwt.Token)))
+	if err != nil {
+		c.Set("err", u.Dep.PromErr["error"])
+		return CreateErrorResponse(err, c)
+	}
+	if data.Id != req.SchoolId {
+		c.Set("err", "School ID mismatch")
+		return CreateErrorResponse(errorr.NewBad("School ID mismatch"), c)
+	}
 	start_date := fmt.Sprintf("%s+07:00", req.StartDate)
 	end_date := fmt.Sprintf("%s+07:00", req.EndDate)
 	u.Gmeetsess[req.SchoolId] = true
@@ -389,8 +399,10 @@ func (u *School) CreateGmeet(c echo.Context) error {
 	if err1 != nil {
 		u.Dep.Log.Errorf("[ERROR]WHEN GETTING SCHOOL DATA, err: %v", err1)
 	}
-	gmeetlink := u.Dep.Calendar.NewService(auth).Create(strings.Replace(data[1], ":00+07", "", 1), strings.Replace(data[2], ":00+07", "", 1), schooldata.Name)
-	_, err3 := u.Service.Update(c.Request().Context(), entity.ReqUpdateSchool{Id: schooldata.Id, Gmeet: gmeetlink}, nil, nil)
+	start_date := strings.Replace(data[1], ":00+07", "", 1)
+	end_date := strings.Replace(data[2], ":00+07", "", 1)
+	gmeetlink := u.Dep.Calendar.NewService(auth).Create(start_date, end_date, schooldata.Name)
+	_, err3 := u.Service.Update(c.Request().Context(), entity.ReqUpdateSchool{Id: schooldata.Id, Gmeet: gmeetlink, GmeetDate: strings.Replace(start_date, "+07:00", "", 1)}, nil, nil)
 	if err3 != nil {
 		u.Dep.Log.Errorf("[ERROR]WHEN UPDATING SCHOOL DATA, err : %v", err3)
 	}
@@ -660,5 +672,8 @@ func (u *School) SetNewToken(c echo.Context) error {
 		c.Set("err", "Token is Missing")
 	}
 	u.Dep.Quiz.Auth = token
+	go func() {
+		u.Dep.Nsq.Publish("10", []byte(token))
+	}()
 	return c.JSON(http.StatusOK, "Set Token Success")
 }

@@ -26,6 +26,7 @@ type (
 		Staff            string `gorm:"not null"`
 		Accreditation    string `gorm:"type:varchar(3);not null"`
 		Gmeet            string `gorm:"type:varchar(70);default: "`
+		GmeetDate        string `gorm:"type:varchar(25)"`
 		QuizLinkPub      string `gorm:"type:varchar(150);default:"`
 		QuizLinkPreview  string `gorm:"type:varchar(150);default:"`
 		QuizLinkResult   string `gorm:"type:varchar(150);default:"`
@@ -309,6 +310,7 @@ type (
 		Staff            string        `json:"staff"`
 		Accreditation    string        `json:"accreditation"`
 		Gmeet            string        `json:"gmeet"`
+		GmeetDate        string        `json:"gmeet_date"`
 		QuizLinkPub      string        `json:"quizLinkPub"`
 		QuizLinkPreview  string        `json:"quizLinkPreview"`
 		Achievements     []ResAddItems `json:"achievements"`
@@ -357,6 +359,7 @@ type (
 		Staff           string `form:"staff" `
 		Accreditation   string `form:"accreditation"`
 		Gmeet           string `json:"gmeet"`
+		GmeetDate       string `json:"gmeet_date"`
 		QuizLinkPub     string `json:"quizLinkPub"`
 		QuizLinkPreview string `json:"quizLinkPreview"`
 	}

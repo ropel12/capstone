@@ -154,11 +154,6 @@ func (s *school) Update(db *gorm.DB, school entity.School) (*entity.School, erro
 			if val != "" {
 				n.Field(i).SetString(val)
 			}
-		case int:
-			val := v.Field(i).Interface().(int)
-			if val != 0 {
-				n.Field(i).SetInt(int64(val))
-			}
 		}
 	}
 
@@ -351,7 +346,7 @@ func (s *school) UpdatePayment(db *gorm.DB, paym entity.Payment) (*entity.Paymen
 			}
 		case int:
 			val := v.Field(i).Interface().(int)
-			if val != -1 {
+			if val != -1 && val != 0 {
 				n.Field(i).SetInt(int64(val))
 			}
 		}
