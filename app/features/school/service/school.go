@@ -460,7 +460,7 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 				Price:       val.Price,
 				Interval:    fmt.Sprintf("%s/%d Month", val.Description, val.Interval),
 			}
-			res.ResPayment.Interval = append(res.ResPayment.OneTime, interval)
+			res.ResPayment.Interval = append(res.ResPayment.Interval, interval)
 		}
 	}
 	return &res, nil
@@ -574,7 +574,7 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 				Price:       val.Price,
 				Interval:    fmt.Sprintf("%s/%d Month", val.Description, val.Interval),
 			}
-			res.ResPayment.Interval = append(res.ResPayment.OneTime, interval)
+			res.ResPayment.Interval = append(res.ResPayment.Interval, interval)
 		}
 	}
 
