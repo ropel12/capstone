@@ -367,7 +367,7 @@ func (u *School) GenerateUrl(c echo.Context) error {
 	end_date := fmt.Sprintf("%s+07:00", req.EndDate)
 	u.Gmeetsess[req.SchoolId] = true
 	url := u.Dep.Calendar.GenerateUrl(start_date, end_date, req.SchoolId)
-	return c.Redirect(http.StatusFound, url)
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"redirect": url}))
 }
 
 func (u *School) CreateGmeet(c echo.Context) error {
@@ -389,7 +389,7 @@ func (u *School) CreateGmeet(c echo.Context) error {
 	gmeetlink := u.Dep.Calendar.NewService(auth).Create(strings.Replace(data[1], ":00+07", "", 1), strings.Replace(data[2], ":00+07", "", 1), schooldata.Name)
 	u.Service.Update(c.Request().Context(), entity.ReqUpdateSchool{Id: schooldata.Id, Gmeet: gmeetlink}, nil, nil)
 	delete(u.Gmeetsess, schoolid)
-	return c.Redirect(http.StatusFound, URLFRONTENDSUCCESSCREATEDGMEET)
+	return c.Redirect(http.StatusFound, "https://education-hub-fe-3q5c.vercel.app/admin")
 }
 
 func (u *School) AddPayment(c echo.Context) error {
