@@ -234,7 +234,7 @@ type (
 		Id          int    `form:"id" validate:"required"`
 		Description string `form:"description" `
 		Image       string `form:"image" `
-		Title       string `form:"title" `
+		Name        string `form:"name" `
 	}
 	ReqAddAchievemnt struct {
 		SchoolID    uint   `form:"school_id" validate:"required"`
@@ -246,7 +246,7 @@ type (
 		Id          int    `form:"id" validate:"required"`
 		Description string `form:"description" `
 		Image       string `form:"image" `
-		Title       string `form:"title" `
+		Name        string `form:"name" `
 	}
 	ReqCreateGmeet struct {
 		StartDate string `json:"start_time" validate:"required"`
@@ -256,14 +256,14 @@ type (
 	ResAddItems struct {
 		Id          int    `json:"id,omitempty"`
 		Name        string `json:"name"`
-		Img         string `json:"img"`
+		Img         string `json:"image"`
 		Description string `json:"description"`
 	}
 	ResPaymentType struct {
-		Id          int
-		Img         string
-		Description string
-		Price       int
+		Id          int    `json:"id"`
+		Img         string `json:"image"`
+		Description string `json:"description"`
+		Price       int    `json:"price"`
 	}
 	ResPayment struct {
 		OneTime  []ResPaymentType `json:"onetime"`
@@ -285,7 +285,7 @@ type (
 		Location      string `json:"location"`
 	}
 	ResReview struct {
-		UserImage string `json:"img"`
+		UserImage string `json:"image"`
 		Review    string `json:"review"`
 	}
 	ResDetailSchool struct {

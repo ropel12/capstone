@@ -70,6 +70,9 @@ func (u *user) FindByUsername(db *gorm.DB, username string) (*entity.User, error
 	return &res, nil
 }
 func (u *user) Delete(db *gorm.DB, user entity.User) error {
+	if err := db.Where("user_id=?", user.ID).First(&entity.School{}).Error; err == nil {
+		return errorr.NewBad("You still have active school")
+	}
 	if err := db.Delete(&user).Error; err != nil {
 		u.log.Errorf("ERROR]WHEN DELETE USER,Error: %v ", err)
 		return errorr.NewInternal(err.Error())

@@ -31,6 +31,16 @@ func StudentMiddleWare(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func SuperAdmin(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		role := helper.GetRole(c.Get("user").(*jwt.Token))
+		if role != "su" {
+			return c.JSON(http.StatusUnauthorized, map[string]any{"code": 401, "message": "UnAuthorization"})
+		}
+		return next(c)
+	}
+}
 func StatusVerifiedMiddleWare(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		isverified := helper.GetStatus(c.Get("user").(*jwt.Token))

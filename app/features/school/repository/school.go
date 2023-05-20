@@ -86,6 +86,9 @@ func (u *school) GetAll(db *gorm.DB, limit, offset int, search string) ([]entity
 		u.log.Errorf("[ERROR]WHEN GETTING SCHOOL DATA, Err : %v", err)
 		return nil, 0, errorr.NewInternal("Internal Server Error")
 	}
+	if len(res) == 0 {
+		return nil, 0, errorr.NewBad("Data Not Found")
+	}
 	return res, int(total), nil
 }
 

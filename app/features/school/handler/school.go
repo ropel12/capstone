@@ -380,16 +380,22 @@ func (u *School) CreateGmeet(c echo.Context) error {
 	}
 	schoolid, err1 := strconv.Atoi(data[3])
 	if err1 != nil {
-		u.Dep.Log.Errorf("[ERROR]WHEN CONVERT SCHOOL ID , Error: %v", err)
+		u.Dep.Log.Errorf("[ERROR]WHEN CONVERT SCHOOL ID , Error: %v", err1)
 	}
 	if !u.Gmeetsess[schoolid] {
 		return c.JSON(http.StatusBadRequest, "Bad Request")
 	}
 	schooldata, err1 := u.Service.GetByid(c.Request().Context(), schoolid)
+	if err1 != nil {
+		u.Dep.Log.Errorf("[ERROR]WHEN GETTING SCHOOL DATA, err: %v", err1)
+	}
 	gmeetlink := u.Dep.Calendar.NewService(auth).Create(strings.Replace(data[1], ":00+07", "", 1), strings.Replace(data[2], ":00+07", "", 1), schooldata.Name)
-	u.Service.Update(c.Request().Context(), entity.ReqUpdateSchool{Id: schooldata.Id, Gmeet: gmeetlink}, nil, nil)
+	_, err3 := u.Service.Update(c.Request().Context(), entity.ReqUpdateSchool{Id: schooldata.Id, Gmeet: gmeetlink}, nil, nil)
+	if err3 != nil {
+		u.Dep.Log.Errorf("[ERROR]WHEN UPDATING SCHOOL DATA, err : %v", err3)
+	}
 	delete(u.Gmeetsess, schoolid)
-	return c.Redirect(http.StatusFound, "https://education-hub-fe-3q5c.vercel.app/admin")
+	return c.Redirect(http.StatusFound, URLFRONTENDFAILCREATEDGMEET)
 }
 
 func (u *School) AddPayment(c echo.Context) error {
@@ -646,4 +652,13 @@ func (u *School) PreviewQuiz(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Data Not Found", nil))
 	}
 	return c.Render(http.StatusOK, "prev.html", data)
+}
+
+func (u *School) SetNewToken(c echo.Context) error {
+	token := c.Param("token")
+	if token == "" {
+		c.Set("err", "Token is Missing")
+	}
+	u.Dep.Quiz.Auth = token
+	return c.JSON(http.StatusOK, "Set Token Success")
 }

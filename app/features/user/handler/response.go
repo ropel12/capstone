@@ -9,7 +9,7 @@ import (
 
 const (
 	URLFRONTEND       = "https://education-hub-fe-3q5c.vercel.app/login"
-	URLFRONTENDUPDATE = "http://localhost:8000?status=success"
+	URLFRONTENDUPDATE = "https://education-hub-fe-3q5c.vercel.app"
 )
 
 type (

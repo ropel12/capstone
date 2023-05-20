@@ -71,7 +71,6 @@ func (u *User) UpdateVerif(c echo.Context) error {
 	if err := u.Service.VerifyEmail(c.Request().Context(), verifcode); err != nil {
 		return CreateErrorResponse(err, c)
 	}
-	c.SetCookie(&http.Cookie{Name: "verified", Value: "true"})
 	return c.Redirect(http.StatusFound, URLFRONTENDUPDATE)
 }
 

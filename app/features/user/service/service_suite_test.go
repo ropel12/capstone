@@ -85,7 +85,7 @@ var _ = Describe("user", func() {
 			It("Akan Mengembalikan error", func() {
 				user, err := UserService.Login(ctx, entity.LoginReq{Username: "satrio", Password: "123"})
 				Expect(err).Should(BeNil())
-				Expect(user.ID).To(Equal(1))
+				Expect(int(user.ID)).To(Equal(1))
 				Expect(user.Role).To(Equal("student"))
 			})
 		})

@@ -54,6 +54,7 @@ func (r *Routes) RegisterRoutes() {
 	ro.POST("/notif", r.Trx.MidtransNotification)
 	// AUTH
 	rauth := ro.Group("", middleware.JWT([]byte(r.Depend.Config.JwtSecret)))
+	rauth.GET("/quiz/set/:token", r.School.SetNewToken, SuperAdmin)
 	//User
 	rauth.PUT("/users", r.User.Update)
 	rauth.DELETE("/users", r.User.Delete)

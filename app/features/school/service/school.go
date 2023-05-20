@@ -295,7 +295,7 @@ func (s *school) UpdateAchievement(ctx context.Context, req entity.ReqUpdateAchi
 	data := entity.Achievement{
 		Description: req.Description,
 		Image:       req.Image,
-		Title:       req.Title,
+		Title:       req.Name,
 	}
 	data.ID = uint(req.Id)
 	res, err := s.repo.UpdateAchievement(s.dep.Db.WithContext(ctx), data)
@@ -364,7 +364,7 @@ func (s *school) UpdateExtracurricular(ctx context.Context, req entity.ReqUpdate
 	data := entity.Extracurricular{
 		Description: req.Description,
 		Image:       req.Image,
-		Title:       req.Title,
+		Title:       req.Name,
 	}
 	data.ID = uint(req.Id)
 	res, err := s.repo.UpdateExtracurricular(s.dep.Db.WithContext(ctx), data)
@@ -389,6 +389,10 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		s.dep.PromErr["error"] = err.Error()
 		return nil, err
 	}
+	previewlink := ""
+	if data.QuizLinkPub != "" {
+		previewlink = fmt.Sprintf("https://go-event.online/quiz/%s?preview=1", data.QuizLinkPub)
+	}
 	res := entity.ResDetailSchool{
 		Id:              int(data.ID),
 		Npsn:            data.Npsn,
@@ -410,7 +414,7 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		Accreditation:   data.Accreditation,
 		Gmeet:           data.Gmeet,
 		QuizLinkPub:     data.QuizLinkPub,
-		QuizLinkPreview: fmt.Sprintf("https://go-event.online/quiz/%s?preview=1", data.QuizLinkPub),
+		QuizLinkPreview: previewlink,
 	}
 	for _, val := range data.Achievements {
 		achivement := entity.ResAddItems{
@@ -722,7 +726,7 @@ func (s *school) CreateSubmission(ctx context.Context, req entity.ReqCreateSubmi
 	parentsignname := fmt.Sprintf("%s_%d_%s", "ParentSign_", req.UserID, req.ParentSignature)
 	wg := &sync.WaitGroup{}
 	wg.Add(3)
-	errchan := make(chan error)
+	errchan := make(chan error, 3)
 	go func() {
 		defer wg.Done()
 		if err := s.dep.Gcp.UploadFile(studentph, studentphoname); err != nil {

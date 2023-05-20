@@ -10,7 +10,7 @@ import (
 const (
 	URLFRONTEND                    = "http://localhost:8000?status=success"
 	URLFRONTENDUPDATE              = "http://localhost:8000?status=success"
-	URLFRONTENDFAILCREATEDGMEET    = "http://localhost:8000?status=failed"
+	URLFRONTENDFAILCREATEDGMEET    = "https://education-hub-fe-3q5c.vercel.app/admin"
 	URLFRONTENDSUCCESSCREATEDGMEET = "http://localhost:8000?status=success"
 )
 
