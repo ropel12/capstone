@@ -264,6 +264,7 @@ type (
 		Img         string `json:"image"`
 		Description string `json:"description"`
 		Price       int    `json:"price"`
+		Interval    string `json:"interval,omitempty"`
 	}
 	ResPayment struct {
 		OneTime  []ResPaymentType `json:"onetime"`
