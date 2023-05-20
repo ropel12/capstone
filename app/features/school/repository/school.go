@@ -406,7 +406,7 @@ func (s *school) UpdateProgress(db *gorm.DB, id int, status string) (*entity.Pro
 		return nil, errorr.NewInternal("Internal Server Erorr")
 	}
 	if status == "Finish" {
-		db.Model(&entity.Progress{}).Where("user_id = ? AND school_id != ?", prog.UserID, prog.SchoolID).Update("status", "Failed")
+		db.Model(&entity.Progress{}).Where("user_id = ? AND school_id != ?", prog.UserID, prog.SchoolID).Update("status", "Failed Test Result")
 		db.Where("user_id=?", prog.UserID).Delete(&entity.Carts{})
 	}
 	if status == "Send Detail Costs Registration" {
@@ -447,7 +447,7 @@ func (s *school) GetAllProgressByuid(db *gorm.DB, uid int) ([]entity.Progress, e
 
 func (s *school) GetProgressByid(db *gorm.DB, id int) (*entity.Progress, error) {
 	res := entity.Progress{}
-	if err := db.First(&res).Error; err != nil {
+	if err := db.First(&res, id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, errorr.NewBad("Data Not Found")
 		}
