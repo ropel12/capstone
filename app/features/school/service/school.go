@@ -71,7 +71,7 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 	}
 
 	if err := s.repo.FindByNPSN(s.dep.Db.WithContext(ctx), req.Npsn); err == nil {
-		s.dep.PromErr["error"] = err.Error()
+		s.dep.PromErr["error"] = "School Already Registered"
 		return 0, errorr.NewBad("School Already Registered")
 	}
 	if err := helper.CheckNPSN(req.Npsn, s.dep.Log); err != nil {
