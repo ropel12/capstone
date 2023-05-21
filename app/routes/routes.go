@@ -69,6 +69,7 @@ func (r *Routes) RegisterRoutes() {
 	rstdnt.POST("/transactions/checkout", r.Trx.CreateTransaction)
 	rstdnt.POST("/school/register", r.School.CreateSubbmision)
 	rstdnt.GET("/users/progress", r.School.GetAllProgressByUid)
+	rstdnt.POST("/reviews", r.School.AddReview)
 
 	//ADMIN AREA
 	radm := rverif.Group("", AdminMiddleWare)
