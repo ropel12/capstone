@@ -78,8 +78,8 @@ func (u *School) Update(c echo.Context) error {
 	}
 	var image multipart.File
 	var pdf multipart.File
-	pdffile, err := c.FormFile("pdf")
-	if err == nil {
+	pdffile, err1 := c.FormFile("pdf")
+	if err1 == nil {
 		if pdffile.Size > 2*1024*1024 {
 			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
 
@@ -91,8 +91,12 @@ func (u *School) Update(c echo.Context) error {
 		req.Pdf = pdffile.Filename
 		pdf = fpdf
 	}
-	imagefile, err := c.FormFile("image")
-	if err == nil {
+	imagefile, err2 := c.FormFile("image")
+	if err2 == nil {
+		if imagefile.Size > 2*1024*1024 {
+			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
+
+		}
 		fimage, err := imagefile.Open()
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Cannot Load Image", nil))
@@ -524,10 +528,11 @@ func (u *School) CreateSubbmision(c echo.Context) error {
 	if studentsignaturehead.Size > 2*1024*1024 {
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
 	}
+	req.UserID = uint(helper.GetUid(c.Get("user").(*jwt.Token)))
 	res, err := u.Service.CreateSubmission(c.Request().Context(), req, studentphoto, studentsign, parensign)
 	if err != nil {
 		c.Set("err", u.Dep.PromErr["error"])
-		CreateErrorResponse(err, c)
+		return CreateErrorResponse(err, c)
 	}
 	return c.JSON(http.StatusCreated, CreateWebResponse(http.StatusCreated, "StatusCreated", map[string]any{"id": res}))
 }

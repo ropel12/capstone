@@ -199,6 +199,7 @@ func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image m
 		if err := s.dep.Gcp.UploadFile(image, filename); err != nil {
 			s.dep.Log.Errorf("Error Service : %v", err)
 			s.dep.PromErr["error"] = err.Error()
+			image.Close()
 			return nil, err
 		}
 		data.Image = filename
@@ -209,6 +210,7 @@ func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image m
 		if err := s.dep.Gcp.UploadFile(pdf, filename); err != nil {
 			s.dep.Log.Errorf("Error Service : %v", err)
 			s.dep.PromErr["error"] = err.Error()
+			pdf.Close()
 			return nil, err
 		}
 		data.Pdf = filename
