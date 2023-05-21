@@ -2,8 +2,10 @@ package pkg
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"mime/multipart"
 	"strings"
 	"time"
@@ -35,4 +37,20 @@ func (s *StorageGCP) UploadFile(file multipart.File, fileName string) error {
 		return errorr.NewInternal(err.Error())
 	}
 	return nil
+}
+
+func (s *StorageGCP) GetPdf(filename string) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
+	defer cancel()
+	rc, err := s.ClG.Bucket(s.BucketName).Object(filename).NewReader(ctx)
+	if err != nil {
+		return "", err
+	}
+	defer rc.Close()
+
+	data, err := ioutil.ReadAll(rc)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(data), nil
 }

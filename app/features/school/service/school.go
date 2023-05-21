@@ -98,19 +98,21 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 		Accreditation: req.Accreditation,
 	}
 	if image != nil && pdf != nil {
+		img := fmt.Sprintf("%s_%s_%s", "School_", req.Npsn, req.Image)
+		pdff := fmt.Sprintf("%s_%s_%s", "School_", req.Npsn, req.Pdf)
+		data.Pdf = pdff
+		data.Image = img
 		wg := &sync.WaitGroup{}
 		errchan := make(chan error, 2)
 		wg.Add(2)
 		go func() {
 			defer wg.Done()
-			filename := fmt.Sprintf("%s_%s_%s", "School_", req.Npsn, req.Image)
-			if err1 := s.dep.Gcp.UploadFile(image, filename); err1 != nil {
+			if err1 := s.dep.Gcp.UploadFile(image, img); err1 != nil {
 				s.dep.Log.Errorf("Error Service : %v", err1)
 				errchan <- err1
 				image.Close()
 				return
 			}
-			data.Image = filename
 			errchan <- nil
 			image.Close()
 			return
@@ -118,14 +120,12 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 		}()
 		go func() {
 			defer wg.Done()
-			filename := fmt.Sprintf("%s_%s_%s", "School_", req.Npsn, req.Pdf)
-			if err1 := s.dep.Gcp.UploadFile(pdf, filename); err1 != nil {
+			if err1 := s.dep.Gcp.UploadFile(pdf, pdff); err1 != nil {
 				s.dep.Log.Errorf("Error Service : %v", err1)
 				errchan <- err1
 				pdf.Close()
 				return
 			}
-			data.Pdf = filename
 			errchan <- nil
 			pdf.Close()
 			return
@@ -396,6 +396,11 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 	if data.QuizLinkPub != "" {
 		previewlink = fmt.Sprintf("https://go-event.online/quiz/%s?preview=1", data.QuizLinkPub)
 	}
+	b64pdf, err := s.dep.Gcp.GetPdf(data.Pdf)
+	if err != nil {
+		s.dep.PromErr["error"] = err.Error()
+		return nil, errorr.NewBad("pdf doesn't exist")
+	}
 	res := entity.ResDetailSchool{
 		Id:              int(data.ID),
 		Npsn:            data.Npsn,
@@ -403,7 +408,7 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		Description:     data.Description,
 		Image:           data.Image,
 		Video:           data.Video,
-		Pdf:             data.Pdf,
+		Pdf:             b64pdf,
 		Web:             data.Web,
 		Province:        data.Province,
 		City:            data.City,
@@ -503,6 +508,11 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 		s.dep.PromErr["error"] = err.Error()
 		return nil, err
 	}
+	b64pdf, err := s.dep.Gcp.GetPdf(data.Pdf)
+	if err != nil {
+		s.dep.PromErr["error"] = err.Error()
+		return nil, errorr.NewBad("pdf doesn't exist")
+	}
 	res := entity.ResDetailSchool{
 		Id:              int(data.ID),
 		Npsn:            data.Npsn,
@@ -510,7 +520,7 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 		Description:     data.Description,
 		Image:           data.Image,
 		Video:           data.Video,
-		Pdf:             data.Pdf,
+		Pdf:             b64pdf,
 		Web:             data.Web,
 		Province:        data.Province,
 		City:            data.City,
