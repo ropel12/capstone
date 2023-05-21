@@ -102,7 +102,7 @@ func (u *school) Delete(db *gorm.DB, id int, uid int) error {
 		}
 		return errorr.NewBad("Id Not Found")
 	}
-	if err := db.Where("id=?", id).Delete(&entity.Achievement{}).Error; err != nil {
+	if err := db.Where("id=?", id).Delete(&entity.School{}).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN DELETING Achievement, Err: %v", err)
 		return errorr.NewInternal("Internal Server Error")
 	}

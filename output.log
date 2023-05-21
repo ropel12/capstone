@@ -906,3 +906,14 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-21T03:10:49+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-21T03:11:09+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-21T03:17:42+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-21T15:32:03+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-21T15:36:35+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-21T15:36:44+07:00"}
+{"level":"error","msg":"[ERROR]WHEN GETTING The Achievement Data, Err: Error 1054 (42S22): Unknown column 'user_id2' in 'where clause'","time":"2023-05-21T15:36:55+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-21T15:37:46+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-21T15:37:54+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-21T15:38:54+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-21T15:39:22+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-21T15:39:49+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-21T15:39:54+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-21T15:43:18+07:00"}
