@@ -230,7 +230,7 @@ func (u *user) Delete(ctx context.Context, id int) error {
 	err := u.repo.Delete(u.dep.Db.WithContext(ctx), data)
 	if err != nil {
 		u.dep.PromErr["error"] = err.Error()
-		return errorr.NewInternal("Internal Server Error")
+		return err
 	}
 	return nil
 }
