@@ -421,6 +421,7 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		Staff:           data.Staff,
 		Accreditation:   data.Accreditation,
 		Gmeet:           data.Gmeet,
+		GmeetDate:       data.GmeetDate,
 		QuizLinkPub:     data.QuizLinkPub,
 		QuizLinkPreview: previewlink,
 	}
@@ -441,7 +442,13 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		}
 		res.Faqs = append(res.Faqs, faq)
 	}
-
+	for _, val := range data.Reviews {
+		review := entity.ResReview{
+			UserImage: val.User.Image,
+			Review:    val.Review,
+		}
+		res.Reviews = append(res.Reviews, review)
+	}
 	for _, val := range data.Extracurriculars {
 		extracurricular := entity.ResAddItems{
 			Name:        val.Title,
@@ -533,6 +540,7 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 		Staff:           data.Staff,
 		Accreditation:   data.Accreditation,
 		Gmeet:           data.Gmeet,
+		GmeetDate:       data.GmeetDate,
 		QuizLinkPub:     data.QuizLinkPub,
 		QuizLinkPreview: data.QuizLinkPreview,
 	}
