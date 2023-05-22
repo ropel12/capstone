@@ -76,13 +76,16 @@ func (u *School) Update(c echo.Context) error {
 		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQUPDATESCHOOL, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
 	}
+	if req.Image == "undefined" && req.Pdf == "undefined" {
+		req.Image = ""
+		req.Pdf = ""
+	}
 	var image multipart.File
 	var pdf multipart.File
 	pdffile, err1 := c.FormFile("pdf")
 	if err1 == nil {
 		if pdffile.Size > 2*1024*1024 {
 			return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "File is too large. Maximum size is 2MB.", nil))
-
 		}
 		fpdf, err := pdffile.Open()
 		if err != nil {
