@@ -76,8 +76,11 @@ func (u *School) Update(c echo.Context) error {
 		u.Dep.Log.Errorf("[ERROR] WHEN BINDING REQUPDATESCHOOL, ERROR: %v", err)
 		return c.JSON(http.StatusBadRequest, CreateWebResponse(http.StatusBadRequest, "Invalid Or Missing Request Body", nil))
 	}
-	if req.Image == "undefined" && req.Pdf == "undefined" {
+	if req.Image == "undefined" {
 		req.Image = ""
+	}
+
+	if req.Pdf == "undefined" {
 		req.Pdf = ""
 	}
 	var image multipart.File
