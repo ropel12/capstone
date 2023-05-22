@@ -342,12 +342,12 @@ type (
 	ReqUpdateSchool struct {
 		Id              int    `form:"id" validate:"required"`
 		Npsn            string `form:"npsn" `
-		Name            string `form:"school_name" `
+		Name            string `form:"name" `
 		Description     string `form:"description" `
 		Image           string `form:"image" `
 		Video           string `form:"video" `
 		Pdf             string `form:"pdf" `
-		Web             string `form:"school_web" `
+		Web             string `form:"web" `
 		Province        string `form:"province" `
 		City            string `form:"city" `
 		District        string `form:"district" `
