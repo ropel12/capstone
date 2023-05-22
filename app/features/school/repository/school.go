@@ -474,12 +474,12 @@ func (s *school) GetAllProgressAndSubmissionByuid(db *gorm.DB, uid int) (*entity
 
 func (s *school) GetSubmissionByid(db *gorm.DB, id int) (*entity.Submission, error) {
 	res := entity.Submission{}
-	if err := db.First(&res, id).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, errorr.NewBad("Data Not Found")
-		}
+	if err := db.Preload("School").Find(&res, id).Error; err != nil {
 		s.log.Errorf("[ERROR]WHEN GETTING SUBMISSION DATA, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
+	}
+	if res.ID == 0 {
+		return nil, errorr.NewBad("Data Not Found")
 	}
 	return &res, nil
 }

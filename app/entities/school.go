@@ -56,6 +56,7 @@ type (
 		ParentName       string `gorm:"type:varchar(255);not null"`
 		ParentJob        string `gorm:"type:varchar(255);not null"`
 		ParentReligion   string `gorm:"type:varchar(255);not null"`
+		ParentGender     string `gorm:"type:varchar(255);not null"`
 		ParentAddress    string `gorm:"type:varchar(255);not null"`
 		ParentPhone      string `gorm:"type:varchar(255);not null"`
 		ParentSignature  string `gorm:"type:varchar(255);not null"`
@@ -110,6 +111,7 @@ type (
 		ParentCity       string `form:"parent_city" validate:"required"`
 		ParentDetail     string `form:"parent_detail" validate:"required"`
 		ParentName       string `form:"parent_name" validate:"required"`
+		ParentGender     string `form:"parent_gender" validate:"required"`
 		ParentJob        string `form:"parent_job" validate:"required"`
 		ParentReligion   string `form:"parent_religion" validate:"required"`
 		ParentPhone      string `form:"parent_phone" validate:"required"`
@@ -158,6 +160,7 @@ type (
 		Job      string              `json:"job"`
 		Religion string              `json:"religion"`
 		Phone    string              `json:"phone"`
+		Gender   string              `json:"gender"`
 		Adress   ReqAdressSubmission `json:"address"`
 	}
 	ResDetailSubmission struct {
@@ -166,6 +169,7 @@ type (
 		ParentSignature  string      `json:"parent_signature"`
 		StudentSignature string      `json:"student_signature"`
 		DatePlace        string      `json:"date_place"`
+		SchoolName       string      `json:"school_name"`
 	}
 	Achievement struct {
 		gorm.Model

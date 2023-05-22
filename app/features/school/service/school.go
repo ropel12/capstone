@@ -818,6 +818,7 @@ func (s *school) CreateSubmission(ctx context.Context, req entity.ReqCreateSubmi
 		ParentJob:        req.ParentJob,
 		Religion:         req.Religion,
 		ParentReligion:   req.Religion,
+		ParentGender:     req.ParentGender,
 		PlaceDate:        req.PlaceDate,
 		Gender:           req.Gender,
 		GraduationFrom:   req.GraduationFrom,
@@ -940,6 +941,7 @@ func (s *school) GetSubmissionByid(ctx context.Context, id int) (*entity.ResDeta
 	res := entity.ResDetailSubmission{
 		ParentSignature:  data.ParentSignature,
 		StudentSignature: data.StudentSignature,
+		SchoolName:       data.School.Name,
 		DatePlace:        fmt.Sprintf("%s, %s", studentaddress.City, data.Date),
 		StudentData: entity.StudentData{
 			Photo:          data.StudentPhoto,
@@ -957,6 +959,7 @@ func (s *school) GetSubmissionByid(ctx context.Context, id int) (*entity.ResDeta
 			Religion: data.ParentReligion,
 			Phone:    data.ParentPhone,
 			Adress:   Parentaddress,
+			Gender:   data.ParentGender,
 		},
 	}
 	return &res, nil
