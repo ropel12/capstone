@@ -66,6 +66,8 @@ func (u *school) GetByUid(db *gorm.DB, uid int) (*entity.School, error) {
 		return db.Select("id,school_id,description,image,title")
 	}).Preload("Faqs", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,school_id,question,answer")
+	}).Preload("Reviews", func(db *gorm.DB) *gorm.DB {
+		return db.Preload("User").Select("user_id,school_id,review")
 	}).Preload("Payments").Where("user_id=?", uid).Find(&res).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN GETTING The School Data BY UID, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
