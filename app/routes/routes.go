@@ -44,6 +44,7 @@ func (r *Routes) RegisterRoutes() {
 	ro.POST("/reset/:token", r.User.ResetPass)
 	ro.GET("/getcaptcha", r.User.GetCaptcha)
 	ro.POST("/verifycaptcha", r.User.VerifyCaptcha)
+	ro.GET("/quiz/:url", r.School.PreviewQuiz)
 	//school
 	ro.GET("/schools", r.School.GetAll)
 	ro.GET("/schools/search", r.School.Search)
@@ -72,7 +73,6 @@ func (r *Routes) RegisterRoutes() {
 
 	//ADMIN AREA
 	radm := rverif.Group("", AdminMiddleWare)
-	radm.GET("/quiz/:url", r.School.PreviewQuiz)
 	radm.POST("/school", r.School.Create)
 	radm.GET("/admin/school", r.School.GetByUid)
 	radm.GET("/admin/admission", r.School.GetAllAdmission)

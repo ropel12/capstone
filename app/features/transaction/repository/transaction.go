@@ -50,7 +50,7 @@ func (t *transaction) CreateTranscation(db *gorm.DB, data entity.Transaction, ty
 
 func (t *transaction) GetTransaction(db *gorm.DB, schoolid int, userid int) (*entity.Transaction, error) {
 	res := entity.Transaction{}
-	if err := db.Preload("TransactionItems").Where("school_id = ?  AND user_id = ? AND (status != 'paid' OR status != 'cancel')", schoolid, userid).Find(&res).Error; err != nil {
+	if err := db.Preload("TransactionItems").Where("school_id = ?  AND user_id = ? AND (status != 'paid' AND status != 'cancel')", schoolid, userid).Find(&res).Error; err != nil {
 		t.log.Errorf("[ERROR]WHEN GETTING TRANSACTION DATA, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
 	}

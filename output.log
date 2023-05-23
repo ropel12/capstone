@@ -942,3 +942,12 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-23T17:32:30+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T19:58:48+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-23T19:59:32+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T21:08:10+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-23T21:08:57+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-23T21:11:50+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T21:12:36+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-23T21:14:06+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T21:14:12+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-23T21:15:23+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T21:15:32+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-23T21:15:46+07:00"}
