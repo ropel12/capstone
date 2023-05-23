@@ -146,7 +146,7 @@ func (t *transaction) GetDetailTransaction(ctx context.Context, schid, uid int) 
 	if err == nil {
 		return entity.ResDetailTransaction{
 			Invoice:       trxdata.Invoice,
-			PaymentMethod: trxdata.PaymentCode,
+			PaymentMethod: trxdata.PaymentMethod,
 			Total:         trxdata.Total,
 			PaymentCode:   trxdata.PaymentCode,
 			Expire:        trxdata.Expire,

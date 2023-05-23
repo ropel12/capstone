@@ -521,28 +521,26 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 		return nil, errorr.NewBad("pdf doesn't exist")
 	}
 	res := entity.ResDetailSchool{
-		Id:              int(data.ID),
-		Npsn:            data.Npsn,
-		Name:            data.Name,
-		Description:     data.Description,
-		Image:           data.Image,
-		Video:           data.Video,
-		Pdf:             b64pdf,
-		Web:             data.Web,
-		Province:        data.Province,
-		City:            data.City,
-		District:        data.District,
-		Village:         data.Village,
-		Detail:          data.Detail,
-		ZipCode:         data.ZipCode,
-		Students:        data.Students,
-		Teachers:        data.Teachers,
-		Staff:           data.Staff,
-		Accreditation:   data.Accreditation,
-		Gmeet:           data.Gmeet,
-		GmeetDate:       data.GmeetDate,
-		QuizLinkPub:     data.QuizLinkPub,
-		QuizLinkPreview: data.QuizLinkPreview,
+		Id:            int(data.ID),
+		Npsn:          data.Npsn,
+		Name:          data.Name,
+		Description:   data.Description,
+		Image:         data.Image,
+		Video:         data.Video,
+		Pdf:           b64pdf,
+		Web:           data.Web,
+		Province:      data.Province,
+		City:          data.City,
+		District:      data.District,
+		Village:       data.Village,
+		Detail:        data.Detail,
+		ZipCode:       data.ZipCode,
+		Students:      data.Students,
+		Teachers:      data.Teachers,
+		Staff:         data.Staff,
+		Accreditation: data.Accreditation,
+		Gmeet:         data.Gmeet,
+		GmeetDate:     data.GmeetDate,
 	}
 
 	for _, val := range data.Achievements {
@@ -864,8 +862,7 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 		if err := s.dep.Pusher.Publish(map[string]string{"username": user.Username, "type": "admission", "school_name": school.Name, "status": "File Approved"}, 2); err != nil {
 			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
 		}
-	}
-	if status == "Send Test Link" {
+	} else if status == "Send Test Link" {
 		schooldata, _ := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
 		userdata, _ := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))
 		encodeddata, _ := json.Marshal(map[string]any{"email": userdata.Email, "name": userdata.FirstName + " " + userdata.SureName, "school": schooldata.Name, "test": schooldata.QuizLinkPub})

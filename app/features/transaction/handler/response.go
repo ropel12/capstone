@@ -27,7 +27,7 @@ type (
 		TransactionStatus string `json:"transaction_status"`
 		FraudStatus       string `json:"fraud_status"`
 		PaymentType       string `json:"payment_type"`
-		GrossAmount       int    `json:"gross_amount"`
+		GrossAmount       string `json:"gross_amount"`
 	}
 )
 

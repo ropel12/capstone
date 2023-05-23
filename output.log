@@ -940,3 +940,5 @@
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T17:32:21+07:00"}
 {"level":"error","msg":"Failed to publish to NSQ: dial tcp [::1]:4150: i/o timeout","time":"2023-05-23T17:32:26+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-23T17:32:30+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T19:58:48+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-23T19:59:32+07:00"}
