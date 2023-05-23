@@ -117,8 +117,8 @@ $ go run main.go
 ## UNIT TEST COVERAGE ALL
 
 <div align="center">
-<img src="docs/tes1.jpg" width="800" height="800">
-<img src="docs/tes2.jpg" width="800" height="100">
+<img src="docs/tes1.JPG" width="800" height="800">
+<img src="docs/tes2.JPG" width="800" height="100">
   </div>
 
 ## Open Api

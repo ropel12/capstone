@@ -76,13 +76,12 @@ type (
 		Total    int                `json:"total"`
 	}
 	ResDetailTransaction struct {
-		Invoice       string
-		PaymentMethod string
-		Total         int
-		PaymentCode   string
-		Expire        string
+		Invoice       string `json:"invoice"`
+		PaymentMethod string `json:"payment_method"`
+		Total         int    `json:"total"`
+		PaymentCode   string `json:"payment_code"`
+		Expire        string `json:"expire"`
 	}
 	PaymentSchedule struct {
-		
 	}
 )
