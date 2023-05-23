@@ -31,7 +31,7 @@ func NewTransactionRepo(log *logrus.Logger) TransactionRepo {
 func (t *transaction) CreateTranscation(db *gorm.DB, data entity.Transaction, typee string) error {
 	return db.Transaction(func(db *gorm.DB) error {
 		if err := db.Create(&data).Error; err != nil {
-			t.log.Errorf("[ERROR]WHEN GETTING Transaction Data, Err: %v", err)
+			t.log.Errorf("[ERROR]WHEN Creating Transaction Data, Err: %v", err)
 			return errorr.NewInternal("Internal Server Error")
 		}
 		status := ""
@@ -40,7 +40,8 @@ func (t *transaction) CreateTranscation(db *gorm.DB, data entity.Transaction, ty
 		} else {
 			status = "Sending Detail Cost Her-Registration"
 		}
-		if err := db.Model(&entity.Progress{}).Where("user_id=? AND school_id=? AND status != 'Finish' AND status != 'Failed Test Result' AND status != '!= 'Failed File Approved''", data.UserID, data.SchoolID).Update("status", status).Error; err != nil {
+		if err := db.Model(&entity.Progress{}).Where("user_id=? AND school_id=? AND status != 'Finish' AND status != 'Failed Test Result' AND status != 'Failed File Approved'", data.UserID, data.SchoolID).Update("status", status).Error; err != nil {
+			t.log.Errorf("[ERROR]WHEN UPDATING PROGRESS STUDENT, Err : %v", err)
 			return errorr.NewInternal("Internal Server Error")
 		}
 		return nil

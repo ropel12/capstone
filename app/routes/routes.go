@@ -36,7 +36,6 @@ func (r *Routes) RegisterRoutes() {
 		templates: template.Must(template.ParseGlob("./template/*.html")),
 	}
 	//No Auth
-	ro.GET("/quiz/:url", r.School.PreviewQuiz)
 	ro.POST("/login", r.User.Login)
 	ro.POST("/register", r.User.Register)
 	ro.GET("/verify/:verifcode", r.User.Verify)
@@ -73,6 +72,7 @@ func (r *Routes) RegisterRoutes() {
 
 	//ADMIN AREA
 	radm := rverif.Group("", AdminMiddleWare)
+	radm.GET("/quiz/:url", r.School.PreviewQuiz)
 	radm.POST("/school", r.School.Create)
 	radm.GET("/admin/school", r.School.GetByUid)
 	radm.GET("/admin/admission", r.School.GetAllAdmission)

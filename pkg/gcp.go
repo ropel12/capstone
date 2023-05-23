@@ -26,6 +26,7 @@ func (s *StorageGCP) UploadFile(file multipart.File, fileName string) error {
 		fmt.Println(strings.Contains(strings.ToLower(fileName), ".jpg"))
 		return errorr.NewBad("File type not allowed")
 	}
+	return nil
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	wc := s.ClG.Bucket(s.BucketName).Object(s.Path + fileName).NewWriter(ctx)

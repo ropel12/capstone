@@ -82,4 +82,7 @@ type (
 		PaymentCode   string
 		Expire        string
 	}
+	PaymentSchedule struct {
+		
+	}
 )

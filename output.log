@@ -927,3 +927,16 @@
 {"level":"info","msg":"Shutting down server","time":"2023-05-21T18:13:40+07:00"}
 {"level":"info","msg":"Starting server on port 8000","time":"2023-05-21T18:13:49+07:00"}
 {"level":"info","msg":"Shutting down server","time":"2023-05-21T18:14:48+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T17:19:10+07:00"}
+{"level":"error","msg":"Error Service : crypto/bcrypt: hashedPassword is not the hash of the given password","time":"2023-05-23T17:21:49+07:00"}
+{"level":"error","msg":"[ERROR]WHEN VALIDATE CREATESUBMISSION REQ, err : Key: 'ReqCreateSubmission.ParentGender' Error:Field validation for 'ParentGender' failed on the 'required' tag","time":"2023-05-23T17:23:09+07:00"}
+{"level":"error","msg":"[ERROR]WHEN CREATING Submission, Err: Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`captone`.`submissions`, CONSTRAINT `fk_schools_submissions` FOREIGN KEY (`school_id`) REFERENCES `schools` (`id`))","time":"2023-05-23T17:23:21+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-23T17:29:57+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T17:30:06+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-23T17:30:06+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T17:31:15+07:00"}
+{"level":"error","msg":"[ERROR]WHEN UPDATING PROGRESS STUDENT, Err : Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''Failed File Approved''' at line 1","time":"2023-05-23T17:31:25+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-23T17:32:13+07:00"}
+{"level":"info","msg":"Starting server on port 8000","time":"2023-05-23T17:32:21+07:00"}
+{"level":"error","msg":"Failed to publish to NSQ: dial tcp [::1]:4150: i/o timeout","time":"2023-05-23T17:32:26+07:00"}
+{"level":"info","msg":"Shutting down server","time":"2023-05-23T17:32:30+07:00"}

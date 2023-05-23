@@ -6,8 +6,8 @@
         "HOST": "localhost",
         "PORT": "3306",
         "USERNAME": "root",
-        "PASSWORD": "",
-        "NAME": ""
+        "PASSWORD": "e12313123",
+        "NAME": "dbname"
     },
     "REDIS" : {
         "HOST": "localhost",
@@ -18,37 +18,43 @@
     "NSQ": {
         "HOST": "localhost",
         "PORT": "4150",
-        "TOPIC": "PENDING",
-        "TOPIC2": "SUCCESS",
-        "TOPIC3": "CANCEL",
-        "TOPIC4": "REFUND",
+        "TOPIC": "PAYMENT-PENDING",
+        "TOPIC2": "PAYMENT-SUCCESS",
+        "TOPIC3": "PAYMENT-CANCEL",
+        "TOPIC4": "PAYMENT-REFUND",
         "TOPIC5": "VERIFY-EMAIL",
-        "TOPIC6": "RESET-PASSWORD"
+        "TOPIC6": "RESET-PASSWORD",
+        "TOPIC7": "CHANGE-EMAIL",
+        "TOPIC8": "SENDTEST-EMAIL",
+        "TOPIC9": "CREATEQUIZ",
+        "TOPIC10": "CHANGETOKEN"
     },
     "PUSHER": {
         "APPID": "1586003",
-        "KEY": "198b35e916a3f0811a9c",
-        "SECRET": "13fa3da050d2a10fcc5c",
+        "KEY": "198beq312321312qw",
+        "SECRET": "13fa3daeqweweqweqwewq",
         "CLUSTER": "ap1",
         "SECURE": false,
         "CHANNEL": "my-channel",
-        "EVENT": "my-event"
+        "EVENT1": "PAYMENT",
+        "EVENT2": "STUDENTADMISSION",
+        "EVENT3": "ADMINADMISSION"
       },
     "MIDTRANS": {
-        "SERVERKEY": "SB-Mid-server-SncqFmlAhQ312312312",
-        "CLIENTKEY": "SB-Mid-client-ZjOMzX23213213ewqewqexmY",
+        "SERVERKEY": "SB-Mid-server-SncqFmlA3ewqewqeqw",
+        "CLIENTKEY": "SB-Mid-client-ZjOMzX2eewqewqewqY",
         "ENV": 1,
-        "URL":"go-event.online/notif",
+        "URL":"domain/handler",
         "EXP":5,
         "UNIT":"minute"
     },
-    "CSRFLENGTH": 20,
-    "CSRFMODE": "2",
+    "QUIZ":"Ae3wqewqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+    "GMAPS": "APW@#@#@EWEWEWEWWEWWE",
     "GCP": {
         "CREDEN": "./Auth.json",
-        "PROJECTID": "projec321312316",
-        "BUCKETNAME" : "prj32131321",
+        "PROJECTID": "PROJECTID",
+        "BUCKETNAME" : "BUCKETNAME",
         "PATH": ""
     },
-    "JWTSECRET": "#$@321dsdwe@_=--++"
+    "JWTSECRET": "321321312"
 }

@@ -84,6 +84,7 @@ var _ = Describe("school", func() {
 		ParentSignature:  "parent_signature.jpg",
 		StudentSignature: "student_signature.jpg",
 		Date:             "2022-02-01",
+		ParentGender:     "Male",
 	}
 	BeforeEach(func() {
 		Depend.Db = config.GetConnectionTes()

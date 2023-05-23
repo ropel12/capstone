@@ -66,15 +66,18 @@ func (u *Transaction) MidtransNotification(c echo.Context) error {
 	if err := c.Bind(&midres); err != nil {
 		c.Set("err", err.Error())
 		u.Dep.Log.Errorf("[ERROR] When Binding Midtrans Reponse : %v", err)
+		return c.JSON(http.StatusBadRequest, "Error")
 	}
 	switch midres.TransactionStatus {
 	case "settlement":
 		if err := u.Service.UpdateStatus(c.Request().Context(), "paid", midres.OrderID); err != nil {
 			u.Dep.Log.Errorf("[ERROR]When update settlement status: %v", err)
+			return CreateErrorResponse(err, c)
 		}
 	case "expire":
 		if err := u.Service.UpdateStatus(c.Request().Context(), "cancel", midres.OrderID); err != nil {
 			u.Dep.Log.Errorf("[ERROR]When update Expire status: %v", err)
+			return CreateErrorResponse(err, c)
 		}
 
 	}
