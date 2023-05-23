@@ -396,7 +396,7 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 	if data.QuizLinkPub != "" {
 		previewlink = fmt.Sprintf("https://go-event.online/quiz/%s?preview=1", data.QuizLinkPub)
 	}
-	b64pdf, err := s.dep.Gcp.GetPdf(data.Pdf)
+	b64pdf, err := s.dep.Gcp.GetFile(data.Pdf)
 	if err != nil {
 		s.dep.PromErr["error"] = err.Error()
 		return nil, errorr.NewBad("pdf doesn't exist")
@@ -515,7 +515,7 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 		s.dep.PromErr["error"] = err.Error()
 		return nil, err
 	}
-	b64pdf, err := s.dep.Gcp.GetPdf(data.Pdf)
+	b64pdf, err := s.dep.Gcp.GetFile(data.Pdf)
 	if err != nil {
 		s.dep.PromErr["error"] = err.Error()
 		return nil, errorr.NewBad("pdf doesn't exist")
@@ -862,6 +862,8 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 		if err := s.dep.Pusher.Publish(map[string]string{"username": user.Username, "type": "admission", "school_name": school.Name, "status": "File Approved"}, 2); err != nil {
 			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
 		}
+	} else if status == "" {
+
 	} else if status == "Send Test Link" {
 		schooldata, _ := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
 		userdata, _ := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))

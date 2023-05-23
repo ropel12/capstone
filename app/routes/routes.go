@@ -95,4 +95,5 @@ func (r *Routes) RegisterRoutes() {
 	radm.DELETE("/payments/:id", r.School.DeletePayment)
 	radm.POST("/quiz", r.School.CreateQuiz)
 	radm.GET("/quiz", r.School.GetTestResult)
+	radm.GET("/file/:fname", r.School.GetBase64File)
 }

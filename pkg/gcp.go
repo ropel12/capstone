@@ -39,7 +39,7 @@ func (s *StorageGCP) UploadFile(file multipart.File, fileName string) error {
 	return nil
 }
 
-func (s *StorageGCP) GetPdf(filename string) (string, error) {
+func (s *StorageGCP) GetFile(filename string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*25)
 	defer cancel()
 	rc, err := s.ClG.Bucket(s.BucketName).Object(filename).NewReader(ctx)

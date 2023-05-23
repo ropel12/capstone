@@ -688,3 +688,15 @@ func (u *School) SetNewToken(c echo.Context) error {
 	}()
 	return c.JSON(http.StatusOK, "Set Token Success")
 }
+
+func (u *School) GetBase64File(c echo.Context) error {
+	filename := c.Param("fname")
+	if filename == "" {
+		return CreateErrorResponse(errorr.NewBad("Filename is missing"), c)
+	}
+	base32, err := u.Dep.Gcp.GetFile(filename)
+	if err != nil {
+		return CreateErrorResponse(errorr.NewBad("Data Not Found"), c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"file": base32}))
+}
