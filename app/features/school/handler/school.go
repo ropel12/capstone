@@ -713,3 +713,20 @@ func (u *School) GetTestResultCron(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
 }
+
+func (u *School) DeleteProgressByid(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		c.Set("err", "progress id is missing")
+		return CreateErrorResponse(errorr.NewBad("Token Not Found"), c)
+	}
+	newid, err := strconv.Atoi(id)
+	if err != nil {
+		c.Set("err", err.Error())
+		return CreateErrorResponse(errorr.NewBad("Invalid Progress Id"), c)
+	}
+	if err := u.Service.DeleteProgressByid(c.Request().Context(), newid); err != nil {
+
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", nil))
+}

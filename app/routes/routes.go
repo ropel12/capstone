@@ -84,6 +84,7 @@ func (r *Routes) RegisterRoutes() {
 	radm := rverif.Group("", AdminMiddleWare)
 	radm.POST("/school", r.School.Create)
 	radm.PUT("/progresses/:id", r.School.UpdateProgressByid)
+	radm.DELETE("/progresses/:id", r.School.DeleteProgressByid)
 	radm.DELETE("/school/:id", r.School.Delete)
 	radm.PUT("/school", r.School.Update)
 	radm.POST("/achievements", r.School.AddAchievement)

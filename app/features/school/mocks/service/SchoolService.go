@@ -270,6 +270,20 @@ func (_m *SchoolService) DeletePayment(ctx context.Context, id int) error {
 	return r0
 }
 
+// DeleteProgressByid provides a mock function with given fields: ctx, id
+func (_m *SchoolService) DeleteProgressByid(ctx context.Context, id int) error {
+	ret := _m.Called(ctx, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetAll provides a mock function with given fields: ctx, page, limit, search
 func (_m *SchoolService) GetAll(ctx context.Context, page int, limit int, search string) (*entities.Response, error) {
 	ret := _m.Called(ctx, page, limit, search)

@@ -49,6 +49,7 @@ type NSQConfig struct {
 	Topic10 string `mapstructure:"TOPIC10"`
 	Topic11 string `mapstructure:"TOPIC11"`
 	Topic12 string `mapstructure:"TOPIC12"`
+	Topic13 string `mapstructure:"TOPIC13"`
 }
 type PusherConfig struct {
 	AppId   string `mapstructure:"APPID"`

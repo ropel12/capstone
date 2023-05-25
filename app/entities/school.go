@@ -24,6 +24,7 @@ type (
 		Students         string `gorm:"not null"`
 		Teachers         string `gorm:"not null"`
 		Staff            string `gorm:"not null"`
+		Phone            string `gorm:"type:varchar(15);not null"`
 		Accreditation    string `gorm:"type:varchar(3);not null"`
 		Gmeet            string `gorm:"type:varchar(70);default: "`
 		GmeetDate        string `gorm:"type:varchar(25)"`
@@ -120,12 +121,13 @@ type (
 		Date             string `form:"date"`
 	}
 	Progress struct {
-		ID       uint `gorm:"primaryKey;autoIncrement;not null"`
-		UserID   uint
-		SchoolID uint
-		Status   string
-		School   School
-		User     User
+		ID        uint `gorm:"primaryKey;autoIncrement;not null"`
+		UserID    uint
+		SchoolID  uint
+		Status    string
+		DeletedAt gorm.DeletedAt `gorm:"index"`
+		School    School
+		User      User
 	}
 	ResAllProgress struct {
 		SchoolName  string `json:"school_name"`
@@ -138,11 +140,12 @@ type (
 		Status string `json:"progress_status"`
 	}
 	ResAllProgressSubmission struct {
-		UserId       int    `json:"user_id"`
-		UserImage    string `json:"user_image"`
-		UserName     string `json:"user_name"`
-		SubmissionId int    `json:"submission_id"`
-		ProgressId   int    `json:"progress_id"`
+		UserId         int    `json:"user_id"`
+		UserImage      string `json:"user_image"`
+		UserName       string `json:"user_name"`
+		SubmissionId   int    `json:"submission_id"`
+		ProgressId     int    `json:"progress_id"`
+		ProgressStatus string `json:"progress_status"`
 	}
 
 	StudentData struct {
@@ -315,8 +318,9 @@ type (
 		Accreditation    string        `json:"accreditation"`
 		Gmeet            string        `json:"gmeet"`
 		GmeetDate        string        `json:"gmeet_date"`
-		QuizLinkPub      string        `json:"quizLinkPub"`
-		QuizLinkPreview  string        `json:"quizLinkPreview"`
+		QuizLinkPub      string        `json:"quizLinkPub,omitempty"`
+		QuizLinkPreview  string        `json:"quizLinkPreview,omitempty"`
+		WaLink           string        `jsonL:"wa_link,omitempty"`
 		Achievements     []ResAddItems `json:"achievements"`
 		Extracurriculars []ResAddItems `json:"extracurriculars"`
 		ResPayment       ResPayment    `json:"payments"`
@@ -342,6 +346,7 @@ type (
 		Teachers      string `form:"teachers" validate:"required"`
 		Staff         string `form:"staff" validate:"required"`
 		Accreditation string `form:"accreditation" validate:"required"`
+		Phone         string `form:"phone" validate:"required"`
 	}
 	ReqUpdateSchool struct {
 		Id              int    `form:"id" validate:"required"`
@@ -361,6 +366,7 @@ type (
 		Students        string `form:"students" `
 		Teachers        string `form:"teachers" `
 		Staff           string `form:"staff" `
+		Phone           string `form:"phone"`
 		Accreditation   string `form:"accreditation"`
 		Gmeet           string `json:"gmeet"`
 		GmeetDate       string `json:"gmeet_date"`

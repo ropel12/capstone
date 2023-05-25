@@ -252,6 +252,20 @@ func (_m *SchoolRepo) DeletePayment(db *gorm.DB, id int) error {
 	return r0
 }
 
+// DeleteProgressByid provides a mock function with given fields: db, id
+func (_m *SchoolRepo) DeleteProgressByid(db *gorm.DB, id int) error {
+	ret := _m.Called(db, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*gorm.DB, int) error); ok {
+		r0 = rf(db, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // FindByNPSN provides a mock function with given fields: db, npsn
 func (_m *SchoolRepo) FindByNPSN(db *gorm.DB, npsn string) error {
 	ret := _m.Called(db, npsn)

@@ -54,6 +54,7 @@ type (
 		GetAllProgressAndSubmissionByuid(ctx context.Context, uid int) ([]entity.ResAllProgressSubmission, error)
 		GetSubmissionByid(ctx context.Context, id int) (*entity.ResDetailSubmission, error)
 		AddReview(ctx context.Context, req entity.Reviews) (int, error)
+		DeleteProgressByid(ctx context.Context, id int) error
 		CreateQuiz(ctx context.Context, req []entity.ReqAddQuiz) error
 		GetTestResult(ctx context.Context, uid int) ([]pkg.TestResult, error)
 	}
@@ -69,7 +70,10 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 		s.dep.PromErr["error"] = err.Error()
 		return 0, errorr.NewBad("Missing or Invalid Request Body")
 	}
-
+	if !helper.IsValidPhone(req.Phone) {
+		return 0, errorr.NewBad("Invalid Phone Number")
+	}
+	req.Phone = strings.ReplaceAll(req.Phone, "0", "62")
 	if err := s.repo.FindByNPSN(s.dep.Db.WithContext(ctx), req.Npsn); err == nil {
 		s.dep.PromErr["error"] = "School Already Registered"
 		return 0, errorr.NewBad("School Already Registered")
@@ -95,6 +99,7 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 		Students:      req.Students,
 		Teachers:      req.Teachers,
 		Staff:         req.Staff,
+		Phone:         req.Phone,
 		Accreditation: req.Accreditation,
 	}
 	if image != nil && pdf != nil {
@@ -160,6 +165,12 @@ func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image m
 		s.dep.PromErr["error"] = err.Error()
 		return nil, errorr.NewBad("Missing Or Invalid Request Body")
 	}
+	if req.Phone != "" {
+		if !helper.IsValidPhone(req.Phone) {
+			return nil, errorr.NewBad("Invalid Phone Number")
+		}
+		req.Phone = strings.ReplaceAll(req.Phone, "0", "62")
+	}
 	if req.Npsn != "" {
 		if err := s.repo.FindByNPSN(s.dep.Db.WithContext(ctx), req.Npsn); err == nil {
 			s.dep.PromErr["error"] = "School Already Registered"
@@ -189,6 +200,7 @@ func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image m
 		Staff:           req.Staff,
 		Accreditation:   req.Accreditation,
 		Gmeet:           req.Gmeet,
+		Phone:           req.Phone,
 		GmeetDate:       req.GmeetDate,
 		QuizLinkPub:     req.QuizLinkPub,
 		QuizLinkPreview: req.QuizLinkPreview,
@@ -354,6 +366,13 @@ func (s *school) DeleteExtracurricular(ctx context.Context, id int) error {
 	return nil
 }
 
+func (s *school) DeleteProgressByid(ctx context.Context, id int) error {
+	if err := s.repo.DeleteProgressByid(s.dep.Db.WithContext(ctx), id); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *school) UpdateExtracurricular(ctx context.Context, req entity.ReqUpdateExtracurricular, image multipart.File) (int, error) {
 	if err := s.validator.Struct(req); err != nil {
 		s.dep.Log.Errorf("[ERROR] WHEN VALIDATE Add Extracurricular REQ, Error: %v", err)
@@ -421,6 +440,7 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		Staff:           data.Staff,
 		Accreditation:   data.Accreditation,
 		Gmeet:           data.Gmeet,
+		WaLink:          fmt.Sprintf("%s%s%s", "https://wa.me/", data.Phone, "?text=Hallo,Saya Ingin Bertanya"),
 		GmeetDate:       data.GmeetDate,
 		QuizLinkPub:     data.QuizLinkPub,
 		QuizLinkPreview: previewlink,
@@ -538,6 +558,7 @@ func (s *school) GetByid(ctx context.Context, id int) (*entity.ResDetailSchool, 
 		Students:      data.Students,
 		Teachers:      data.Teachers,
 		Staff:         data.Staff,
+		WaLink:        fmt.Sprintf("%s%s%s", "https://wa.me/", data.Phone, "?text=Hallo,Saya Ingin Bertanya"),
 		Accreditation: data.Accreditation,
 		Gmeet:         data.Gmeet,
 		GmeetDate:     data.GmeetDate,
@@ -907,6 +928,18 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 			}
 		}()
 
+	} else if status == "Failed File Approved" {
+		schooldata, _ := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
+		userdata, _ := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))
+		encodeddata, _ := json.Marshal(map[string]any{"email": userdata.Email, "name": userdata.FirstName + " " + userdata.SureName, "school": schooldata.Name, "reason": "Berkas Pendaftaran Ditolak"})
+		if err := s.dep.Pusher.Publish(map[string]string{"username": userdata.Username, "type": "admission", "school_name": schooldata.Name, "status": "Finish"}, 2); err != nil {
+			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
+		}
+		go func() {
+			if err := s.dep.Nsq.Publish("13", encodeddata); err != nil {
+				s.dep.Log.Errorf("Failed to publish to NSQ: %v", err)
+			}
+		}()
 	}
 	return int(res.ID), nil
 }
@@ -947,11 +980,12 @@ func (s *school) GetAllProgressAndSubmissionByuid(ctx context.Context, uid int) 
 	res := []entity.ResAllProgressSubmission{}
 	for id, val := range data.Progresses {
 		progresssubmission := entity.ResAllProgressSubmission{
-			UserId:       int(val.User.ID),
-			UserImage:    val.User.Image,
-			UserName:     val.User.FirstName + " " + val.User.SureName,
-			SubmissionId: int(data.Submissions[id].ID),
-			ProgressId:   int(val.ID),
+			UserId:         int(val.User.ID),
+			UserImage:      val.User.Image,
+			UserName:       val.User.FirstName + " " + val.User.SureName,
+			SubmissionId:   int(data.Submissions[id].ID),
+			ProgressId:     int(val.ID),
+			ProgressStatus: val.Status,
 		}
 		res = append(res, progresssubmission)
 	}

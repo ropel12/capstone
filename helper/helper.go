@@ -5,6 +5,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 
@@ -125,4 +126,11 @@ func CheckNPSN(npsn string, log *logrus.Logger) error {
 		return errorr.NewBad("NPSN not registered")
 	}
 	return nil
+}
+func IsValidPhone(number string) bool {
+	re := regexp.MustCompile(`^0\d{11,12}$`)
+	if re.MatchString(number) {
+		return true
+	}
+	return false
 }

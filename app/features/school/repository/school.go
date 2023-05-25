@@ -39,6 +39,7 @@ type (
 		GetProgressByid(db *gorm.DB, id int) (*entity.Progress, error)
 		GetAllProgressAndSubmissionByuid(db *gorm.DB, uid int) (*entity.School, error)
 		GetSubmissionByid(db *gorm.DB, id int) (*entity.Submission, error)
+		DeleteProgressByid(db *gorm.DB, id int) error
 		AddReview(db *gorm.DB, data entity.Reviews) (int, error)
 		UpdateProgressByUid(db *gorm.DB, uid int, schid int, status string) (int, error)
 	}
@@ -81,10 +82,10 @@ func (u *school) GetAll(db *gorm.DB, limit, offset int, search string) ([]entity
 	res := []entity.School{}
 	search = "%" + search + "%"
 	var total int64
-	db.Model(&entity.School{}).Where("deleted_at IS NULL AND (name like ? or province like ? or district like ? or village like ? or detail like ?)", search, search, search, search, search).Count(&total)
+	db.Model(&entity.School{}).Where("deleted_at IS NULL AND (name like ? or province like ? or district like ? or village like ? or detail like ? or city like ? or accreditation like ?)", search, search, search, search, search, search, search).Count(&total)
 	if err := db.Preload("User", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,username")
-	}).Where("deleted_at IS NULL AND (name like ? or province like ? or district like ? or village like ? or detail like ?)", search, search, search, search, search).Find(&res).Error; err != nil {
+	}).Where("deleted_at IS NULL AND (name like ? or province like ? or district like ? or village like ? or detail like ? or city like ? or accreditation like ?)", search, search, search, search, search, search, search).Find(&res).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN GETTING SCHOOL DATA, Err : %v", err)
 		return nil, 0, errorr.NewInternal("Internal Server Error")
 	}
@@ -485,10 +486,10 @@ func (s *school) GetAllProgressAndSubmissionByuid(db *gorm.DB, uid int) (*entity
 	if err := db.Preload("Progresses", func(db *gorm.DB) *gorm.DB {
 		return db.Preload("User", func(db *gorm.DB) *gorm.DB {
 			return db.Select("id,first_name,sure_name,image")
-		}).Select("school_id,id,user_id")
+		}).Select("school_id,id,user_id,status")
 	}).Preload("Submissions", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,school_id")
-	}).Joins("join progresses p on p.school_id=schools.id").Where("schools.user_id=? AND p.status != 'Failed Test Result' AND p.status != 'Failed File Approved' AND p.status != 'Finish'", uid).Find(&res).Error; err != nil {
+	}).Joins("join progresses p on p.school_id=schools.id").Where("schools.user_id=? AND p.deleted_at IS NULL", uid).Find(&res).Error; err != nil {
 		s.log.Errorf("[ERROR]WHEN GETTING PRORGRESS AND SUBMISSION DATA, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Erorr")
 	}
@@ -497,7 +498,13 @@ func (s *school) GetAllProgressAndSubmissionByuid(db *gorm.DB, uid int) (*entity
 	}
 	return &res, nil
 }
-
+func (s *school) DeleteProgressByid(db *gorm.DB, id int) error {
+	if err := db.Where("id=?", id).Delete(&entity.Progress{}).Error; err != nil {
+		s.log.Errorf("[ERROR]WHEN DELETING PROGRESS, Err: %v", err)
+		return errorr.NewBad("Cannot Delete Progress")
+	}
+	return nil
+}
 func (s *school) GetSubmissionByid(db *gorm.DB, id int) (*entity.Submission, error) {
 	res := entity.Submission{}
 	if err := db.Preload("School").Find(&res, id).Error; err != nil {
