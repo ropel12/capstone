@@ -870,7 +870,7 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 		return 0, err
 	}
 	if status == "File Approved" {
-		user, err := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
+		user, err := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))
 		if err != nil {
 			s.dep.Log.Errorf("[ERROR]WHEN GETTING USER DATA: %v", err)
 		}
@@ -888,7 +888,7 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 		} else {
 			typecost = "Her-Registration"
 		}
-		user, err := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
+		user, err := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))
 		if err != nil {
 			s.dep.Log.Errorf("[ERROR]WHEN GETTING USER DATA: %v", err)
 		}
