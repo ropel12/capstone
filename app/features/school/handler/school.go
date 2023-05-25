@@ -700,3 +700,16 @@ func (u *School) GetBase64File(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", map[string]any{"file": base32}))
 }
+
+func (u *School) GetTestResultCron(c echo.Context) error {
+	token := c.Param("token")
+	if token == "" {
+		c.Set("err", "Token Not Found")
+		return CreateErrorResponse(errorr.NewBad("Token Not Found"), c)
+	}
+	res, err := u.Dep.Quiz.GetResult(token, u.Dep.Log)
+	if err != nil {
+		return CreateErrorResponse(err, c)
+	}
+	return c.JSON(http.StatusOK, CreateWebResponse(http.StatusOK, "Success Operation", res))
+}

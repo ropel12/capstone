@@ -62,6 +62,9 @@ func (u *Transaction) GetDetailTransaction(c echo.Context) error {
 }
 
 func (u *Transaction) MidtransNotification(c echo.Context) error {
+	if c.Request().UserAgent() != "Veritrans" {
+		c.JSON(http.StatusUnauthorized, map[string]any{"code": 401, "message": "UnAuthorized"})
+	}
 	midres := MidtransNotifResponse{}
 	if err := c.Bind(&midres); err != nil {
 		c.Set("err", err.Error())

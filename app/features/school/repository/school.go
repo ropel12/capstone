@@ -398,18 +398,43 @@ func (s *school) UpdateProgress(db *gorm.DB, id int, status string) (*entity.Pro
 		s.log.Errorf("[ERORR]WHEN GETTING Progress DATA, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Error")
 	}
-	if err := db.Model(&entity.Progress{}).Where("id = ?", id).Update("status", status).Error; err != nil {
-		s.log.Errorf("[ERROR]WHEN UPDATING Submission, Err : %v", err)
-		return nil, errorr.NewInternal("Internal Server Erorr")
-	}
 	if status == "Finish" {
-		db.Model(&entity.Progress{}).Where("user_id = ? AND school_id != ?", prog.UserID, prog.SchoolID).Update("status", "Failed Test Result")
-		db.Where("user_id=?", prog.UserID).Delete(&entity.Carts{})
-	}
-	if status == "Send Detail Costs Registration" {
+		err := db.Transaction(func(db *gorm.DB) error {
+			if prog.Status != "Already Paid Her-Registration" {
+				return errorr.NewBad("Participant has not paid her registration fee")
+			}
+			db.Model(&entity.Progress{}).Where("user_id = ? AND school_id != ?", prog.UserID, prog.SchoolID).Update("status", "Failed Test Result")
+			db.Where("user_id=?", prog.UserID).Delete(&entity.Carts{})
+			return nil
+		})
+		if err != nil {
+			return nil, err
+		}
+	} else if status == "Send Detail Costs Registration" {
+		if prog.Status != "File Approved" {
+			return nil, errorr.NewBad("Participant registration form has not been approved")
+		}
 		db.Create(&entity.Carts{UserID: prog.UserID, SchoolID: prog.SchoolID, Type: "registration"})
 	} else if status == "Send Detail Costs Her-Registration" {
-		db.Create(&entity.Carts{UserID: prog.UserID, SchoolID: prog.SchoolID, Type: "herregistration"})
+		err := db.Transaction(func(db *gorm.DB) error {
+			if prog.Status != "Test Result" {
+				return errorr.NewBad("participant has not taken the test or did not pass the test")
+			}
+			db.Create(&entity.Carts{UserID: prog.UserID, SchoolID: prog.SchoolID, Type: "herregistration"})
+			return nil
+		})
+		if err != nil {
+			return nil, err
+		}
+	} else if status == "Send Test Link" {
+		if prog.Status != "Done Payment" {
+			return nil, errorr.NewBad("participant has not taken the test or did not pass the test")
+		}
+	}
+	prog.Status = status
+	if err := db.Save(&prog).Error; err != nil {
+		s.log.Errorf("[ERROR]WHEN UPDATING Submission, Err : %v", err)
+		return nil, errorr.NewInternal("Internal Server Erorr")
 	}
 	return &prog, nil
 }
@@ -422,7 +447,8 @@ func (s *school) UpdateProgressByUid(db *gorm.DB, uid int, schid int, status str
 		s.log.Errorf("[ERORR]WHEN GETTING Progress DATA, Err: %v", err)
 		return 0, errorr.NewInternal("Internal Server Error")
 	}
-	if err := db.Model(&entity.Progress{}).Where("user_id = ? AND school_id=?", uid, schid).Update("status", status).Error; err != nil {
+	progress.Status = status
+	if err := db.Save(&progress).Error; err != nil {
 		s.log.Errorf("[ERROR]WHEN UPDATING PROGRESS, Err : %v", err)
 		return 0, errorr.NewInternal("Internal Server Erorr")
 	}
@@ -462,7 +488,7 @@ func (s *school) GetAllProgressAndSubmissionByuid(db *gorm.DB, uid int) (*entity
 		}).Select("school_id,id,user_id")
 	}).Preload("Submissions", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,school_id")
-	}).Joins("join progresses p on p.school_id=schools.id").Where("schools.user_id=? AND p.status != 'Failed Test Result' AND p.status != 'Failed File Approved'", uid).Find(&res).Error; err != nil {
+	}).Joins("join progresses p on p.school_id=schools.id").Where("schools.user_id=? AND p.status != 'Failed Test Result' AND p.status != 'Failed File Approved' AND p.status != 'Finish'", uid).Find(&res).Error; err != nil {
 		s.log.Errorf("[ERROR]WHEN GETTING PRORGRESS AND SUBMISSION DATA, Err: %v", err)
 		return nil, errorr.NewInternal("Internal Server Erorr")
 	}

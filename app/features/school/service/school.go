@@ -837,10 +837,8 @@ func (s *school) CreateSubmission(ctx context.Context, req entity.ReqCreateSubmi
 }
 
 func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) (int, error) {
-	if status != "Check File Registration" && status != "File Approved" && status != "Send Detail Costs Registration" &&
-		status != "Failed File Approved" && status != "Failed Test Result" &&
-		status != "Send Test Link" && status != "Check Test Result" &&
-		status != "Test Result" && status != "Send Detail Costs Her-Registration" &&
+	if status != "File Approved" && status != "Send Detail Costs Registration" &&
+		status != "Failed File Approved" && status != "Send Test Link" && status != "Send Detail Costs Her-Registration" &&
 		status != "Finish" {
 		s.dep.PromErr["error"] = "Status Not Available"
 		return 0, errorr.NewBad("Invalid Request Body")
@@ -862,8 +860,27 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 		if err := s.dep.Pusher.Publish(map[string]string{"username": user.Username, "type": "admission", "school_name": school.Name, "status": "File Approved"}, 2); err != nil {
 			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
 		}
-	} else if status == "" {
-
+	} else if status == "Send Detail Costs Registration" || status == "Send Detail Costs Her-Registration" {
+		typecost := ""
+		if status == "Send Detail Costs Registration" {
+			typecost = "Registration"
+		} else {
+			typecost = "Her-Registration"
+		}
+		user, err := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
+		if err != nil {
+			s.dep.Log.Errorf("[ERROR]WHEN GETTING USER DATA: %v", err)
+		}
+		school, err := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
+		if err != nil {
+			s.dep.Log.Errorf("[ERROR]WHEN GETTING SCHOOL DATA: %v", err)
+		}
+		encodeddata, _ := json.Marshal(map[string]any{"email": user.Email, "name": user.FirstName + " " + user.SureName, "school": school.Name, "type": typecost, "school_id": school.ID})
+		go func() {
+			if err := s.dep.Nsq.Publish("11", encodeddata); err != nil {
+				s.dep.Log.Errorf("Failed to publish to NSQ: %v", err)
+			}
+		}()
 	} else if status == "Send Test Link" {
 		schooldata, _ := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
 		userdata, _ := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))
@@ -873,6 +890,19 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 		}
 		go func() {
 			if err := s.dep.Nsq.Publish("8", encodeddata); err != nil {
+				s.dep.Log.Errorf("Failed to publish to NSQ: %v", err)
+			}
+		}()
+
+	} else if status == "Finish" {
+		schooldata, _ := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
+		userdata, _ := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))
+		encodeddata, _ := json.Marshal(map[string]any{"email": userdata.Email, "name": userdata.FirstName + " " + userdata.SureName, "school": schooldata.Name})
+		if err := s.dep.Pusher.Publish(map[string]string{"username": userdata.Username, "type": "admission", "school_name": schooldata.Name, "status": "Finish"}, 2); err != nil {
+			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
+		}
+		go func() {
+			if err := s.dep.Nsq.Publish("12", encodeddata); err != nil {
 				s.dep.Log.Errorf("Failed to publish to NSQ: %v", err)
 			}
 		}()

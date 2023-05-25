@@ -48,6 +48,11 @@ func (t *transaction) CreateTransaction(ctx context.Context, req entity.ReqCheck
 		t.dep.Log.Errorf("[ERROR]WHEN VALIDATE CHECKOUT REQ, err :%v", err)
 		return nil, errorr.NewBad("Missing or Invalid Request Body")
 	}
+	_, err := t.repo.GetCart(t.dep.Db.WithContext(ctx), req.SchoolID, uid)
+	if err != nil {
+		t.dep.PromErr["error"] = err.Error()
+		return nil, errorr.NewBad("You don't have a transaction cart yet")
+	}
 	var total int
 	var invoice = helper.GenerateInvoice(req.SchoolID, uid)
 	itemdetails := []midtrans.ItemDetails{}

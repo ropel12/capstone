@@ -28,8 +28,8 @@ func GetConnection(c *Config) (*gorm.DB, error) {
 		return nil, fmt.Errorf("unable to access database sql: %v", err)
 	}
 
-	sqlDB.SetMaxIdleConns(5)
-	sqlDB.SetMaxOpenConns(50)
+	sqlDB.SetMaxIdleConns(20)
+	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxIdleTime(5 * time.Minute)
 	sqlDB.SetConnMaxLifetime(60 * time.Minute)
 

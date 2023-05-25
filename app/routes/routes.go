@@ -45,6 +45,7 @@ func (r *Routes) RegisterRoutes() {
 	ro.GET("/getcaptcha", r.User.GetCaptcha)
 	ro.POST("/verifycaptcha", r.User.VerifyCaptcha)
 	ro.GET("/quiz/:url", r.School.PreviewQuiz)
+	ro.GET("/quiz/cron/:token", r.School.GetTestResultCron)
 	//school
 	ro.GET("/schools", r.School.GetAll)
 	ro.GET("/schools/search", r.School.Search)
@@ -72,11 +73,16 @@ func (r *Routes) RegisterRoutes() {
 	rstdnt.POST("/reviews", r.School.AddReview)
 
 	//ADMIN AREA
+	// not veried
+	radmm := rauth.Group("", AdminMiddleWare)
+	radmm.GET("/admin/school", r.School.GetByUid)
+	radmm.GET("/admin/admission", r.School.GetAllAdmission)
+	radmm.GET("/admin/admission/:id", r.School.GetSubmissionByid)
+	radmm.GET("/quiz", r.School.GetTestResult)
+	radmm.GET("/file/:fname", r.School.GetBase64File)
+	//verfied
 	radm := rverif.Group("", AdminMiddleWare)
 	radm.POST("/school", r.School.Create)
-	radm.GET("/admin/school", r.School.GetByUid)
-	radm.GET("/admin/admission", r.School.GetAllAdmission)
-	radm.GET("/admin/admission/:id", r.School.GetSubmissionByid)
 	radm.PUT("/progresses/:id", r.School.UpdateProgressByid)
 	radm.DELETE("/school/:id", r.School.Delete)
 	radm.PUT("/school", r.School.Update)
@@ -94,6 +100,4 @@ func (r *Routes) RegisterRoutes() {
 	radm.PUT("/payments", r.School.UpdatePayment)
 	radm.DELETE("/payments/:id", r.School.DeletePayment)
 	radm.POST("/quiz", r.School.CreateQuiz)
-	radm.GET("/quiz", r.School.GetTestResult)
-	radm.GET("/file/:fname", r.School.GetBase64File)
 }
