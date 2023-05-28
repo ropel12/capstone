@@ -416,6 +416,10 @@ func (s *school) UpdateProgress(db *gorm.DB, id int, status string) (*entity.Pro
 			return nil, errorr.NewBad("Participant registration form has not been approved")
 		}
 		db.Create(&entity.Carts{UserID: prog.UserID, SchoolID: prog.SchoolID, Type: "registration"})
+	} else if status == "File Approved" {
+		if prog.Status != "Check File Registration" {
+			return nil, errorr.NewBad("participant has not submitted the registration form")
+		}
 	} else if status == "Send Detail Costs Her-Registration" {
 		err := db.Transaction(func(db *gorm.DB) error {
 			if prog.Status != "Test Result" {
