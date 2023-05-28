@@ -85,7 +85,7 @@ func (u *school) GetAll(db *gorm.DB, limit, offset int, search string) ([]entity
 	db.Model(&entity.School{}).Where("deleted_at IS NULL AND (name like ? or province like ? or district like ? or village like ? or detail like ? or city like ? or accreditation like ?)", search, search, search, search, search, search, search).Count(&total)
 	if err := db.Preload("User", func(db *gorm.DB) *gorm.DB {
 		return db.Select("id,username")
-	}).Where("deleted_at IS NULL AND (name like ? or province like ? or district like ? or village like ? or detail like ? or city like ? or accreditation like ?)", search, search, search, search, search, search, search).Find(&res).Error; err != nil {
+	}).Where("deleted_at IS NULL AND (name like ? or province like ? or district like ? or village like ? or detail like ? or city like ? or accreditation like ?)", search, search, search, search, search, search, search).Limit(limit).Offset(offset).Find(&res).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN GETTING SCHOOL DATA, Err : %v", err)
 		return nil, 0, errorr.NewInternal("Internal Server Error")
 	}

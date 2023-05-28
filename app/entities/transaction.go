@@ -21,6 +21,15 @@ type (
 		School    School
 		User      User
 	}
+	BillingSchedule struct {
+		ID           uint `gorm:"primaryKey;not null;autoIncrement"`
+		StudentName  string
+		StudentEmail string
+		SchoolName   string
+		DeletedAt    gorm.DeletedAt `gorm:"index"`
+		Date         string         `gorm:"type:timestamp;not null"`
+		Total        int
+	}
 	Transaction struct {
 		Invoice          string `gorm:"primaryKey;not null;type:varchar(20)" json:"invoice,omitempty"`
 		UserID           uint   `gorm:"not null"`
@@ -81,7 +90,5 @@ type (
 		Total         int    `json:"total"`
 		PaymentCode   string `json:"payment_code"`
 		Expire        string `json:"expire"`
-	}
-	PaymentSchedule struct {
 	}
 )

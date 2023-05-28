@@ -320,7 +320,8 @@ type (
 		GmeetDate        string        `json:"gmeet_date"`
 		QuizLinkPub      string        `json:"quizLinkPub,omitempty"`
 		QuizLinkPreview  string        `json:"quizLinkPreview,omitempty"`
-		WaLink           string        `jsonL:"wa_link,omitempty"`
+		WaLink           string        `json:"wa_link,omitempty"`
+		Phone            string        `json:"phone"`
 		Achievements     []ResAddItems `json:"achievements"`
 		Extracurriculars []ResAddItems `json:"extracurriculars"`
 		ResPayment       ResPayment    `json:"payments"`

@@ -73,7 +73,7 @@ func (s *school) Create(ctx context.Context, req entity.ReqCreateSchool, image m
 	if !helper.IsValidPhone(req.Phone) {
 		return 0, errorr.NewBad("Invalid Phone Number")
 	}
-	req.Phone = strings.ReplaceAll(req.Phone, "0", "62")
+	req.Phone = strings.Replace(req.Phone, "0", "62", 1)
 	if err := s.repo.FindByNPSN(s.dep.Db.WithContext(ctx), req.Npsn); err == nil {
 		s.dep.PromErr["error"] = "School Already Registered"
 		return 0, errorr.NewBad("School Already Registered")
@@ -169,7 +169,7 @@ func (s *school) Update(ctx context.Context, req entity.ReqUpdateSchool, image m
 		if !helper.IsValidPhone(req.Phone) {
 			return nil, errorr.NewBad("Invalid Phone Number")
 		}
-		req.Phone = strings.ReplaceAll(req.Phone, "0", "62")
+		req.Phone = strings.Replace(req.Phone, "0", "62", 1)
 	}
 	if req.Npsn != "" {
 		if err := s.repo.FindByNPSN(s.dep.Db.WithContext(ctx), req.Npsn); err == nil {
@@ -440,7 +440,7 @@ func (s *school) GetByUid(ctx context.Context, uid int) (*entity.ResDetailSchool
 		Staff:           data.Staff,
 		Accreditation:   data.Accreditation,
 		Gmeet:           data.Gmeet,
-		WaLink:          fmt.Sprintf("%s%s%s", "https://wa.me/", data.Phone, "?text=Hallo,Saya Ingin Bertanya"),
+		Phone:           strings.Replace(data.Phone, "62", "0", 1),
 		GmeetDate:       data.GmeetDate,
 		QuizLinkPub:     data.QuizLinkPub,
 		QuizLinkPreview: previewlink,
@@ -874,11 +874,7 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 		if err != nil {
 			s.dep.Log.Errorf("[ERROR]WHEN GETTING USER DATA: %v", err)
 		}
-		school, err := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
-		if err != nil {
-			s.dep.Log.Errorf("[ERROR]WHEN GETTING SCHOOL DATA: %v", err)
-		}
-		if err := s.dep.Pusher.Publish(map[string]string{"username": user.Username, "type": "admission", "school_name": school.Name, "status": "File Approved"}, 2); err != nil {
+		if err := s.dep.Pusher.Publish(map[string]any{"username": user.Username, "type": "admission", "status": status, "progress_id": id}, 2); err != nil {
 			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
 		}
 	} else if status == "Send Detail Costs Registration" || status == "Send Detail Costs Her-Registration" {
@@ -896,6 +892,9 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 		if err != nil {
 			s.dep.Log.Errorf("[ERROR]WHEN GETTING SCHOOL DATA: %v", err)
 		}
+		if err := s.dep.Pusher.Publish(map[string]any{"username": user.Username, "type": "admission", "status": status, "progress_id": id}, 2); err != nil {
+			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
+		}
 		encodeddata, _ := json.Marshal(map[string]any{"email": user.Email, "name": user.FirstName + " " + user.SureName, "school": school.Name, "type": typecost, "school_id": school.ID})
 		go func() {
 			if err := s.dep.Nsq.Publish("11", encodeddata); err != nil {
@@ -906,7 +905,7 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 		schooldata, _ := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
 		userdata, _ := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))
 		encodeddata, _ := json.Marshal(map[string]any{"email": userdata.Email, "name": userdata.FirstName + " " + userdata.SureName, "school": schooldata.Name, "test": schooldata.QuizLinkPub})
-		if err := s.dep.Pusher.Publish(map[string]string{"username": userdata.Username, "type": "admission", "school_name": schooldata.Name, "status": "Send Test Link"}, 2); err != nil {
+		if err := s.dep.Pusher.Publish(map[string]any{"username": userdata.Username, "type": "admission", "status": status, "progress_id": id}, 2); err != nil {
 			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
 		}
 		go func() {
@@ -918,12 +917,15 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 	} else if status == "Finish" {
 		schooldata, _ := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
 		userdata, _ := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))
-		encodeddata, _ := json.Marshal(map[string]any{"email": userdata.Email, "name": userdata.FirstName + " " + userdata.SureName, "school": schooldata.Name})
-		if err := s.dep.Pusher.Publish(map[string]string{"username": userdata.Username, "type": "admission", "school_name": schooldata.Name, "status": "Finish"}, 2); err != nil {
+		encodeddata, _ := json.Marshal(map[string]any{"email": userdata.Email, "name": userdata.FirstName + " " + userdata.SureName, "school": schooldata.Name, "user_id": int(userdata.ID), "school_id": int(schooldata.ID)})
+		if err := s.dep.Pusher.Publish(map[string]any{"username": userdata.Username, "type": "admission", "status": status, "progress_id": id}, 2); err != nil {
 			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
 		}
 		go func() {
 			if err := s.dep.Nsq.Publish("12", encodeddata); err != nil {
+				s.dep.Log.Errorf("Failed to publish to NSQ: %v", err)
+			}
+			if err := s.dep.Nsq.Publish("14", encodeddata); err != nil {
 				s.dep.Log.Errorf("Failed to publish to NSQ: %v", err)
 			}
 		}()
@@ -932,7 +934,7 @@ func (s *school) UpdateProgressByid(ctx context.Context, id int, status string) 
 		schooldata, _ := s.repo.GetById(s.dep.Db.WithContext(ctx), int(res.SchoolID))
 		userdata, _ := s.userrepo.GetById(s.dep.Db.WithContext(ctx), int(res.UserID))
 		encodeddata, _ := json.Marshal(map[string]any{"email": userdata.Email, "name": userdata.FirstName + " " + userdata.SureName, "school": schooldata.Name, "reason": "Berkas Pendaftaran Ditolak"})
-		if err := s.dep.Pusher.Publish(map[string]string{"username": userdata.Username, "type": "admission", "school_name": schooldata.Name, "status": "Finish"}, 2); err != nil {
+		if err := s.dep.Pusher.Publish(map[string]any{"username": userdata.Username, "type": "admission", "status": status, "progress_id": id}, 2); err != nil {
 			s.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
 		}
 		go func() {

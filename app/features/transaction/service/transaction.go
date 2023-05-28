@@ -206,6 +206,9 @@ func (t *transaction) UpdateStatus(ctx context.Context, status, invoice string) 
 			if err := t.dep.Pusher.Publish(map[string]any{"progress_id": id, "status": "Done Payment"}, 3); err != nil {
 				t.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
 			}
+			if err := t.dep.Pusher.Publish(map[string]any{"progress_id": id, "status": "Done Payment", "username": trxdata.User.Username}, 2); err != nil {
+				t.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
+			}
 		} else {
 			id, err := t.schoolrepo.UpdateProgressByUid(t.dep.Db.WithContext(ctx), int(trxdata.UserID), int(trxdata.SchoolID), "Already Paid Her-Registration")
 			if err != nil {
@@ -213,6 +216,9 @@ func (t *transaction) UpdateStatus(ctx context.Context, status, invoice string) 
 				t.dep.Log.Errorf("[ERROR]WHEN UPDATING PROGRESS STATUS,Err : %v", err)
 			}
 			if err := t.dep.Pusher.Publish(map[string]any{"progress_id": id, "status": "Already Paid Her-Registration"}, 3); err != nil {
+				t.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
+			}
+			if err := t.dep.Pusher.Publish(map[string]any{"progress_id": id, "status": "Already Paid Her-Registration", "username": trxdata.User.Username}, 2); err != nil {
 				t.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
 			}
 		}
@@ -228,9 +234,6 @@ func (t *transaction) UpdateStatus(ctx context.Context, status, invoice string) 
 
 			t.dep.Log.Errorf("[ERROR]WHEN DELETING CART,Err : %v", err)
 		}
-		if err := t.dep.Pusher.Publish(map[string]string{"username": trxdata.User.Username, "type": "payment", "school_name": trxdata.School.Name, "status": "success"}, 1); err != nil {
-			t.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
-		}
 	case "cancel":
 		err = t.repo.UpdateStatus(t.dep.Db.WithContext(ctx), invoice, "cancel")
 		if err != nil {
@@ -243,12 +246,15 @@ func (t *transaction) UpdateStatus(ctx context.Context, status, invoice string) 
 			return err
 		}
 		status = ""
+		progstatus := ""
 		if cartdata.Type == "registration" {
 			status = "File Approved"
+			progstatus = "Failed Done Payment"
 		} else {
 			status = "Test Result"
+			progstatus = "Failed Already Paid Her-Registration"
 		}
-		_, err = t.schoolrepo.UpdateProgressByUid(t.dep.Db.WithContext(ctx), int(trxdata.UserID), int(trxdata.UserID), status)
+		progid, err := t.schoolrepo.UpdateProgressByUid(t.dep.Db.WithContext(ctx), int(trxdata.UserID), int(trxdata.UserID), status)
 		if err != nil {
 			t.dep.Log.Errorf("[ERROR]WHEN UPDATING PROGRESS STATUS,Err : %v", err)
 		}
@@ -257,7 +263,10 @@ func (t *transaction) UpdateStatus(ctx context.Context, status, invoice string) 
 				t.dep.Log.Errorf("Failed to publish to NSQ: %v", err)
 			}
 		}()
-		if err := t.dep.Pusher.Publish(map[string]string{"username": trxdata.User.Username, "type": "payment", "school_name": trxdata.School.Name, "status": "Expire"}, 1); err != nil {
+		if err := t.dep.Pusher.Publish(map[string]any{"progress_id": progid, "status": progstatus}, 3); err != nil {
+			t.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
+		}
+		if err := t.dep.Pusher.Publish(map[string]any{"progress_id": progid, "status": progstatus, "username": trxdata.User.Username}, 2); err != nil {
 			t.dep.Log.Errorf("Failed to publish to PusherJs: %v", err)
 		}
 	}

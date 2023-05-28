@@ -1,13 +1,13 @@
 version: "3"
 services:
-  mycache:
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    volumes:
-      - ~/redis-data:/data
-    restart: always
-    command: redis-server --requirepass test
+  # mycache:
+  #   image: redis:latest
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - ~/redis-data:/data
+  #   restart: always
+  #   command: redis-server --requirepass test
 
   nsqlookupd:
     image: nsqio/nsq
@@ -35,26 +35,26 @@ services:
     restart: always
     depends_on:
       - nsqlookupd
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
-    volumes:
-      - ~/grafana-storage:/var/lib/grafana
-    user: root
-    restart: always
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ~/grafana-storage:/var/lib/grafana
+  #   user: root
+  #   restart: always
 
-  prometheus:
-    image: prom/prometheus:v2.27.1
-    volumes:
-      - ~/promo/:/etc/prometheus/
-      - ~/prometheus_data/:/prometheus/
-    user: root
-    command:
-      - '--config.file=/etc/prometheus/config.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-    ports:
-      - "9070:9090"
-    restart: always
+  # prometheus:
+  #   image: prom/prometheus:v2.27.1
+  #   volumes:
+  #     - ~/promo/:/etc/prometheus/
+  #     - ~/prometheus_data/:/prometheus/
+  #   user: root
+  #   command:
+  #     - '--config.file=/etc/prometheus/config.yml'
+  #     - '--storage.tsdb.path=/prometheus'
+  #     - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+  #     - '--web.console.templates=/usr/share/prometheus/consoles'
+  #   ports:
+  #     - "9070:9090"
+  #   restart: always
