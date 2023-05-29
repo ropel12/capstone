@@ -254,7 +254,7 @@ func (t *transaction) UpdateStatus(ctx context.Context, status, invoice string) 
 			status = "Test Result"
 			progstatus = "Failed Already Paid Her-Registration"
 		}
-		progid, err := t.schoolrepo.UpdateProgressByUid(t.dep.Db.WithContext(ctx), int(trxdata.UserID), int(trxdata.UserID), status)
+		progid, err := t.schoolrepo.UpdateProgressByUid(t.dep.Db.WithContext(ctx), int(trxdata.UserID), int(trxdata.SchoolID), status)
 		if err != nil {
 			t.dep.Log.Errorf("[ERROR]WHEN UPDATING PROGRESS STATUS,Err : %v", err)
 		}
