@@ -36,9 +36,9 @@ func (t *transaction) CreateTranscation(db *gorm.DB, data entity.Transaction, ty
 		}
 		status := ""
 		if typee == "registration" {
-			status = "Sending Detail Cost Registration"
+			status = "Send Detail Costs Registration"
 		} else {
-			status = "Sending Detail Cost Her-Registration"
+			status = "Send Detail Costs Her-Registration"
 		}
 		if err := db.Model(&entity.Progress{}).Where("user_id=? AND school_id=? AND status != 'Finish' AND status != 'Failed Test Result' AND status != 'Failed File Approved'", data.UserID, data.SchoolID).Update("status", status).Error; err != nil {
 			t.log.Errorf("[ERROR]WHEN UPDATING PROGRESS STUDENT, Err : %v", err)
