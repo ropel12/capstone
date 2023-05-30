@@ -105,6 +105,17 @@ func (u *school) Delete(db *gorm.DB, id int, uid int) error {
 		}
 		return errorr.NewBad("Id Not Found")
 	}
+	progress := entity.Progress{}
+	if err := db.Where("school_id=? AND status != 'Failed Test Result' AND status != 'Failed File Approved' AND status != 'Finish'", id).Find(&progress).Error; err != nil {
+		if err != gorm.ErrRecordNotFound {
+			u.log.Errorf("[ERROR]WHEN GETTING The Achievement Data, Err: %v", err)
+			return errorr.NewInternal("Internal Server Error")
+
+		}
+	}
+	if progress.ID != 0 {
+		return errorr.NewBad("There are still participants enrolling in your school")
+	}
 	if err := db.Where("id=?", id).Delete(&entity.School{}).Error; err != nil {
 		u.log.Errorf("[ERROR]WHEN DELETING Achievement, Err: %v", err)
 		return errorr.NewInternal("Internal Server Error")
