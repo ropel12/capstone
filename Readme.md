@@ -20,7 +20,7 @@ reach your dream school through your hands without having to go anywhere. Find m
 ## 🛠 Technology Stack
 <div align="center">
 
-<img src="https://storage.googleapis.com/prj1ropel/techstack.png" width="800" height="600">
+<img src="https://github.com/ropel12/capstone/blob/main/docs/techstack.png" width="800" height="600">
 
   </div>
 
